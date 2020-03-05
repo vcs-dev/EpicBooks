@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    @RenderSectionAsync("Styles", required: false);
+    <title>Gerencial - @ViewData["Title"]</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="gerencial.html">Gerencial</a>
+        <ul class="navbar-nav px-3 col-md-9 text-right">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link text-white disabled" href="">Olá Vinicius</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="logingerencial.html">Sair</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="gerencial.html">
+                                <span data-feather="bar-chart-2"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="gerenciallivros.html">
+                                <span data-feather="book"></span>
+                                Livros
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="gerencialestoque.html">
+                                <span data-feather="database"></span>
+                                Estoque
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="gerencialtrocas.html">
+                                <span data-feather="shopping-cart"></span>
+                                Trocas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                @RenderBody()
+                <footer class="container text-center mt-3">
+                    <p>&copy; Code EZ 2020</p>
+                </footer>
+            </main>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery-v3.4.1.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+
+</html>
+@*<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - Web</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Web</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2020 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @RenderSection("Scripts", required: false)
+    </body>
+    </html>*@
