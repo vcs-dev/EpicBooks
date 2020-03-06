@@ -1,0 +1,16 @@
+﻿@model Domain.Produto.Livro
+@{
+    ViewData["Title"] = "Cadastro de livro";
+}
+@section Styles{
+    <link rel="stylesheet" href="css/form-validation.css">
+}
+
+<div class="container">
+    @await Html.PartialAsync("_livro", Model)
+</div>
+
+@section Scripts{
+    <script src="~/js/form-validation.js"></script>
+}
+
