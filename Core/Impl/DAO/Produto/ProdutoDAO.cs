@@ -77,7 +77,7 @@ namespace Core.Impl.Produto.DAO
                 comandolivro.Parameters.AddWithValue("@DataCadastro", livro.DataCadastro);
                 comandolivro.Parameters.AddWithValue("@QtdePaginas", livro.QtdePaginas);
                 comandolivro.Parameters.AddWithValue("@Edicao", livro.Edicao);
-                if(livro.Volume == null || livro.Volume == 0)
+                if (livro.Volume == null || livro.Volume == 0)
                     comandolivro.Parameters.AddWithValue("@Volume", DBNull.Value);
                 else
                     comandolivro.Parameters.AddWithValue("@Volume", livro.Volume);
@@ -264,11 +264,12 @@ namespace Core.Impl.Produto.DAO
             Livro livro = (Livro)entidade;
             List<Livro> livros;
             List<int> generos;
-            List<int> paisesProibicao;
-            string precoVenda = "";
+            List<int> autores;
             string cmdTextolivro = "";
             string cmdTextoGenero;
-            string cmdTextoEstoque;
+            string cmdTextoAutor;
+            //string precoVenda = "";
+            //string cmdTextoEstoque;
             try
             {
                 Conectar();
@@ -320,31 +321,59 @@ namespace Core.Impl.Produto.DAO
                         }
                         drGenero.Close();
                         item.Generos = generos;
+                    }
 
-                        cmdTextoEstoque = "SELECT FORMAT(MAX(E.ValorCusto) * (1 + GP.PercentuaLucro), 'N', 'pt-br') AS PrecoVenda, " +
-                                                  "GP.PercentuaLucro " +
-                                          "FROM EntradaEstoque E " +
-                                          "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
-                                          "JOIN GruposPrecificacao GP on(GP.GrupoPrecificacaoId = P.GrupoPrecificacao) " +
-                                          "WHERE P.ProdutoId = @ProdutoId " +
-                                          "GROUP BY GP.PercentuaLucro";
+                    foreach (var item in livros)
+                    {
+                        cmdTextoAutor = "SELECT A.AutorId " +
+                                         "FROM Produtos P " +
+                                             "JOIN ProdutosAutores PA " +
+                                             "ON(P.ProdutoId = PA.ProdutoId) " +
+                                             "JOIN Autores A " +
+                                             "ON(PA.AutorId = A.AutorId)" +
+                                         "WHERE P.ProdutoId = @ProdutoId";
 
-                        SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao);
-                        comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
-                        SqlDataReader drValorCusto = comandoEstoque.ExecuteReader();
-                        comandoEstoque.Dispose();
+                        SqlCommand comandoAutor = new SqlCommand(cmdTextoAutor, conexao);
+                        comandoAutor.Parameters.AddWithValue("@ProdutoId", item.Id);
+                        SqlDataReader drAutor = comandoAutor.ExecuteReader();
+                        comandoAutor.Dispose();
 
-                        if (!drValorCusto.HasRows)
+                        if (!drAutor.HasRows)
                         {
                             throw new Exception("Sem Registros");
                         }
-                        paisesProibicao = new List<int>();
-                        while (drValorCusto.Read())
+                        autores = new List<int>();
+                        while (drAutor.Read())
                         {
-                            precoVenda = Convert.ToDouble(drValorCusto.GetString(0)).ToString("0.00");
+                            autores.Add(drAutor.GetInt32(0));
                         }
-                        drValorCusto.Close();
-                        item.PrecoVenda = precoVenda;
+                        drAutor.Close();
+                        item.Autores = autores;
+
+                        //cmdTextoEstoque = "SELECT FORMAT(MAX(E.ValorCusto) * (1 + GP.PercentuaLucro), 'N', 'pt-br') AS PrecoVenda, " +
+                        //                          "GP.PercentuaLucro " +
+                        //                  "FROM EntradaEstoque E " +
+                        //                  "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
+                        //                  "JOIN GruposPrecificacao GP on(GP.GrupoPrecificacaoId = P.GrupoPrecificacao) " +
+                        //                  "WHERE P.ProdutoId = @ProdutoId " +
+                        //                  "GROUP BY GP.PercentuaLucro";
+
+                        //SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao);
+                        //comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
+                        //SqlDataReader drValorCusto = comandoEstoque.ExecuteReader();
+                        //comandoEstoque.Dispose();
+
+                        //if (!drValorCusto.HasRows)
+                        //{
+                        //    throw new Exception("Sem Registros");
+                        //}
+                        //paisesProibicao = new List<int>();
+                        //while (drValorCusto.Read())
+                        //{
+                        //    precoVenda = Convert.ToDouble(drValorCusto.GetString(0)).ToString("0.00");
+                        //}
+                        //drValorCusto.Close();
+                        //item.PrecoVenda = precoVenda;
                     }
                 }
             }
@@ -387,15 +416,17 @@ namespace Core.Impl.Produto.DAO
                         DataCadastro = DateTime.Parse(dataReader["DataCadastro"].ToString()),
                         QtdePaginas = Convert.ToInt32(dataReader["QtdePaginas"]),
                         Edicao = Convert.ToInt32(dataReader["Edicao"]),
-                        Volume = Convert.ToInt32(dataReader["Volume"]),
                         Peso = Convert.ToInt32(dataReader["Peso"]),
                         Altura = Convert.ToDecimal(dataReader["Altura"]),
                         Comprimento = Convert.ToDecimal(dataReader["Comprimento"]),
                         Largura = Convert.ToDecimal(dataReader["Largura"]),
                         TipoCapa = Convert.ToInt32(dataReader["TipoCapa"]),
                         GrupoPrecificacao = Convert.ToInt32(dataReader["GrupoPrecificacao"]),
-                        MotivoMudancaStatus = dataReader["MotivoMudancaStatus"].ToString(),
                     };
+                    if (!dataReader.IsDBNull(11))
+                        livro.Volume = Convert.ToInt32(dataReader["Volume"]);
+                    if (!dataReader.IsDBNull(18))
+                        livro.MotivoMudancaStatus = dataReader["MotivoMudancaStatus"].ToString();
                     if (!dataReader.IsDBNull(19))
                         livro.CategoriaAtivacao = Convert.ToInt32(dataReader["CategoriaAtivacao"]);
                     if (!dataReader.IsDBNull(20))

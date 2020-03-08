@@ -1,4 +1,4 @@
-﻿@model Domain.Produto.Livro
+﻿@model IEnumerable<Domain.Produto.Livro>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,9 +6,7 @@
     <link rel="stylesheet" href="css/form-validation.css">
 }*@
 
-<div class="container">
-    @await Html.PartialAsync("_produtos", Model)
-</div>
+@await Html.PartialAsync("_produtos", Model)
 
 @*@section Scripts{
     <script src="~/js/form-validation.js"></script>

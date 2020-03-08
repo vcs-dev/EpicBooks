@@ -23,7 +23,25 @@ namespace Web.Areas.Gerencial.Controllers
         [Area("Gerencial")]
         public IActionResult Index()
         {
-            return View();
+            Livro livro = new Livro();
+            List<Livro> livros;
+
+            resultado = new Facade().Consultar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                livros = new List<Livro>();
+                foreach (var item in resultado.Entidades)
+                {
+                    livros.Add((Livro)item);
+                }
+                return View(livros);
+            }
         }
 
         [Area("Gerencial")]
