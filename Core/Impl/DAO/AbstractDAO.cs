@@ -49,7 +49,7 @@ namespace Core.Impl.DAO
             {
                 Conectar();
                 BeginTransaction();
-                string cmdTexto = "DELETE FROM " + tabela + " WHERE = " + idTabela;
+                string cmdTexto = "DELETE FROM " + tabela + " WHERE " + idTabela + " = " + entidade.Id;
                 SqlCommand comando = new SqlCommand(cmdTexto, conexao, transacao);
                 comando.ExecuteNonQuery();
                 Commit();

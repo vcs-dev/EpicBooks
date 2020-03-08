@@ -17,6 +17,7 @@ namespace Domain.Produto
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public IFormFile Imagem { get; set; }
+        public string CaminhoImagem { get; set; }
         public IList<int> Generos { get; set; }
         public IList<int> Autores { get; set; }
         public int? Editora { get; set; }
@@ -25,10 +26,10 @@ namespace Domain.Produto
         public int? Edicao { get; set; }
         public int? Volume { get; set; }
         public int? Peso { get; set; }
-        public int? Altura { get; set; }
-        public int? Comprimento { get; set; }
-        public int? Largura { get; set; }
-        public int? TipoCapa { get; set; }
+        public decimal? Altura { get; set; }
+        public decimal? Comprimento { get; set; }
+        public decimal? Largura { get; set; }
+        public int TipoCapa { get; set; }
         public string Isbn { get; set; }
         public int GrupoPrecificacao { get; set; }
         public byte Status { get; set; }

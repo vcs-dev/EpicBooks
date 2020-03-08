@@ -20,7 +20,7 @@ namespace Core.Impl.Business
                     (livro.Peso == null || livro.Peso == 0) || (livro.Altura == null || livro.Altura == 0) ||
                     (livro.Comprimento == null || livro.Comprimento == 0) || (livro.Largura == null || livro.Largura == 0) ||
                     string.IsNullOrEmpty(livro.CaminhoImagem.Trim()) || string.IsNullOrEmpty(livro.Isbn.Trim()) ||
-                    (livro.QtdePaginas == null || livro.QtdePaginas == 0) || (livro.TipoCapa == null || livro.TipoCapa == 0))
+                    (livro.QtdePaginas == null || livro.QtdePaginas == 0) || livro.TipoCapa == 0)
                     return "Os campos com * são de preenchimento obrigatório.";
             }
             else

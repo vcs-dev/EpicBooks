@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Application;
+using Core.Impl.Control;
 using Domain.Produto;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,16 @@ namespace Web.Areas.Gerencial.Controllers
     public class ProdutosController : Controller
     {
         private readonly IWebHostEnvironment _appEnvironment;
+        private Result resultado;
 
         public ProdutosController(IWebHostEnvironment appEnvironment)
         {
             _appEnvironment = appEnvironment;
+        }
+        [Area("Gerencial")]
+        public IActionResult Index()
+        {
+            return View();
         }
 
         [Area("Gerencial")]
@@ -36,14 +44,27 @@ namespace Web.Areas.Gerencial.Controllers
                 return BadRequest();
 
             string caminho_WebRoot = _appEnvironment.WebRootPath;
-            string caminhoDestinoArquivo = caminho_WebRoot + "\\img\\uploads\\" + pastaDestino + "\\";
-            string caminhoDestinoArquivoOriginal = caminhoDestinoArquivo + "\\" + nomeArquivo;
-            using (var stream = new FileStream(caminhoDestinoArquivoOriginal, FileMode.Create))
+            string caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
+            string caminhoDestinoArquivoCompleto = caminho_WebRoot + caminhoCurtoENomeArquivo;
+            using (var stream = new FileStream(caminhoDestinoArquivoCompleto, FileMode.Create))
             {
                 await livro.Imagem.CopyToAsync(stream);
             }
 
-            return Ok();
+            if (!string.IsNullOrEmpty(caminhoCurtoENomeArquivo.Trim()))
+                livro.CaminhoImagem = caminhoCurtoENomeArquivo;
+
+            resultado = new Facade().Salvar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+            }
         }
     }
 }

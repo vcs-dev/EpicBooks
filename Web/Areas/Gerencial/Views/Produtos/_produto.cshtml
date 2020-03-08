@@ -71,6 +71,17 @@
                     Informe uma editora.
                 </div>
             </div>
+            <div class="col-md-3 mb-3">
+                <label for="grupoPrecificacao">Grupo de precificação</label>
+                <select class="form-control" id="grupoPrecificacao" name="grupoPrecificacao" required>
+                    <option selected="@(Model.GrupoPrecificacao == 1)" value="1">Bronze</option>
+                    <option selected="@(Model.GrupoPrecificacao == 2)" value="2">Prata</option>
+                    <option selected="@(Model.GrupoPrecificacao == 3)" value="3">Ouro</option>
+                </select>
+                <div class="invalid-feedback">
+                    Informe um grupo de precificação.
+                </div>
+            </div>
             <div class="col-md-2 mb-3">
                 <label for="anoLancamento">Ano de lançamento</label>
                 <input type="text" class="form-control" id="anoLancamento" name="anoLancamento" placeholder="aaaa" value="@Model.AnoLancamento" required>
@@ -93,7 +104,7 @@
             </div>
             <div class="col-md-2 mb-3">
                 <label for="tipocapa">Tipo de capa</label>
-                <select class="custom-select d-block w-100" id="tipocapa" required>
+                <select class="custom-select d-block w-100" id="tipoCapa" name="tipoCapa" required>
                     <option></option>
                     <option selected="@(Model.TipoCapa == 1)" value="1">Mole</option>
                     <option selected="@(Model.TipoCapa == 2)" value="2">Dura</option>
@@ -121,7 +132,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" id="altura" name="altura" value="@Model.Altura" required>
                     <div class="input-group-append">
-                        <span class="input-group-text" >cm</span>
+                        <span class="input-group-text">cm</span>
                     </div>
                     <div class="invalid-feedback">
                         Informe altura.
@@ -129,9 +140,9 @@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
-                <label for="largura">Largura</label>
+                <label for="comprimento">Comprimento</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="largura" name="largura" value="@Model.Largura" required>
+                    <input type="text" class="form-control" id="comprimento" name="comprimento" value="@Model.Comprimento" required>
                     <div class="input-group-append">
                         <span class="input-group-text">cm</span>
                     </div>
@@ -141,9 +152,9 @@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
-                <label for="espessura">Espessura</label>
+                <label for="largura">Largura</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="espessura" name="espessura" value="@Model.Comprimento" required>
+                    <input type="text" class="form-control" id="largura" name="largura" value="@Model.Largura" required>
                     <div class="input-group-append">
                         <span class="input-group-text">cm</span>
                     </div>

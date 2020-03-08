@@ -38,9 +38,9 @@ namespace Core.Impl.Control
             Dictionary<string, List<IStrategy>> rnsProduto = new Dictionary<string, List<IStrategy>>();
 
             rnsProduto.Add("SALVAR", rnsSalvarProduto);
-            rnsProduto.Add("ALTERAR", rnsAlterarProduto);
+            //rnsProduto.Add("ALTERAR", rnsAlterarProduto);
 
-            rns.Add(nameof(Produto), rnsProduto);
+            rns.Add(nameof(Livro), rnsProduto);
             #endregion
 
         }
