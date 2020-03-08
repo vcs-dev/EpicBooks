@@ -1,0 +1,12 @@
+﻿using System.Data.SqlClient;
+
+namespace Core.Util
+{
+    public class ConexaoBd
+    {
+        public static SqlConnection GetConexao()
+        {
+            return new SqlConnection("Server=DESKTOP-LTQQHLP\\SQLEXPRESS; Database=EpicBooks;Trusted_Connection=True;");
+        }
+    }
+}

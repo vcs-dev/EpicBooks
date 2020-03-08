@@ -3,29 +3,29 @@
     <h1 class="h2">Cadastro de livros</h1>
 </div>
 <div class="row order-md-1 justify-content-center">
-    <form class="needs-validation" novalidate action="Gerencial/Livros/Cadastrar" method="post">
+    <form class="needs-validation" novalidate action="Gerencial/Produtos/Cadastrar" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="titulo">Título</label>
-                <input type="text" class="form-control" id="titulo" name="titulo" value="@Model.Titulo"
+                <input type="text" class="form-control" id="nome" name="nome" value="@Model.Nome"
                        required>
                 <div class="invalid-feedback">
                     Informe um título.
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="caminhoImagem">Capa</label>
+                <label for="imagem">Capa</label>
                 <div class="input-group mb-3">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="caminhoImagem" name="caminhoImagem" value="@Model.CaminhoImagem" required>
-                        <label class="custom-file-label" for="caminhoImagem"
+                        <input type="file" class="custom-file-input" id="imagem" name="imagem" value="@Model.Imagem" required>
+                        <label class="custom-file-label" for="imagem"
                                data-browse="Procurar">Escolha uma imagem</label>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="categorias">Categoria</label>
-                <select multiple class="form-control" id="categorias" name="categorias" required>
+                <label for="categorias">Genero</label>
+                <select multiple class="form-control" id="generos" name="generos" required>
                     <option value="1">Desenvolvimento pessoal</option>
                     <option value="2">Ficção</option>
                     <option value="3">Romance</option>
@@ -51,8 +51,8 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label for="sinopse">Sinopse</label>
-                <textarea class="form-control" id="sinopse" name="sinopse" cols="30" rows="6"
-                          required>@Model.Sinopse</textarea>
+                <textarea class="form-control" id="descricao" name="descricao" cols="30" rows="6"
+                          required>@Model.Descricao</textarea>
                 <div class="invalid-feedback">
                     Informe a sinopse.
                 </div>
@@ -143,7 +143,7 @@
             <div class="col-md-2 mb-3">
                 <label for="espessura">Espessura</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="espessura" name="espessura" value="@Model.Espessura" required>
+                    <input type="text" class="form-control" id="espessura" name="espessura" value="@Model.Comprimento" required>
                     <div class="input-group-append">
                         <span class="input-group-text">cm</span>
                     </div>

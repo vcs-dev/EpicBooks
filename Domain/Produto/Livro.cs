@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Domain.Produto
 {
@@ -9,23 +11,30 @@ namespace Domain.Produto
         public Livro()
         {
             Autores = new List<int>();
-            Categorias = new List<int>();
+            Generos = new List<int>();
+            Status = 0;
         }
-        public string Titulo { get; set; }
-        public string Sinopse { get; set; }
-        public string CaminhoImagem { get; set; }
-        public IList<int> Categorias { get; set; }
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public IFormFile Imagem { get; set; }
+        public IList<int> Generos { get; set; }
         public IList<int> Autores { get; set; }
         public int? Editora { get; set; }
         public string AnoLancamento { get; set; }
         public int? QtdePaginas { get; set; }
-        public int? Peso { get; set; }
         public int? Edicao { get; set; }
         public int? Volume { get; set; }
+        public int? Peso { get; set; }
         public int? Altura { get; set; }
+        public int? Comprimento { get; set; }
         public int? Largura { get; set; }
-        public int? Espessura { get; set; }
         public int? TipoCapa { get; set; }
         public string Isbn { get; set; }
+        public int GrupoPrecificacao { get; set; }
+        public byte Status { get; set; }
+        public string MotivoMudancaStatus { get; set; }
+        public int? CategoriaAtivacao { get; set; }
+        public int? CategoriaInativacao { get; set; }
+        public string PrecoVenda { get; set; }
     }
 }
