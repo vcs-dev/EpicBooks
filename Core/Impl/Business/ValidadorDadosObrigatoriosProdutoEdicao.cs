@@ -1,12 +1,14 @@
 ﻿using Core.Interfaces;
 using Domain;
 using Domain.Produto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Core.Impl.Business
 {
-    public class ValidadorDadosObrigatoriosProduto : IStrategy
+    public class ValidadorDadosObrigatoriosProdutoEdicao : IStrategy
     {
         public string Processar(EntidadeDominio entidade)
         {
@@ -22,6 +24,12 @@ namespace Core.Impl.Business
                     livro.Comprimento == null || livro.Comprimento == 0 || livro.Largura == null || livro.Largura == 0 ||
                     string.IsNullOrEmpty(livro.CaminhoImagem.Trim()) || string.IsNullOrEmpty(livro.Isbn.Trim()) ||
                     livro.QtdePaginas == null || livro.QtdePaginas == 0 || livro.TipoCapa == 0)
+                    return "Os campos com * são de preenchimento obrigatório.";
+                if(livro.Status == 0 && 
+                    (string.IsNullOrEmpty(livro.MotivoMudancaStatus.Trim()) || livro.CategoriaInativacao == null || livro.CategoriaInativacao == 0))
+                    return "Os campos com * são de preenchimento obrigatório.";
+                else if (livro.Status == 1 &&
+                    (string.IsNullOrEmpty(livro.MotivoMudancaStatus.Trim()) || livro.CategoriaAtivacao == null || livro.CategoriaAtivacao == 0))
                     return "Os campos com * são de preenchimento obrigatório.";
             }
             else

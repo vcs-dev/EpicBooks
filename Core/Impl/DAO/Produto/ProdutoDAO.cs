@@ -416,15 +416,19 @@ namespace Core.Impl.Produto.DAO
                         DataCadastro = DateTime.Parse(dataReader["DataCadastro"].ToString()),
                         QtdePaginas = Convert.ToInt32(dataReader["QtdePaginas"]),
                         Edicao = Convert.ToInt32(dataReader["Edicao"]),
-                        Peso = Convert.ToInt32(dataReader["Peso"]),
-                        Altura = Convert.ToDecimal(dataReader["Altura"]),
-                        Comprimento = Convert.ToDecimal(dataReader["Comprimento"]),
-                        Largura = Convert.ToDecimal(dataReader["Largura"]),
                         TipoCapa = Convert.ToInt32(dataReader["TipoCapa"]),
                         GrupoPrecificacao = Convert.ToInt32(dataReader["GrupoPrecificacao"]),
                     };
                     if (!dataReader.IsDBNull(11))
                         livro.Volume = Convert.ToInt32(dataReader["Volume"]);
+                    if (!dataReader.IsDBNull(12))
+                        livro.Peso = Convert.ToInt32(dataReader["Peso"]);
+                    if (!dataReader.IsDBNull(13))
+                        livro.Altura = Convert.ToDecimal(dataReader["Altura"]);
+                    if (!dataReader.IsDBNull(14))
+                        livro.Comprimento = Convert.ToDecimal(dataReader["Comprimento"]);
+                    if (!dataReader.IsDBNull(15))
+                        livro.Largura = Convert.ToDecimal(dataReader["Largura"]);
                     if (!dataReader.IsDBNull(18))
                         livro.MotivoMudancaStatus = dataReader["MotivoMudancaStatus"].ToString();
                     if (!dataReader.IsDBNull(19))

@@ -84,5 +84,29 @@ namespace Web.Areas.Gerencial.Controllers
                 return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
             }
         }
+
+        [Area("Gerencial")]
+        public IActionResult Detalhes(int id)
+        {
+            Livro livro = new Livro();
+            List<Livro> livros;
+            livro.Id = id;
+            resultado = new Facade().Consultar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                livros = new List<Livro>();
+                foreach (var item in resultado.Entidades)
+                {
+                    livros.Add((Livro)item);
+                }
+                return View(livros.FirstOrDefault());
+            }
+        }
     }
 }

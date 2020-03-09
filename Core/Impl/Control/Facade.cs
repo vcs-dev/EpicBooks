@@ -26,8 +26,13 @@ namespace Core.Impl.Control
 
             daos.Add(nameof(Livro), produtoDAO);
 
+            //Regras de salvar
             ValidadorDadosObrigatoriosProduto validadorDadosObrgProd = new ValidadorDadosObrigatoriosProduto();
             InclusaoDataCadastro inclusaoDataCadastro = new InclusaoDataCadastro();
+            //Regra genérica
+            ValidadorIsbn validadorIsbn = new ValidadorIsbn();
+            //Regras de alterar
+            ValidadorDadosObrigatoriosProdutoEdicao validadorDadosObrgProdEdicao = new ValidadorDadosObrigatoriosProdutoEdicao();
 
             List<IStrategy> rnsSalvarProduto = new List<IStrategy>();
             List<IStrategy> rnsAlterarProduto = new List<IStrategy>();
@@ -35,10 +40,13 @@ namespace Core.Impl.Control
             rnsSalvarProduto.Add(validadorDadosObrgProd);
             rnsSalvarProduto.Add(inclusaoDataCadastro);
 
+            rnsAlterarProduto.Add(validadorDadosObrgProdEdicao);
+            rnsAlterarProduto.Add(validadorIsbn);
+
             Dictionary<string, List<IStrategy>> rnsProduto = new Dictionary<string, List<IStrategy>>();
 
             rnsProduto.Add("SALVAR", rnsSalvarProduto);
-            //rnsProduto.Add("ALTERAR", rnsAlterarProduto);
+            rnsProduto.Add("ALTERAR", rnsAlterarProduto);
 
             rns.Add(nameof(Livro), rnsProduto);
             #endregion
