@@ -14,9 +14,10 @@
 <table class="table table-striped text-center self-align-center">
     <thead>
         <tr>
+            <th>Capa</th>
             <th>ISBN</th>
             <th>Título</th>
-            <th>Autores</th>
+            <th>Status</th>
             <th>Lançamento</th>
             <th></th>
             <th></th>
@@ -29,9 +30,10 @@
             foreach (var item in Model)
             {
                 <tr>
+                    <td><img src="@(item.CaminhoImagem)" width="50" height="70" alt="Capa" class="img-thumbnail" /></td>
                     <td>@item.Isbn</td>
                     <td>@item.Nome</td>
-                    <td>@item.Autores.Count()</td>
+                    <td>@(item.Status == 0 ? "Inativo" : "Ativo")</td>
                     <td>@item.AnoLancamento</td>
                     <td>
                         <a href="/Gerencial/Produtos/Detalhes/@item.Id" class="btn btn-primary" title="Detalhes">
@@ -57,50 +59,5 @@
                 <td></td>
             </tr>
         }
-        @*<tr>
-            <td>348328943212</td>
-            <td>O poder do hábito</td>
-            <td>Fulano</td>
-            <td>2010</td>
-            <td>
-                <a href="gerenciallivros.html" class="btn btn-primary" title="Detalhes">
-                    <i class="fa fa-info-circle"></i>
-                </a>
-            </td>
-            <td><a href="" class="btn btn-secondary" title="Editar"><i class="fa fa-edit"></i></a></td>
-            <td>
-                <a href="" class="btn btn-danger" title="Inativar"><i class="fa fa-trash-alt"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td>392498324823</td>
-            <td>Como fazer amigos e influenciar pessoas</td>
-            <td>Dale Carnegie</td>
-            <td>1992</td>
-            <td>
-                <a href="gerenciallivros.html" class="btn btn-primary" title="Detalhes">
-                    <i class="fa fa-info-circle"></i>
-                </a>
-            </td>
-            <td><a href="" class="btn btn-secondary" title="Editar"><i class="fa fa-edit"></i></a></td>
-            <td>
-                <a href="" class="btn btn-danger" title="Inativar"><i class="fa fa-trash-alt"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td>340234099009</td>
-            <td>O príncipe</td>
-            <td>Nicolau Maquiavel</td>
-            <td>1510</td>
-            <td>
-                <a href="gerenciallivros.html" class="btn btn-primary" title="Detalhes">
-                    <i class="fa fa-info-circle"></i>
-                </a>
-            </td>
-            <td><a href="" class="btn btn-secondary" title="Editar"><i class="fa fa-edit"></i></a></td>
-            <td>
-                <a href="" class="btn btn-danger" title="Inativar"><i class="fa fa-trash-alt"></i></a>
-            </td>
-        </tr>*@
     </tbody>
 </table>

@@ -280,6 +280,8 @@ namespace Core.Impl.Produto.DAO
                     cmdTextolivro = "SELECT * FROM Produtos WHERE ProdutoId = @ProdutoId";
                 else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
                     cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like %@Nome%";
+                else if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome) && !string.IsNullOrEmpty(livro.Isbn))
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE Isbn = @Isbn";
 
                 SqlCommand comandolivro = new SqlCommand(cmdTextolivro, conexao);
 
@@ -287,6 +289,8 @@ namespace Core.Impl.Produto.DAO
                     comandolivro.Parameters.AddWithValue("@ProdutoId", livro.Id);
                 else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
                     comandolivro.Parameters.AddWithValue("@Nome", livro.Nome);
+                else if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome) && !string.IsNullOrEmpty(livro.Isbn))
+                    comandolivro.Parameters.AddWithValue("@Isbn", livro.Nome);
 
                 SqlDataReader drlivro = comandolivro.ExecuteReader();
                 comandolivro.Dispose();

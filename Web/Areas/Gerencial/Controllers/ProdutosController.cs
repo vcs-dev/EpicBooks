@@ -20,6 +20,7 @@ namespace Web.Areas.Gerencial.Controllers
         {
             _appEnvironment = appEnvironment;
         }
+
         [Area("Gerencial")]
         public IActionResult Index()
         {
@@ -54,34 +55,43 @@ namespace Web.Areas.Gerencial.Controllers
         [HttpPost]
         public async Task<IActionResult> CadastrarAsync(Livro livro)
         {
-            string pastaDestino = "produtos";
-            string nomeArquivo = Path.GetRandomFileName();
-            if (livro.Imagem.FileName.Contains("jpg"))
-                nomeArquivo += ".jpg";
-            else
-                return BadRequest();
-
-            string caminho_WebRoot = _appEnvironment.WebRootPath;
-            string caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
-            string caminhoDestinoArquivoCompleto = caminho_WebRoot + caminhoCurtoENomeArquivo;
-            using (var stream = new FileStream(caminhoDestinoArquivoCompleto, FileMode.Create))
-            {
-                await livro.Imagem.CopyToAsync(stream);
-            }
-
-            if (!string.IsNullOrEmpty(caminhoCurtoENomeArquivo.Trim()))
-                livro.CaminhoImagem = caminhoCurtoENomeArquivo;
-
-            resultado = new Facade().Salvar(livro);
+            resultado = new Facade().Consultar(livro);
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
-                TempData["MsgErro"] = resultado.Msg;
-                return View();
+                string pastaDestino = "produtos";
+                string nomeArquivo = Path.GetRandomFileName();
+                if (livro.Imagem.FileName.Contains("jpg"))
+                    nomeArquivo += ".jpg";
+                else
+                    return BadRequest();
+
+                string caminho_WebRoot = _appEnvironment.WebRootPath;
+                string caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
+                string caminhoDestinoArquivoCompleto = caminho_WebRoot + caminhoCurtoENomeArquivo;
+                using (var stream = new FileStream(caminhoDestinoArquivoCompleto, FileMode.Create))
+                {
+                    await livro.Imagem.CopyToAsync(stream);
+                }
+
+                if (!string.IsNullOrEmpty(caminhoCurtoENomeArquivo.Trim()))
+                    livro.CaminhoImagem = caminhoCurtoENomeArquivo.Replace("\\", "/");
+
+                resultado = new Facade().Salvar(livro);
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                {
+                    TempData["MsgErro"] = resultado.Msg;
+                    return View();
+                }
+                else
+                {
+                    TempData["MsgSucesso"] = resultado.Msg;
+                    return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+                }
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
-                return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+                TempData["MsgErro"] = "Isbn já cadastrado.";
+                return View("index");
             }
         }
 
@@ -108,5 +118,47 @@ namespace Web.Areas.Gerencial.Controllers
                 return View(livros.FirstOrDefault());
             }
         }
+
+        [Area("Gerencial")]
+        public IActionResult Editar(int id)
+        {
+            Livro livro = new Livro();
+            List<Livro> livros;
+            livro.Id = id;
+            resultado = new Facade().Consultar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                livros = new List<Livro>();
+                foreach (var item in resultado.Entidades)
+                {
+                    livros.Add((Livro)item);
+                }
+                return View(livros.FirstOrDefault());
+            }
+        }
+
+        [Area("Gerencial")]
+        [HttpPost]
+        public IActionResult Editar(Livro livro)
+        {
+            resultado = new Facade().Alterar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                return View("index");
+            }
+        }
     }
 }
+

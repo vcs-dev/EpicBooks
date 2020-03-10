@@ -20,8 +20,6 @@ namespace Core.Impl.Business
                     livro.Generos.Count() == 0 || livro.Autores.Count() == 0 ||
                     livro.Editora == null || livro.Editora == 0 || livro.GrupoPrecificacao == 0 ||
                     string.IsNullOrEmpty(livro.AnoLancamento.Trim()) || livro.Edicao == null || livro.Editora == 0 ||
-                    livro.Peso == null || livro.Peso == 0 || livro.Altura == null || livro.Altura == 0 ||
-                    livro.Comprimento == null || livro.Comprimento == 0 || livro.Largura == null || livro.Largura == 0 ||
                     string.IsNullOrEmpty(livro.CaminhoImagem.Trim()) || string.IsNullOrEmpty(livro.Isbn.Trim()) ||
                     livro.QtdePaginas == null || livro.QtdePaginas == 0 || livro.TipoCapa == 0)
                     return "Os campos com * são de preenchimento obrigatório.";
