@@ -71,7 +71,7 @@ namespace Core.Impl.Control
                 }
                 catch (Exception e)
                 {
-                    resultado.Msg = "Não foi possível realizar o registro!\n" + e.Message;
+                    resultado.Msg = e.Message;
                 }
             }
             else
@@ -94,7 +94,7 @@ namespace Core.Impl.Control
             }
             catch (Exception e)
             {
-                resultado.Msg = "Não foi possível realizar a consulta!\n" + e.Message;
+                resultado.Msg = e.Message;
             }
 
             return resultado;
@@ -119,7 +119,7 @@ namespace Core.Impl.Control
                 }
                 catch (Exception e)
                 {
-                    resultado.Msg = "Não foi possível realizar o registro!\n" + e.Message;
+                    resultado.Msg = e.Message;
                 }
             }
             else
@@ -148,7 +148,7 @@ namespace Core.Impl.Control
                 }
                 catch (Exception e)
                 {
-                    resultado.Msg = "Não foi possível realizar o registro!\n" + e.Message;
+                    resultado.Msg = e.Message;
                 }
             }
             else

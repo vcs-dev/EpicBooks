@@ -4,6 +4,7 @@ using Domain.Produto;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 
 namespace Core.Impl.Produto.DAO
@@ -150,7 +151,6 @@ namespace Core.Impl.Produto.DAO
             Livro livro = (Livro)entidade;
             string cmdTextolivro;
             string cmdTextoGenero;
-            string cmdTextoPais;
 
             try
             {
@@ -171,12 +171,12 @@ namespace Core.Impl.Produto.DAO
                                     "Peso = @Peso," +
                                     "Altura = @Altura," +
                                     "Comprimento = @Comprimento," +
-                                    "Largura = @Lancamento," +
+                                    "Largura = @Largura," +
                                     "TipoCapa = @TipoCapa," +
                                     "GrupoPrecificacao = @GrupoPrecificacao," +
                                     "MotivoMudancaStatus = @MotivoMudancaStatus," +
                                     "CategoriaAtivacao = @CategoriaAtivacao," +
-                                    "CategoriaInativacao = @CategoriaAtivacao" +
+                                    "CategoriaInativacao = @CategoriaInativacao " +
                                 "WHERE ProdutoId = @ProdutoId";
 
                 SqlCommand comandolivro = new SqlCommand(cmdTextolivro, conexao, transacao);
@@ -189,19 +189,46 @@ namespace Core.Impl.Produto.DAO
                 comandolivro.Parameters.AddWithValue("@Editora", livro.Editora);
                 comandolivro.Parameters.AddWithValue("@AnoLancamento", livro.AnoLancamento);
                 comandolivro.Parameters.AddWithValue("@Isbn", livro.Isbn);
-                comandolivro.Parameters.AddWithValue("@DataCadastro", livro.DataCadastro);
                 comandolivro.Parameters.AddWithValue("@QtdePaginas", livro.QtdePaginas);
-                comandolivro.Parameters.AddWithValue("@Edicao", livro.Edicao);
-                comandolivro.Parameters.AddWithValue("@Volume", livro.Volume);
-                comandolivro.Parameters.AddWithValue("@Peso", livro.Peso);
-                comandolivro.Parameters.AddWithValue("@Altura", livro.Altura);
-                comandolivro.Parameters.AddWithValue("@Comprimento", livro.Comprimento);
-                comandolivro.Parameters.AddWithValue("@Largura", livro.Largura);
+                if(livro.Edicao == null)
+                    comandolivro.Parameters.AddWithValue("@Edicao", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Edicao", livro.Edicao);
+                if(livro.Volume == null)
+                    comandolivro.Parameters.AddWithValue("@Volume", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Volume", livro.Volume);
+                if (livro.Peso == null)
+                    comandolivro.Parameters.AddWithValue("@Peso", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Peso", livro.Peso);
+                if (livro.Altura == null)
+                    comandolivro.Parameters.AddWithValue("@Altura", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Altura", livro.Altura);
+
+                if (livro.Comprimento == null)
+                    comandolivro.Parameters.AddWithValue("@Comprimento", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Comprimento", livro.Comprimento);
+                if (livro.Largura == null)
+                    comandolivro.Parameters.AddWithValue("@Largura", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Largura", livro.Largura);
                 comandolivro.Parameters.AddWithValue("@TipoCapa", livro.TipoCapa);
                 comandolivro.Parameters.AddWithValue("@GrupoPrecificacao", livro.GrupoPrecificacao);
-                comandolivro.Parameters.AddWithValue("@MotivoMudancaStatus", livro.MotivoMudancaStatus);
-                comandolivro.Parameters.AddWithValue("@CategoriaAtivacao", livro.CategoriaAtivacao);
-                comandolivro.Parameters.AddWithValue("@CategoriaInativacao", livro.CategoriaInativacao);
+                if (livro.MotivoMudancaStatus == null)
+                    comandolivro.Parameters.AddWithValue("@MotivoMudancaStatus", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@MotivoMudancaStatus", livro.MotivoMudancaStatus);
+                if (livro.CategoriaAtivacao == null)
+                    comandolivro.Parameters.AddWithValue("@CategoriaAtivacao", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@CategoriaAtivacao", livro.CategoriaAtivacao);
+                if (livro.CategoriaInativacao == null)
+                    comandolivro.Parameters.AddWithValue("@CategoriaInativacao", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@CategoriaInativacao", livro.CategoriaInativacao);
 
                 comandolivro.ExecuteNonQuery();
 
@@ -231,17 +258,9 @@ namespace Core.Impl.Produto.DAO
                     comandoGenero.Parameters.Clear();
                 }
 
-                cmdTextoPais = "DELETE FROM livrosPaisesProibidos " +
-                               "WHERE ProdutoId = @ProdutoId";
-
-                SqlCommand comandoPais = new SqlCommand(cmdTextoPais, conexao, transacao);
-                comandoPais.Parameters.AddWithValue("@ProdutoId", livro.Id);
-                comandoPais.ExecuteNonQuery();
-
                 Commit();
                 comandolivro.Dispose();
                 comandoGenero.Dispose();
-                comandoPais.Dispose();
             }
             catch (SqlException e)
             {
@@ -249,6 +268,21 @@ namespace Core.Impl.Produto.DAO
                 throw e;
             }
             catch (InvalidOperationException e)
+            {
+                Rollback();
+                throw e;
+            }
+            catch (InvalidCastException e)
+            {
+                Rollback();
+                throw e;
+            }
+            catch (IOException e)
+            {
+                Rollback();
+                throw e;
+            }
+            catch (Exception e)
             {
                 Rollback();
                 throw e;
@@ -274,23 +308,25 @@ namespace Core.Impl.Produto.DAO
             {
                 Conectar();
 
-                if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome))
+                if (!string.IsNullOrEmpty(livro.Isbn) && livro.Id != 0)
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE ProdutoId = @ProdutoId AND Isbn = @Isbn";
+                else if (!string.IsNullOrEmpty(livro.Isbn))
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE Isbn = @Isbn";
+                else if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome))
                     cmdTextolivro = "SELECT * FROM Produtos";
                 else if (livro.Id != 0 && string.IsNullOrEmpty(livro.Nome))
                     cmdTextolivro = "SELECT * FROM Produtos WHERE ProdutoId = @ProdutoId";
                 else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
-                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like %@Nome%";
-                else if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome) && !string.IsNullOrEmpty(livro.Isbn))
-                    cmdTextolivro = "SELECT * FROM Produtos WHERE Isbn = @Isbn";
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like '%@Nome%'";
 
                 SqlCommand comandolivro = new SqlCommand(cmdTextolivro, conexao);
 
-                if (livro.Id != 0 && string.IsNullOrEmpty(livro.Nome))
+                if (livro.Id != 0)
                     comandolivro.Parameters.AddWithValue("@ProdutoId", livro.Id);
-                else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
+                if (!string.IsNullOrEmpty(livro.Isbn))
+                    comandolivro.Parameters.AddWithValue("@Isbn", livro.Isbn);
+                else if(!string.IsNullOrEmpty(livro.Nome))
                     comandolivro.Parameters.AddWithValue("@Nome", livro.Nome);
-                else if (livro.Id == 0 && string.IsNullOrEmpty(livro.Nome) && !string.IsNullOrEmpty(livro.Isbn))
-                    comandolivro.Parameters.AddWithValue("@Isbn", livro.Nome);
 
                 SqlDataReader drlivro = comandolivro.ExecuteReader();
                 comandolivro.Dispose();

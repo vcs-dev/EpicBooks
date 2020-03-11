@@ -7,9 +7,28 @@
 }
 
 <div class="container">
-    @await Html.PartialAsync("_produto", Model)
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        @if (ViewData["Title"].ToString().ToLower().Contains("cadastro"))
+        {
+            <h1 class="h2">Cadastro de livros</h1>
+        }
+        else if (ViewData["Title"].ToString().ToLower().Contains("detalhes"))
+        {
+            <h1 class="h2">Detalhes do livro</h1>
+        }
+        else
+        {
+            <h1 class="h2">Edição de livros</h1>
+        }
+    </div>
+    <div class="row order-md-1 justify-content-center">
+        <form class="needs-validation" novalidate action="" method="post" enctype="multipart/form-data">
+            @await Html.PartialAsync("_produto", Model)
+        </form>
+    </div>
 </div>
 
 @section Scripts{
     <script src="~/js/form-validation.js"></script>
+    <script src="~/js/Produto/produto.js"></script>
 }

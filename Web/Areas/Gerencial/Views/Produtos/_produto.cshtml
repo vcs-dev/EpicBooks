@@ -1,206 +1,214 @@
 ﻿@model Domain.Produto.Livro
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        @if (ViewData["Title"].ToString().ToLower().Contains("cadastro"))
-        {
-            <h1 class="h2">Cadastro de livros</h1>
-        }
-        else if (ViewData["Title"].ToString().ToLower().Contains("detalhes"))
-        {
-            <h1 class="h2">Detalhes do livro</h1>
-        }
-        else
-        {
-            <h1 class="h2">Edição de livros</h1>
-        }
-    </div>
-<div class="row order-md-1 justify-content-center">
-    <form class="needs-validation" novalidate action="Gerencial/Produtos/Cadastrar" method="post" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="titulo">Título</label>
-                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="nome" name="nome" value="@Model.Nome"
-                       required>
-                <div class="invalid-feedback">
-                    Informe um título.
-                </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="titulo">Título</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="nome" name="nome" value="@Model.Nome"
+                   required>
+            <div class="invalid-feedback">
+                Informe um título.
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="imagem">Capa</label>
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <input type="file" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control custom-file-input" id="imagem" name="imagem" value="@Model.Imagem" required>
-                        <label class="custom-file-label" for="imagem"
-                               data-browse="Procurar">Escolha uma imagem</label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="categorias">Genero</label>
-                <select multiple class="form-control" id="generos" name="generos" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                    <option value="1">Desenvolvimento pessoal</option>
-                    <option value="2">Ficção</option>
-                    <option value="3">Romance</option>
-                    <option value="4">História</option>
-                    <option value="5">Terror</option>
-                </select>
-                <div class="invalid-feedback">
-                    Informe pelo menos uma categoria.
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="autores">Autor</label>
-                <select multiple class="form-control" id="autores" name="autores" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                    <option selected="@(Model.Autores.Contains(1))" value="1">Dale Carnegie</option>
-                    <option selected="@(Model.Autores.Contains(2))" value="2">Jeff Sutherland</option>
-                    <option selected="@(Model.Autores.Contains(3))" value="3">J. R. R. Tolkien</option>
-                    <option selected="@(Model.Autores.Contains(4))" value="4">Idalberto Chiavenato</option>
-                    <option selected="@(Model.Autores.Contains(5))" value="5">Gabriel Torres</option>
-                </select>
-                <div class="invalid-feedback">
-                    Informe pelo menos uma autor.
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <label for="sinopse">Sinopse</label>
-                <textarea class="form-control" id="descricao" name="descricao" cols="30" rows="6"
-                          required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">@Model.Descricao</textarea>
-                <div class="invalid-feedback">
-                    Informe a sinopse.
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="editora">Editora</label>
-                <select class="form-control" id="editora" name="editora" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                    <option></option>
-                    <option selected="@(Model.Editora == 1)" value="1">Leya</option>
-                    <option selected="@(Model.Editora == 2)" value="2">Abril</option>
-                    <option selected="@(Model.Editora == 3)" value="3">Novo mundo</option>
-                    <option selected="@(Model.Editora == 4)" value="4">Casa do código</option>
-                    <option selected="@(Model.Editora == 5)" value="5">Objetiva</option>
-                </select>
-                <div class="invalid-feedback">
-                    Informe uma editora.
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="grupoPrecificacao">Grupo de precificação</label>
-                <select class="form-control" id="grupoPrecificacao" name="grupoPrecificacao" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                    <option></option>
-                    <option selected="@(Model.GrupoPrecificacao == 1)" value="1">Bronze</option>
-                    <option selected="@(Model.GrupoPrecificacao == 2)" value="2">Prata</option>
-                    <option selected="@(Model.GrupoPrecificacao == 3)" value="3">Ouro</option>
-                </select>
-                <div class="invalid-feedback">
-                    Informe um grupo de precificação.
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="anoLancamento">Ano de lançamento</label>
-                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="anoLancamento" name="anoLancamento" placeholder="aaaa" value="@Model.AnoLancamento" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Informe o ano de lançamento.
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="edicao">Edição</label>
-                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="edicao" name="edicao" placeholder="1ª" value="@Model.Edicao" required>
-                <div class="invalid-feedback">
-                    Informe a edição.
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="volume">Volume</label>
-                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="volume" name="volume" value="@Model.Volume">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="tipocapa">Tipo de capa</label>
-                <select class="form-control" id="tipoCapa" name="tipoCapa" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                    <option></option>
-                    <option selected="@(Model.TipoCapa == 1)" value="1">Mole</option>
-                    <option selected="@(Model.TipoCapa == 2)" value="2">Dura</option>
-                </select>
-                <div class="invalid-feedback">
-                    Informe o tipo de capa.
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="isbn">ISBN</label>
-                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="isbn" name="isbn" value="@Model.Isbn" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Informe o ISBN.
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="qtdePaginas">Qtde de páginas</label>
-                <input readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" type="text" class="form-control" id="qtdePaginas" name="qtdePaginas" value="@Model.QtdePaginas" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Informe a quantidade de páginas.
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="altura">Altura</label>
-                <div class="input-group">
-                    <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="altura" name="altura" value="@Model.Altura" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text">cm</span>
-                    </div>
-                    <div class="invalid-feedback">
-                        Informe altura.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="comprimento">Comprimento</label>
-                <div class="input-group">
-                    <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="comprimento" name="comprimento" value="@Model.Comprimento" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text">cm</span>
-                    </div>
-                    <div class="invalid-feedback">
-                        Informe a largura.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="largura">Largura</label>
-                <div class="input-group">
-                    <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="largura" name="largura" value="@Model.Largura" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text">cm</span>
-                    </div>
-                    <div class="invalid-feedback">
-                        Informe a espessura.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-
-                <label for="peso">Peso</label>
-                <div class="input-group">
-                    <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="peso" name="peso" value="@Model.Peso" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text">gr</span>
-                    </div>
-                    <div class="invalid-feedback">
-                        Informe o peso.
-                    </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="imagem">Capa</label>
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control custom-file-input" id="imagem" name="imagem" value="@Model.Imagem" required>
+                    <label class="custom-file-label" for="imagem"
+                           data-browse="Procurar">Escolha uma imagem</label>
                 </div>
             </div>
         </div>
-        <hr class="mb-4">
-        @if (ViewData["Title"].ToString().ToLower().Contains("cadastro"))
-        {
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar livro</button>
-        }
-        else if (ViewData["Title"].ToString().ToLower().Contains("detalhes"))
-        {
-            <span class="btn btn-primary btn-lg btn-block">Editar</span>
-        }
-        else
-        {
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Salvar alterações</button>
-        }
-    </form>
-</div>
+        <div class="col-md-6 mb-3">
+            <label for="categorias">Genero</label>
+            <select multiple class="form-control" id="generos" name="generos" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option selected="@(Model.Generos.Contains(1))" value="1">Ficção</option>
+                <option selected="@(Model.Generos.Contains(2))" value="2">Ficção Científica</option>
+                <option selected="@(Model.Generos.Contains(3))" value="3">Romance</option>
+                <option selected="@(Model.Generos.Contains(4))" value="4">Ação</option>
+                <option selected="@(Model.Generos.Contains(5))" value="5">Aventura</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe pelo menos uma categoria.
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="autores">Autor</label>
+            <select multiple class="form-control" id="autores" name="autores" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option selected="@(Model.Autores.Contains(1))" value="1">J. R. R. Tolkien</option>
+                <option selected="@(Model.Autores.Contains(2))" value="2">J. J. Sutherland</option>
+                <option selected="@(Model.Autores.Contains(3))" value="3">George R.R. Martin</option>
+                <option selected="@(Model.Autores.Contains(4))" value="4">Dale Carnegie</option>
+                <option selected="@(Model.Autores.Contains(5))" value="5">T. Harv Eker</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe pelo menos uma autor.
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <label for="sinopse">Sinopse</label>
+            <textarea class="form-control" id="descricao" name="descricao" cols="30" rows="6"
+                      required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">@Model.Descricao</textarea>
+            <div class="invalid-feedback">
+                Informe a sinopse.
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="editora">Editora</label>
+            <select class="form-control" id="editora" name="editora" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.Editora == 1)" value="1">Leya</option>
+                <option selected="@(Model.Editora == 2)" value="2">Casa do Código</option>
+                <option selected="@(Model.Editora == 3)" value="3">Cengage Learning</option>
+                <option selected="@(Model.Editora == 4)" value="4">Elsevier</option>
+                <option selected="@(Model.Editora == 5)" value="5">Senac</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe uma editora.
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="grupoPrecificacao">Grupo de precificação</label>
+            <select class="form-control" id="grupoPrecificacao" name="grupoPrecificacao" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.GrupoPrecificacao == 1)" value="1">Bronze</option>
+                <option selected="@(Model.GrupoPrecificacao == 2)" value="2">Prata</option>
+                <option selected="@(Model.GrupoPrecificacao == 3)" value="3">Ouro</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe um grupo de precificação.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="anoLancamento">Ano de lançamento</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="anoLancamento" name="anoLancamento" placeholder="aaaa" maxlength="4" value="@Model.AnoLancamento" required>
+            <div class="invalid-feedback" style="width: 100%;">
+                Informe o ano de lançamento.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="edicao">Edição</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="edicao" name="edicao" placeholder="1ª" value="@Model.Edicao" required>
+            <div class="invalid-feedback">
+                Informe a edição.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="volume">Volume</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="volume" name="volume" value="@Model.Volume">
+            <div class="invalid-feedback">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="tipocapa">Tipo de capa</label>
+            <select class="form-control" id="tipoCapa" name="tipoCapa" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.TipoCapa == 1)" value="1">Mole</option>
+                <option selected="@(Model.TipoCapa == 2)" value="2">Dura</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe o tipo de capa.
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="isbn">ISBN</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="isbn" name="isbn" value="@Model.Isbn" required>
+            <div class="invalid-feedback" style="width: 100%;">
+                Informe o ISBN.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="qtdePaginas">Qtde de páginas</label>
+            <input readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" type="text" class="form-control" id="qtdePaginas" name="qtdePaginas" value="@Model.QtdePaginas" required>
+            <div class="invalid-feedback" style="width: 100%;">
+                Informe a quantidade de páginas.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="altura">Altura</label>
+            <div class="input-group">
+                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="altura" name="altura" value="@Model.Altura">
+                <div class="input-group-append">
+                    <span class="input-group-text">cm</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="comprimento">Comprimento</label>
+            <div class="input-group">
+                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="comprimento" name="comprimento" value="@Model.Comprimento">
+                <div class="input-group-append">
+                    <span class="input-group-text">cm</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="largura">Largura</label>
+            <div class="input-group">
+                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="largura" name="largura" value="@Model.Largura">
+                <div class="input-group-append">
+                    <span class="input-group-text">cm</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+
+            <label for="peso">Peso</label>
+            <div class="input-group">
+                <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="peso" name="peso" value="@Model.Peso">
+                <div class="input-group-append">
+                    <span class="input-group-text">gr</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="status">Status</label>
+            <select class="form-control" id="status" name="status" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.Status == 1)" value="1">Ativo</option>
+                <option selected="@(Model.Status == 0)" value="0">Inativo</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3 d-none">
+            <label for="motivoMudancaStatus">Motivo da mudança de status</label>
+            <input type="text" class="form-control"  id="motivoMudancaStatus" name="motivoMudancaStatus" value="@Model.MotivoMudancaStatus" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <div class="invalid-feedback" style="width: 100%;">
+                Informe o motivo da mudança de status.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3 d-none">
+            <label for="categoriaAtivacao">Categoria de ativação</label>
+            <select class="form-control" id="categoriaAtivacao" name="categoriaAtivacao" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.CategoriaAtivacao == 1)" value="1">Produto novo</option>
+                <option selected="@(Model.CategoriaAtivacao == 2)" value="2">Liberação judicial</option>
+                <option selected="@(Model.CategoriaAtivacao == 3)" value="3">Reabastecimento de estoque</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe a categoria de ativação.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3 d-none">
+            <label for="categoriaInativacao">Categoria de inativação</label>
+            <select class="form-control" id="categoriaInativacao" name="categoriaInativacao" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                <option></option>
+                <option selected="@(Model.CategoriaInativacao == 1)" value="1">Sem estoque</option>
+                <option selected="@(Model.CategoriaInativacao == 2)" value="2">Imposição legal</option>
+            </select>
+            <div class="invalid-feedback">
+                Informe a categoria de inativação.
+            </div>
+        </div>
+    </div>
+<hr class="mb-4">
+@if (ViewData["Title"].ToString().ToLower().Contains("cadastro"))
+{
+    <button class="btn btn-primary btn-lg btn-block" id="btnCadastrar" type="submit">Cadastrar livro</button>
+}
+else if (ViewData["Title"].ToString().ToLower().Contains("detalhes"))
+{
+    <a href="/Gerencial/Produtos/Editar/@Model.Id" class="btn btn-primary btn-lg btn-block" id="btnEditar" type="submit">Editar</a>
+}
+else
+{
+    <button class="btn btn-primary btn-lg btn-block" id="btnSalvar" type="submit">Salvar</button>
+}

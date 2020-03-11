@@ -23,7 +23,7 @@ namespace Core.Impl.Business
                     string.IsNullOrEmpty(livro.CaminhoImagem.Trim()) || string.IsNullOrEmpty(livro.Isbn.Trim()) ||
                     livro.QtdePaginas == null || livro.QtdePaginas == 0 || livro.TipoCapa == 0)
                     return "Os campos com * são de preenchimento obrigatório.";
-                if(livro.Status == 0 && 
+                if (livro.Status == 0 &&
                     (string.IsNullOrEmpty(livro.MotivoMudancaStatus.Trim()) || livro.CategoriaInativacao == null || livro.CategoriaInativacao == 0))
                     return "Os campos com * são de preenchimento obrigatório.";
                 else if (livro.Status == 1 &&

@@ -145,8 +145,25 @@ namespace Web.Areas.Gerencial.Controllers
 
         [Area("Gerencial")]
         [HttpPost]
-        public IActionResult Editar(Livro livro)
+        public async Task<IActionResult> EditarAsync(Livro livro)
         {
+            string pastaDestino = "produtos";
+            string nomeArquivo = Path.GetRandomFileName();
+            if (livro.Imagem.FileName.Contains("jpg"))
+                nomeArquivo += ".jpg";
+            else
+                return BadRequest();
+
+            string caminho_WebRoot = _appEnvironment.WebRootPath;
+            string caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
+            string caminhoDestinoArquivoCompleto = caminho_WebRoot + caminhoCurtoENomeArquivo;
+            using (var stream = new FileStream(caminhoDestinoArquivoCompleto, FileMode.Create))
+            {
+                await livro.Imagem.CopyToAsync(stream);
+            }
+
+            if (!string.IsNullOrEmpty(caminhoCurtoENomeArquivo.Trim()))
+                livro.CaminhoImagem = caminhoCurtoENomeArquivo.Replace("\\", "/");
             resultado = new Facade().Alterar(livro);
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
@@ -156,7 +173,7 @@ namespace Web.Areas.Gerencial.Controllers
             else
             {
                 TempData["MsgSucesso"] = resultado.Msg;
-                return View("index");
+                return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
             }
         }
     }
