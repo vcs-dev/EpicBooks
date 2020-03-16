@@ -58,7 +58,7 @@ namespace Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Gerencial}/{controller=Produtos}/{action=Index}/{id?}");
+                    pattern: "{area=Loja}/{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

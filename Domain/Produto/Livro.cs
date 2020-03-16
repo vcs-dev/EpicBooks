@@ -13,11 +13,13 @@ namespace Domain.Produto
             Autores = new List<int>();
             Generos = new List<int>();
             Status = 0;
+            AlterarImagem = false;
         }
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public IFormFile Imagem { get; set; }
         public string CaminhoImagem { get; set; }
+        public string CaminhoImagemBackup { get; set; }
         public IList<int> Generos { get; set; }
         public IList<int> Autores { get; set; }
         public int? Editora { get; set; }
@@ -37,5 +39,6 @@ namespace Domain.Produto
         public int? CategoriaAtivacao { get; set; }
         public int? CategoriaInativacao { get; set; }
         public string PrecoVenda { get; set; }
+        public bool AlterarImagem { get; set; }
     }
 }

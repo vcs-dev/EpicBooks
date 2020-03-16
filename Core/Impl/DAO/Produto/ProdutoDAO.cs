@@ -77,15 +77,31 @@ namespace Core.Impl.Produto.DAO
                 comandolivro.Parameters.AddWithValue("@Isbn", livro.Isbn);
                 comandolivro.Parameters.AddWithValue("@DataCadastro", livro.DataCadastro);
                 comandolivro.Parameters.AddWithValue("@QtdePaginas", livro.QtdePaginas);
-                comandolivro.Parameters.AddWithValue("@Edicao", livro.Edicao);
-                if (livro.Volume == null || livro.Volume == 0)
+                if (livro.Edicao == null)
+                    comandolivro.Parameters.AddWithValue("@Edicao", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Edicao", livro.Edicao);
+                if (livro.Volume == null)
                     comandolivro.Parameters.AddWithValue("@Volume", DBNull.Value);
                 else
                     comandolivro.Parameters.AddWithValue("@Volume", livro.Volume);
-                comandolivro.Parameters.AddWithValue("@Peso", livro.Peso);
-                comandolivro.Parameters.AddWithValue("@Altura", livro.Altura);
-                comandolivro.Parameters.AddWithValue("@Comprimento", livro.Comprimento);
-                comandolivro.Parameters.AddWithValue("@Largura", livro.Largura);
+                if (livro.Peso == null)
+                    comandolivro.Parameters.AddWithValue("@Peso", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Peso", livro.Peso);
+                if (livro.Altura == null)
+                    comandolivro.Parameters.AddWithValue("@Altura", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Altura", livro.Altura);
+
+                if (livro.Comprimento == null)
+                    comandolivro.Parameters.AddWithValue("@Comprimento", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Comprimento", livro.Comprimento);
+                if (livro.Largura == null)
+                    comandolivro.Parameters.AddWithValue("@Largura", DBNull.Value);
+                else
+                    comandolivro.Parameters.AddWithValue("@Largura", livro.Largura);
                 comandolivro.Parameters.AddWithValue("@TipoCapa", livro.TipoCapa);
                 comandolivro.Parameters.AddWithValue("@GrupoPrecificacao", livro.GrupoPrecificacao);
 

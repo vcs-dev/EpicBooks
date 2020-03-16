@@ -24,6 +24,7 @@
     <div class="row order-md-1 justify-content-center">
         <form class="needs-validation" novalidate action="/Gerencial/Produtos/Editar/" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.CaminhoImagemBackup)
             @await Html.PartialAsync("_produto", Model)
         </form>
     </div>

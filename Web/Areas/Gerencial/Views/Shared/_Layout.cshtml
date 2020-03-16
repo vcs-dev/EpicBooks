@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="~/css/font-awesome.css">
     <link rel="stylesheet" href="~/css/dashboard.css">
-    @RenderSectionAsync("Styles", required: false);
+    @RenderSection("Styles", required: false)
     <title>Gerencial - @ViewData["Title"]</title>
 </head>
 
@@ -67,7 +67,7 @@
     </div>
     <script src="~/lib/jquery/dist/jquery-v3.4.1.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    @RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>
