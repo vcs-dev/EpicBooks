@@ -1,5 +1,6 @@
 $(document).ready(function () {
     const valStatus = $('#status').val();
+
     $('#status').on('change', function () {
         if ($('#status').val() !== valStatus) {
             $('#divMudaStatus').removeClass('d-none');
@@ -32,5 +33,17 @@ $(document).ready(function () {
             $('#categoriaInativacao').val('');
             $('#categoriaInativacao').removeAttr('required');
         }
+    });
+
+    $('#btnConsultarProduto').on('click', function () {
+        $.ajax({
+            type: "get",
+            url: "/Gerencial/Produtos/Consultar/",
+            data: {stringBusca : $('#stringBusca').val()},
+            dataType: "html",
+            success: function (response) {
+                $("#listaProdutos").html(response);
+            }
+        });
     });
 });

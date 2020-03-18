@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -218,6 +219,35 @@ namespace Web.Areas.Gerencial.Controllers
                 FileInfo fi = new FileInfo(caminhoWebRoot + caminhoImagemAntiga);
                 fi.Delete();
                 return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+            }
+        }
+        [Area("Gerencial")]
+        public PartialViewResult Consultar(string stringBusca)
+        {
+            if (string.IsNullOrEmpty(stringBusca) || string.IsNullOrWhiteSpace(stringBusca))
+                return PartialView("_produtos");
+
+            List<Livro> livros;
+            Livro livro = new Livro
+            {
+                Nome = stringBusca
+            };
+
+            resultado = new Facade().Consultar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return PartialView("_produtos");
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                livros = new List<Livro>();
+                foreach (var item in resultado.Entidades)
+                {
+                    livros.Add((Livro)item);
+                }
+                return PartialView("_produtos", livros);
             }
         }
     }

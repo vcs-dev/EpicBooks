@@ -333,7 +333,7 @@ namespace Core.Impl.Produto.DAO
                 else if (livro.Id != 0 && string.IsNullOrEmpty(livro.Nome))
                     cmdTextolivro = "SELECT * FROM Produtos WHERE ProdutoId = @ProdutoId";
                 else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
-                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like '%@Nome%'";
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like @Nome";
 
                 SqlCommand comandolivro = new SqlCommand(cmdTextolivro, conexao);
 
@@ -342,7 +342,7 @@ namespace Core.Impl.Produto.DAO
                 if (!string.IsNullOrEmpty(livro.Isbn))
                     comandolivro.Parameters.AddWithValue("@Isbn", livro.Isbn);
                 else if(!string.IsNullOrEmpty(livro.Nome))
-                    comandolivro.Parameters.AddWithValue("@Nome", livro.Nome);
+                    comandolivro.Parameters.AddWithValue("@Nome", "%" + livro.Nome + "%");
 
                 SqlDataReader drlivro = comandolivro.ExecuteReader();
                 comandolivro.Dispose();

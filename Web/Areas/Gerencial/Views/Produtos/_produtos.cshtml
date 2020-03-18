@@ -1,16 +1,5 @@
 ﻿@model IEnumerable<Domain.Produto.Livro>
 
-<div class="row mt-3 mb-3">
-    <div class="form-group col-10">
-        <input type="text" class="form-control" id="consultar" value="Título">
-    </div>
-    <div class="col-2">
-        <a href="" class="btn btn-primary" title="">Consultar</a>
-    </div>
-    <div class="col-12">
-        <a href="/Gerencial/Produtos/Cadastrar" class="btn btn-primary" title="">Cadastrar livro <i class="fa fa-plus"></i></a>
-    </div>
-</div>
 <table class="table table-striped text-center self-align-center">
     <thead>
         <tr>
@@ -19,7 +8,6 @@
             <th>Título</th>
             <th>Status</th>
             <th>Lançamento</th>
-            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -41,9 +29,6 @@
                         </a>
                     </td>
                     <td><a href="/Gerencial/Produtos/Editar/@item.Id" class="btn btn-secondary" title="Editar"><i class="fa fa-edit"></i></a></td>
-                    <td>
-                        <a href="/Gerencial/Produtos/Inativar/@item.Id" class="btn btn-danger" title="Inativar"><i class="fa fa-trash-alt"></i></a>
-                    </td>
                 </tr>
             }
         }
