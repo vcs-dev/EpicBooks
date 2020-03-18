@@ -19,7 +19,7 @@ $(document).ready(function () {
             $('#categoriaInativacao').removeAttr('required');
         }
         else if ($('#status').val() === "0" && $('#status').val() !== valStatus) {
-            $('#divCatInativacao').removeAttr('required');
+            $('#divCatInativacao').removeClass('d-none');
             $('#categoriaInativacao').prop('required', 'true');
             $('#divCatAtivacao').addClass('d-none');
             $('#categoriaAtivacao').removeAttr('required');
