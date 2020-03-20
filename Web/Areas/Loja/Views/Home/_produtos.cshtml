@@ -1,89 +1,30 @@
 ﻿@model IEnumerable<Domain.Produto.Livro>
 <div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3"><a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a></p>
+    @if (Model != null)
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 mt-3 text-center">
+                    <div class="col-12">
+                        @if (item.Nome.Length > 25)
+                        {
+                            <label>@(item.Nome.Substring(0, 25) + "...")</label>
+                        }
+                        else
+                        {
+                            <label>@item.Nome</label>
+                        }
+                    </div>
+                    <div class="w-100 h-75">
+                        <a href="/Loja/Produto/@item.Id">
+                            <img src="@item.CaminhoImagem" alt="Imagem do produto" title="@item.Nome" class="img-thumbnail">
+                        </a>
+                    </div>
+                    <p class="mt-4"><a class="btn btn-secondary" href="/Loja/Carrinho/Adicionar/@item.Id" role="button">Adicionar ao carrinho</a></p>
+                </div>
+            }
         </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3"><a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a></p>
-        </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3"><a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a></p>
-        </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3"><a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a></p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3">
-                <a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a>
-            </p>
-        </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3">
-                <a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a>
-            </p>
-        </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3">
-                <a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a>
-            </p>
-        </div>
-        <div class="col-md-3">
-            <div class="col-12">
-                <h6>Scrum - A Arte de fazer o dobro na metade do tempo</h6>
-            </div>
-            <a href="produto.html">
-                <img src="img/scrum-fs.jpg" alt="..." class="img-thumbnail">
-            </a>
-            <p class="text-center mt-3">
-                <a class="btn btn-secondary" href="#" role="button">Adicionar ao carrinho</a>
-            </p>
-        </div>
-    </div>
+    }
     <hr>
 </div> <!-- /container -->

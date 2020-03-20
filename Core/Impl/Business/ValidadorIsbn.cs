@@ -2,8 +2,6 @@
 using Domain;
 using Domain.Produto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Impl.Business
 {
