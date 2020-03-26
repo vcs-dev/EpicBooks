@@ -43,5 +43,35 @@ namespace Web.Areas.Loja.Controllers
                 return View(livrosAtivos);
             }
         }
+        [Area("Loja")]
+        public IActionResult Produto(int id)
+        {
+            List<Livro> livros, livrosAtivos;
+            Livro livro = new Livro();
+
+            livrosAtivos = new List<Livro>();
+            livro.Id = id;
+
+            resultado = new Facade().Consultar(livro);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View();
+            }
+            else
+            {
+                TempData["MsgSucesso"] = resultado.Msg;
+                livros = new List<Livro>();
+                
+                foreach (var item in resultado.Entidades)
+                {
+                    livros.Add((Livro)item);
+                }
+                if (livros.FirstOrDefault().Status == 1)
+                    livrosAtivos.Add(livros.FirstOrDefault());
+                livrosAtivos.FirstOrDefault().PrecoVenda = "R$ 00,00"; //Teste
+                return View(livrosAtivos.FirstOrDefault());
+            }
+        }
     }
 }

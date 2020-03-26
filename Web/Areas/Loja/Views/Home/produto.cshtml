@@ -1,0 +1,77 @@
+﻿@model Domain.Produto.Livro
+@{
+    ViewData["Title"] = "Produto";
+}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h3>@Model.Nome</h3>
+            </div>
+            <div class="col-md-4">
+                <a href="">
+                    <img src="@Model.CaminhoImagem" alt="..." class="img-thumbnail">
+                </a>
+            </div>
+            <div class="col-md-4 align-self-end">
+                <form action="">
+                    <div class="form-row">
+                        <div class="form-group mb-0">
+                            <div class="col-md-12 mb-3">
+                                <label>Preço: <span>@Model.PrecoVenda</span></label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="submit" class="btn btn-secondary" role="button" value="Adicionar ao carrinho">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <h4>Sinopse</h4>
+            </div>
+            <div class="col-md-12">
+                <p>@Model.Descricao</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <h4>Informações sobre o produto</h4>
+            </div>
+            <div class="col-md-12">
+                <table>
+                    <tr>
+                        <td>Autor:</td>
+                        <td>@ViewBag.Autores</td>
+                    </tr>
+                    <tr>
+                        <td>Páginas:</td>
+                        <td>@Model.QtdePaginas</td>
+                    </tr>
+                    <tr>
+                        <td>Lançamento:</td>
+                        <td>@Model.AnoLancamento</td>
+                    </tr>
+                    <tr>
+                        <td>Edição:</td>
+                        <td>@Model.Edicao</td>
+                    </tr>
+                    <tr>
+                        <td>ISBN:</td>
+                        <td>@Model.Isbn</td>
+                    </tr>
+                    <tr>
+                        <td>Capa:</td>
+                        <td>@(Model.TipoCapa == 1? "Mole": "Dura")</td>
+                    </tr>
+                    <tr>
+                        <td>Peso:</td>
+                        <td>@Model.Peso</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
