@@ -43,6 +43,7 @@ namespace Web.Areas.Loja.Controllers
                 return View(livrosAtivos);
             }
         }
+
         [Area("Loja")]
         public IActionResult Produto(int id)
         {
