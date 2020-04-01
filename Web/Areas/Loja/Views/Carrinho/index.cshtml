@@ -1,0 +1,100 @@
+﻿@model Domain.Negocio.Carrinho
+@{
+    ViewData["Title"] = "Carrinho";
+}
+
+<div class="container">
+    <h3>Itens do carrinho</h3>
+    <!--cabecalho do carrinho -->
+    <div class="row mr-0 ml-0">
+        <div class="col-md-7 text-center">
+            <label for="">Produto</label>
+        </div>
+        <div class="col-md-2 text-center">
+            <label for="">Preço</label>
+        </div>
+        <div class="col-md-2 text-center">
+            <label for="">Quantidade</label>
+        </div>
+        <div class="col-md-1 text-center">
+            <label for=""></label>
+        </div>
+    </div>
+    <!--itens do pedido -->
+    <partial id="itensPedido">
+        @await Html.PartialAsync("_itensPedido", Model.ItensPedido)
+    </partial>
+    <!--frete -->
+    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+        <div class="col-md-2 align-self-center mt-2">
+            <label for="frete">Calcular frete</label>
+        </div>
+        <div class="col-md-2 mt-2">
+            <input type="password" class="form-control" id="frete" placeholder="00000-000">
+        </div>
+        <div class="col-md-2 mt-2">
+            <button type="button" class="btn btn-primary mb-2">Calcular</button>
+        </div>
+    </div>
+    <!--cupom promocional -->
+    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+        <div class="col-md-2 align-self-center mt-2">
+            <label for="cupomPromocional">Cupom promocional</label>
+        </div>
+        <div class="col-md-2 mt-2">
+            <input type="password" class="form-control" id="cupomPromocional">
+        </div>
+        <div class="col-md-2 mt-2">
+            <button type="button" class="btn btn-primary mb-2">Adicionar</button>
+        </div>
+    </div>
+    <!--cupom de troca -->
+    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+        <div class="col-md-2 align-self-center mt-2">
+            <label for="cupomTroca">Cupom de troca</label>
+        </div>
+        <div class="col-md-2 mt-2">
+            <input type="password" class="form-control" id="cupomTroca">
+        </div>
+        <div class="col-md-2 mt-2">
+            <button type="button" class="btn btn-primary mb-2">Adicionar</button>
+        </div>
+    </div>
+    <!--resumo do carrinho -->
+    <h3>Resumo</h3>
+    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+        <table class="table">
+            <tr>
+                <td>1 produto</td>
+                <td>R$ 29,90</td>
+            </tr>
+            <tr>
+                <td>Frete</td>
+                <td>R$ 00,00</td>
+            </tr>
+            <tr>
+                <td>Cupom promocional</td>
+                <td>R$ 00,00</td>
+            </tr>
+            <tr>
+                <td>Cupom de troca</td>
+                <td>R$ 00,00</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td>R$ 29,90</td>
+            </tr>
+        </table>
+    </div>
+    <div class="row mr-0 ml-0 mb-2">
+        <div class="col-6 mt-3 pl-0 text-left">
+            <a class="btn btn-primary" href="index.html">Retornar à loja</a>
+        </div>
+        <div class="col-6 mt-3 pr-0 text-right">
+            <a class="btn btn-danger" href="checkout.html">Continuar</a>
+        </div>
+    </div>
+</div> <!-- /container -->
+@section Scripts{
+    <script src="~/js/carrinho/carrinho.js"></script>
+}
