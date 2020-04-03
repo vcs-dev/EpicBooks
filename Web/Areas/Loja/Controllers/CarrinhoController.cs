@@ -19,25 +19,18 @@ namespace Web.Areas.Loja.Controllers
         public IActionResult Index()
         {
             Carrinho carrinho = new Carrinho();
-            ItemPedido itemPedido;
+
             if (HttpContext.Session.Keys.Count() > 0)
-            {
-                foreach (var item in HttpContext.Session.Keys)
-                {
-                    if (int.TryParse(item, out int num))
-                    {//Se for uma chave de int entra na estrutura abaixo
-                     //Produtos sao inseridos na Session com chave int
-                        itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, item);
-                        carrinho.ItensPedido.Add(itemPedido);
-                    }
-                }
-            }
+                carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");//Se o carrinho existir, carrega
+            else
+                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);//Senao, cria
+
             foreach (var item in carrinho.ItensPedido)
             {
                 carrinho.QtdeTotalItens += item.Qtde;
             }
             if (!string.IsNullOrEmpty(carrinho.Cep) && !string.IsNullOrWhiteSpace(carrinho.Cep))
-                carrinho.Frete =  CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
+                carrinho.Frete = CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
 
             return View(carrinho);
         }
@@ -46,6 +39,7 @@ namespace Web.Areas.Loja.Controllers
         public IActionResult AdicionarItem(int id)
         {
             List<Livro> livros;
+            Carrinho carrinho;
             ItemPedido itemPedido = new ItemPedido();
             Livro livro = new Livro
             {
@@ -68,7 +62,21 @@ namespace Web.Areas.Loja.Controllers
                 itemPedido.Qtde = 1;
                 itemPedido.HoraInclusao = DateTime.Now;
                 itemPedido.Produto = livros.FirstOrDefault();
-                SessionHelper.Set<ItemPedido>(HttpContext.Session, itemPedido.Produto.Id.ToString(), itemPedido);
+
+                if (HttpContext.Session.Keys.Count() > 0)
+                    carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");//Se o carrinho existir, carrega
+                else
+                    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());//Senao, cria
+
+                carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
+                ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
+                if (itemPed != null)
+                    carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+                else
+                    carrinho.ItensPedido.Add(itemPedido);//Senao, adiciona o novo item ao carrinho
+
+                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
                 return RedirectToAction("index");
             }
         }
@@ -76,82 +84,57 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public PartialViewResult AumentarQtde(int id)
         {
-            ItemPedido itemPedido;
-            List<ItemPedido> itensPedido = new List<ItemPedido>();
+            Carrinho carrinho;
 
-            itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, id.ToString());
-            itemPedido.Qtde += 1;
-            SessionHelper.Set<ItemPedido>(HttpContext.Session, itemPedido.Produto.Id.ToString(), itemPedido);
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
 
-            if (HttpContext.Session.Keys.Count() > 0)
-            {
-                foreach (var item in HttpContext.Session.Keys)
-                {
-                    if (int.TryParse(item, out int num))
-                    {//Se for uma chave de int entra na estrutura abaixo
-                     //Produtos sao inseridos na Session com chave int
-                        itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, item);
-                        itensPedido.Add(itemPedido);
-                    }
-                }
-            }
-            return PartialView("_itensPedido", itensPedido);
+            ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
+                carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+            return PartialView("_itensPedido", carrinho.ItensPedido);
         }
 
         [Area("Loja")]
         public PartialViewResult DiminuirQtde(int id)
         {
-            ItemPedido itemPedido;
-            List<ItemPedido> itensPedido = new List<ItemPedido>();
+            Carrinho carrinho;
 
-            itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, id.ToString());
-            if (itemPedido.Qtde > 1)
-                itemPedido.Qtde -= 1;
-            SessionHelper.Set<ItemPedido>(HttpContext.Session, itemPedido.Produto.Id.ToString(), itemPedido);
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
 
-            if (HttpContext.Session.Keys.Count() > 0)
-            {
-                foreach (var item in HttpContext.Session.Keys)
-                {
-                    if (int.TryParse(item, out int num))
-                    {//Se for uma chave de int entra na estrutura abaixo
-                     //Produtos sao inseridos na Session com chave int
-                        itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, item);
-                        itensPedido.Add(itemPedido);
-                    }
-                }
-            }
-            return PartialView("_itensPedido", itensPedido);
+            ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
+            if(carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde > 1)
+                carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde -= 1;//Decrementa qtde em 1 se a qtde for maior que 1
+
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+            return PartialView("_itensPedido", carrinho.ItensPedido);
         }
 
         [Area("Loja")]
         public PartialViewResult RemoverItem(int id)
         {
-            ItemPedido itemPedido;
-            List<ItemPedido> itensPedido = new List<ItemPedido>();
+            Carrinho carrinho;
 
-            itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, id.ToString());
-            if (itemPedido != null)
-                HttpContext.Session.Remove(id.ToString());
-            if (HttpContext.Session.Keys.Count() > 0)
-            {
-                foreach (var item in HttpContext.Session.Keys)
-                {
-                    if (int.TryParse(item, out int num))
-                    {//Se for uma chave de int entra na estrutura abaixo
-                     //Produtos sao inseridos na Session com chave int
-                        itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, item);
-                        itensPedido.Add(itemPedido);
-                    }
-                }
-            }
-            return PartialView("_itensPedido", itensPedido);
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
+            ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
+            if (itemPed != null)
+                carrinho.ItensPedido.Remove(itemPed);//Decrementa qtde em 1 se a qtde for maior que 1
+
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+            return PartialView("_itensPedido", carrinho.ItensPedido);
         }
 
         [Area("Loja")]
-        public JsonResult CalcularFrete(string cep, int qtdeItens)
+        public JsonResult CalcularFrete(string cep)
         {
-            return Json(CalculoFrete.Calcular(cep, qtdeItens));
+            Carrinho carrinho;
+
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            return Json("{valor : " + CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens) + "}");
         }
         //[Area("Loja")]
         //public PartialViewResult AdicionarCupomPromo()

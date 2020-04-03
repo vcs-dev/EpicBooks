@@ -5,6 +5,10 @@ namespace Core.Impl.Business
     {
         public static string Calcular(string cep, int qtdeItens)
         {
+            if (cep == null)
+                cep = "00000-000";
+            if (qtdeItens == 0)
+                qtdeItens = 1;
             int fatorMultiplicador = (Convert.ToInt32(cep.ToCharArray(cep.Length - 1, 1)[0])) switch
             {
                 0 => 9,

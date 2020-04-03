@@ -12,8 +12,7 @@ namespace Domain.Negocio
             Cep = "00000-000";
             //Cupons = new List<Cupom>();
         }
-        public int Id { get; set; }
-        public IList<ItemPedido> ItensPedido { get; set; }
+        public List<ItemPedido> ItensPedido { get; set; }
         //public IList<Cupom> Cupons { get; set; }
         //public Usuario Usuario { get; set; }
         public string Cep { get; set; }

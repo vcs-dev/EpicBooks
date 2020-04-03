@@ -54,7 +54,6 @@
                 $("#itensPedido").html(response);
             }
         });
-        var qtde
 
         $.ajax({
             type: "get",
@@ -62,7 +61,7 @@
             data: {cep : $('#inputCep').val()},
             dataType: "html",
             success: function (response) {
-                $("#itensPedido").html(response);
+                $("#valorFrete").html('R$ ' + response);
             }
         });
     });
