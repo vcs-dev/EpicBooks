@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Application;
+using Core.Impl.Business;
 using Core.Impl.Control;
 using Domain.Negocio;
 using Domain.Produto;
@@ -19,7 +20,6 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho = new Carrinho();
             ItemPedido itemPedido;
-
             if (HttpContext.Session.Keys.Count() > 0)
             {
                 foreach (var item in HttpContext.Session.Keys)
@@ -32,6 +32,13 @@ namespace Web.Areas.Loja.Controllers
                     }
                 }
             }
+            foreach (var item in carrinho.ItensPedido)
+            {
+                carrinho.QtdeTotalItens += item.Qtde;
+            }
+            if (!string.IsNullOrEmpty(carrinho.Cep) && !string.IsNullOrWhiteSpace(carrinho.Cep))
+                carrinho.Frete =  CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
+
             return View(carrinho);
         }
 
@@ -98,7 +105,7 @@ namespace Web.Areas.Loja.Controllers
             List<ItemPedido> itensPedido = new List<ItemPedido>();
 
             itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, id.ToString());
-            if(itemPedido.Qtde > 1)
+            if (itemPedido.Qtde > 1)
                 itemPedido.Qtde -= 1;
             SessionHelper.Set<ItemPedido>(HttpContext.Session, itemPedido.Produto.Id.ToString(), itemPedido);
 
@@ -124,7 +131,7 @@ namespace Web.Areas.Loja.Controllers
             List<ItemPedido> itensPedido = new List<ItemPedido>();
 
             itemPedido = SessionHelper.Get<ItemPedido>(HttpContext.Session, id.ToString());
-            if(itemPedido != null)
+            if (itemPedido != null)
                 HttpContext.Session.Remove(id.ToString());
             if (HttpContext.Session.Keys.Count() > 0)
             {
@@ -140,5 +147,24 @@ namespace Web.Areas.Loja.Controllers
             }
             return PartialView("_itensPedido", itensPedido);
         }
+
+        [Area("Loja")]
+        public JsonResult CalcularFrete(string cep, int qtdeItens)
+        {
+            return Json(CalculoFrete.Calcular(cep, qtdeItens));
+        }
+        //[Area("Loja")]
+        //public PartialViewResult AdicionarCupomPromo()
+        //{
+        //}
+
+        //[Area("Loja")]
+        //public PartialViewResult AdicionarCupomTroca()
+        //{
+        //}
+        //[Area("Loja")]
+        //public PartialViewResult AdicionarCartaoCredito(int idCartao, double valor)
+        //{
+        //}
     }
 }

@@ -1,6 +1,23 @@
 ﻿@model IEnumerable<Domain.Negocio.ItemPedido>
-@if (Model != null)
+
+@if (Model != null && Model.Count() > 0)
 {
+    <h3>Itens do carrinho</h3>
+    <!--cabecalho do carrinho -->
+    <div class="row mr-0 ml-0">
+        <div class="col-md-7 text-center">
+            <label for="">Produto</label>
+        </div>
+        <div class="col-md-2 text-center">
+            <label for="">Preço</label>
+        </div>
+        <div class="col-md-2 text-center">
+            <label for="">Quantidade</label>
+        </div>
+        <div class="col-md-1 text-center">
+            <label for=""></label>
+        </div>
+    </div>
     foreach (var item in Model)
     {
         <div class="row mr-0 ml-0 mb-2 border rounded-sm itemPedido">
@@ -35,4 +52,8 @@
             </div>
         </div>
     }
+}
+else
+{
+    <h3 class="mb-5">Você ainda não possui itens no carrinho =( </h3>
 }
