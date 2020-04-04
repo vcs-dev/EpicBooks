@@ -164,7 +164,7 @@
             <input type="text" class="form-control" id="inputCep" placeholder="00000-000">
         </div>
         <div class="col-md-2 mt-2">
-            <button type="button" class="btn btn-primary mb-2">Calcular</button>
+            <button type="button" class="btn btn-primary mb-2" id="btnCalcFrete">Calcular</button>
         </div>
     </div>
     <!--resumo do carrinho -->
@@ -177,7 +177,7 @@
             </tr>
             <tr>
                 <td>Frete</td>
-                <td id="valorFrete">R$ @(!string.IsNullOrEmpty(Model.Frete) ? Model.Frete : "00,00")</td>
+                <td id="valorFrete">R$</td>
             </tr>
             <tr>
                 <td>Cupom promocional</td>

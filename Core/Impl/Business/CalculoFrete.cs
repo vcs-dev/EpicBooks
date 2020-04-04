@@ -5,11 +5,10 @@ namespace Core.Impl.Business
     {
         public static string Calcular(string cep, int qtdeItens)
         {
-            if (cep == null)
-                cep = "00000-000";
-            if (qtdeItens == 0)
-                qtdeItens = 1;
-            int fatorMultiplicador = (Convert.ToInt32(cep.ToCharArray(cep.Length - 1, 1)[0])) switch
+            if (cep == null || qtdeItens == 0)
+                return "00,00";
+            
+            int fatorMultiplicador = (Convert.ToInt32(cep.Substring(cep.Length - 1))) switch
             {
                 0 => 9,
                 1 => 10,
@@ -24,7 +23,7 @@ namespace Core.Impl.Business
                 _ => 20,
             };
             double valorFrete = qtdeItens * (fatorMultiplicador / 1.5);
-            return valorFrete.ToString("##.##");
+            return valorFrete.ToString("##.00");
         }
     }
 }

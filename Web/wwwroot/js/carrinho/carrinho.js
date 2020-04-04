@@ -19,7 +19,6 @@
     });
 
     $('#itensPedido').on('click', '.btnAumentarQtde', function () {
-        //alert($(this).val());
         $.ajax({
             type: "get",
             url: "/Loja/Carrinho/AumentarQtde/",
@@ -54,15 +53,26 @@
                 $("#itensPedido").html(response);
             }
         });
+        CalcularCep();
+    });
 
-        $.ajax({
-            type: "get",
-            url: "/Loja/Carrinho/CalcularFrete/",
-            data: {cep : $('#inputCep').val()},
-            dataType: "html",
-            success: function (response) {
-                $("#valorFrete").html('R$ ' + response);
-            }
-        });
+    $('#btnCalcFrete').on('click', function () {
+        if($('#inputCep').val() !== undefined && $('#inputCep').val().trim() !== ''){
+            CalcularCep();
+        }
     });
 });
+
+function CalcularCep(){
+    $.ajax({
+        type: "get",
+        url: "/Loja/Carrinho/CalcularFrete/",
+        data: {cep : $('#inputCep').val()},
+        dataType: "json",
+        success: function (data) {
+            var retorno = JSON.parse(data);
+            $("#valorFrete").html('R$ ' + retorno.valor);
+            alert(retorno.valor);
+        }
+    });
+}
