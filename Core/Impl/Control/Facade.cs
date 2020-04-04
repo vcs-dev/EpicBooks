@@ -1,8 +1,10 @@
 ﻿using Core.Application;
 using Core.Impl.Business;
-using Core.Impl.Produto.DAO;
+using Core.Impl.DAO.Negocio;
+using Core.Impl.DAO.Produto;
 using Core.Interfaces;
 using Domain;
+using Domain.Negocio;
 using Domain.Produto;
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,14 @@ namespace Core.Impl.Control
             rnsProduto.Add("ALTERAR", rnsAlterarProduto);
 
             rns.Add(nameof(Livro), rnsProduto);
+            #endregion
+
+            #region Cupom
+            CupomDAO cupomDAO = new CupomDAO();
+
+            daos.Add(nameof(Cupom), produtoDAO);
+
+            rns.Add(nameof(Cupom), null);
             #endregion
 
         }
@@ -158,13 +168,13 @@ namespace Core.Impl.Control
             return resultado;
         }
 
-        public Result Visualizar(EntidadeDominio entidade)
-        {
-            resultado = new Result();
-            resultado.Entidades = new List<EntidadeDominio>(1);
-            resultado.Entidades.Add(entidade);
-            return resultado;
-        }
+        //public Result Visualizar(EntidadeDominio entidade)
+        //{
+        //    resultado = new Result();
+        //    resultado.Entidades = new List<EntidadeDominio>(1);
+        //    resultado.Entidades.Add(entidade);
+        //    return resultado;
+        //}
 
         private string ExecutarRegras(EntidadeDominio entidade, string operacao)
         {

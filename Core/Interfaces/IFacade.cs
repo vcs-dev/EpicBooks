@@ -9,6 +9,6 @@ namespace Core.Interfaces
         Result Alterar(EntidadeDominio entidade);
         Result Excluir(EntidadeDominio entidade);
         Result Consultar(EntidadeDominio entidade);
-        Result Visualizar(EntidadeDominio entidade);
+        //Result Visualizar(EntidadeDominio entidade);
     }
 }

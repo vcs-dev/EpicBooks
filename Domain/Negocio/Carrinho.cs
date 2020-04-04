@@ -9,11 +9,11 @@ namespace Domain.Negocio
         {
             //Usuario = new Usuario();
             ItensPedido = new List<ItemPedido>();
-            Cep = "00000-000";
-            //Cupons = new List<Cupom>();
+            CuponsTroca = new List<Cupom>();
         }
         public List<ItemPedido> ItensPedido { get; set; }
-        //public IList<Cupom> Cupons { get; set; }
+        public List<Cupom> CuponsTroca { get; set; }
+        public Cupom CupomPromocional { get; set; }
         //public Usuario Usuario { get; set; }
         public string Cep { get; set; }
         public IList<int> CartoesCredito { get; set; }

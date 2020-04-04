@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
-namespace Core.Impl.Produto.DAO
+namespace Core.Impl.DAO.Produto
 {
     public class ProdutoDAO : AbstractDAO
     {

@@ -3,101 +3,59 @@
     ViewData["Title"] = "Carrinho";
 }
 
-<div class="container">
-    <!--itens do pedido -->
-    <partial id="itensPedido">
-        @await Html.PartialAsync("_itensPedido", Model.ItensPedido)
-    </partial>
-    <!--endereco -->
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <div class="col-md-3 mt-2 align-self-center">
-            <label for="">Endereço de entrega:</label>
+    <div class="container">
+        <!--itens do pedido -->
+        <partial id="itensPedido">
+            @await Html.PartialAsync("_itensPedido", Model.ItensPedido)
+        </partial>
+        <!--endereco -->
+        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <div class="col-md-3 mt-2 align-self-center">
+                <label for="">Endereço de entrega:</label>
+            </div>
+            <div class="col-md-4 mt-2 mb-2 align-self-center">
+                <select class="custom-select" id="selectEndereco">
+                    <option value="" selected>Escolha</option>
+                    <option value="08830-745">
+                        Rua Maria da Glória, 240, Jd. Esplanada, Mogi das Cruzes-SP,
+                        08830-740.
+                    </option>
+                    <option value="04932-039">Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039</option>
+                </select>
+            </div>
         </div>
-        <div class="col-md-4 mt-2 mb-2 align-self-center">
-            <select class="custom-select">
-                <option selected>Escolha</option>
-                <option value="1">
-                    Rua Maria da Glória, 240, Jd. Esplanada, Mogi das Cruzes-SP,
-                    08830-740.
-                </option>
-                <option value="2">Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039</option>
-            </select>
+        <!--cupom promocional -->
+        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <div class="col-md-2 align-self-center mt-2">
+                <label for="cupomPromocional">Cupom promocional</label>
+            </div>
+            <div class="col-md-2 mt-2">
+                <input type="text" class="form-control" id="cupomPromocional">
+            </div>
+            <div class="col-md-2 mt-2">
+                <button type="button" class="btn btn-warning mb-2">Adicionar</button>
+            </div>
         </div>
-    </div>
-    <!--cupom promocional -->
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <div class="col-md-2 align-self-center mt-2">
-            <label for="cupomPromocional">Cupom promocional</label>
+        <!--cupom de troca -->
+        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <div class="col-md-2 align-self-center mt-2">
+                <label for="cupomTroca">Cupom de troca</label>
+            </div>
+            <div class="col-md-2 mt-2">
+                <input type="text" class="form-control" id="cupomTroca">
+            </div>
+            <div class="col-md-2 mt-2">
+                <button type="button" class="btn btn-warning mb-2">Adicionar</button>
+            </div>
         </div>
-        <div class="col-md-2 mt-2">
-            <input type="text" class="form-control" id="cupomPromocional">
+        <!--pagamento -->
+        <div class="row mr-0 ml-0 mt-3 mb-2">
+            <div class="col-12 custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="chkDoisCartoes">
+                <label class="custom-control-label" for="chkDoisCartoes">Pagar com mais de um cartão de crédito</label>
+            </div>
         </div>
-        <div class="col-md-2 mt-2">
-            <button type="button" class="btn btn-warning mb-2">Adicionar</button>
-        </div>
-    </div>
-    <!--cupom de troca -->
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <div class="col-md-2 align-self-center mt-2">
-            <label for="cupomTroca">Cupom de troca</label>
-        </div>
-        <div class="col-md-2 mt-2">
-            <input type="text" class="form-control" id="cupomTroca">
-        </div>
-        <div class="col-md-2 mt-2">
-            <button type="button" class="btn btn-warning mb-2">Adicionar</button>
-        </div>
-    </div>
-    <!--pagamento -->
-    <div class="row mr-0 ml-0 mt-3 mb-2">
-        <div class="col-12 custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="chkDoisCartoes">
-            <label class="custom-control-label" for="chkDoisCartoes">Pagar com mais de um cartão de crédito</label>
-        </div>
-    </div>
-    <!--cartao 1 -->
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <div class="col-md-1 mt-2 align-self-center">
-            <label for="">Cartão:</label>
-        </div>
-        <div class="col-md-2 mt-2 mb-2">
-            <select class="custom-select">
-                <option selected>Escolha</option>
-                <option value="1">VISA final 0493</option>
-                <option value="2">Mastercard final 4839</option>
-            </select>
-        </div>
-        @*<div class="col-md-2 mt-2 mb-2">
-                <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-            </div>*@
-        <div class="col-md-1 mt-2 align-self-center">
-            <label for="cupomPromocional">Parcelas:</label>
-        </div>
-        <div class="col-md-2 mt-2 mb-2">
-            <select class="custom-select">
-                <option selected value="1">1x sem juros</option>
-                <option value="2">2x sem juros</option>
-                <option value="3">3x sem juros</option>
-                <option value="4">4x sem juros</option>
-                <option value="5">5x sem juros</option>
-                <option value="6">6x sem juros</option>
-            </select>
-        </div>
-        <div class="col-md-2 mt-2 align-self-center">
-            <label for="cupomPromocional">Cód. segurança</label>
-        </div>
-        <div class="col-md-1 mt-2">
-            <input type="text" class="form-control">
-        </div>
-        <div class="col-md-1 mt-2 align-self-center valorCartao d-none">
-            <label for="cupomPromocional">Valor R$</label>
-        </div>
-        <div class="col-md-2 mt-2 valorCartao d-none">
-            <input type="text" class="form-control" id="valorCartao1">
-        </div>
-    </div>
-    <div id="pagarDoisCartoes" class="d-none">
-        <!--cartao 2 -->
+        <!--cartao 1 -->
         <div class="row mr-0 ml-0 mb-2 border rounded-sm">
             <div class="col-md-1 mt-2 align-self-center">
                 <label for="">Cartão:</label>
@@ -110,8 +68,8 @@
                 </select>
             </div>
             @*<div class="col-md-2 mt-2 mb-2">
-                    <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-                </div>*@
+                <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+            </div>*@
             <div class="col-md-1 mt-2 align-self-center">
                 <label for="cupomPromocional">Parcelas:</label>
             </div>
@@ -135,10 +93,52 @@
                 <label for="cupomPromocional">Valor R$</label>
             </div>
             <div class="col-md-2 mt-2 valorCartao d-none">
-                <input type="text" class="form-control" id="valorCartao2">
+                <input type="text" class="form-control" id="valorCartao1">
             </div>
         </div>
-        @*<div class="row mr-0 ml-0 mb-2 border rounded-sm">
+        <div id="pagarDoisCartoes" class="d-none">
+            <!--cartao 2 -->
+            <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+                <div class="col-md-1 mt-2 align-self-center">
+                    <label for="">Cartão:</label>
+                </div>
+                <div class="col-md-2 mt-2 mb-2">
+                    <select class="custom-select">
+                        <option selected>Escolha</option>
+                        <option value="1">VISA final 0493</option>
+                        <option value="2">Mastercard final 4839</option>
+                    </select>
+                </div>
+                @*<div class="col-md-2 mt-2 mb-2">
+                    <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+                </div>*@
+                <div class="col-md-1 mt-2 align-self-center">
+                    <label for="cupomPromocional">Parcelas:</label>
+                </div>
+                <div class="col-md-2 mt-2 mb-2">
+                    <select class="custom-select">
+                        <option selected value="1">1x sem juros</option>
+                        <option value="2">2x sem juros</option>
+                        <option value="3">3x sem juros</option>
+                        <option value="4">4x sem juros</option>
+                        <option value="5">5x sem juros</option>
+                        <option value="6">6x sem juros</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mt-2 align-self-center">
+                    <label for="cupomPromocional">Cód. segurança</label>
+                </div>
+                <div class="col-md-1 mt-2">
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-md-1 mt-2 align-self-center valorCartao d-none">
+                    <label for="cupomPromocional">Valor R$</label>
+                </div>
+                <div class="col-md-2 mt-2 valorCartao d-none">
+                    <input type="text" class="form-control" id="valorCartao2">
+                </div>
+            </div>
+            @*<div class="row mr-0 ml-0 mb-2 border rounded-sm">
                 <div class="col-md-3 align-self-center mt-2">
                     <label for="valorCartao1">Valor no primeiro cartão R$</label>
                 </div>
@@ -154,54 +154,54 @@
                     <input type="text" class="form-control" id="valorCartao1">
                 </div>
             </div>*@
-    </div>
-    <!--frete -->
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <div class="col-md-2 align-self-center mt-2">
-            <label for="inputCep">Calcular frete</label>
         </div>
-        <div class="col-md-2 mt-2">
-            <input type="text" class="form-control" id="inputCep" placeholder="00000-000">
+        <!--frete -->
+        @*<div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <div class="col-md-2 align-self-center mt-2">
+                <label for="inputCep">Calcular frete</label>
+            </div>
+            <div class="col-md-2 mt-2">
+                <input type="text" class="form-control" id="inputCep" placeholder="00000-000">
+            </div>
+            <div class="col-md-2 mt-2">
+                <button type="button" class="btn btn-primary mb-2" id="btnCalcFrete">Calcular</button>
+            </div>
+        </div>*@
+        <!--resumo do carrinho -->
+        <h3>Resumo</h3>
+        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <table class="table">
+                <tr>
+                    <td>0 produtos</td>
+                    <td>R$ 00,00</td>
+                </tr>
+                <tr>
+                    <td>Frete</td>
+                    <td id="valorFrete">@(!string.IsNullOrEmpty(Model.Frete) ? Model.Frete: "R$ 00,00")</td>
+                </tr>
+                <tr>
+                    <td>Cupom promocional @(Model.CupomPromocional != null ? Model.CupomPromocional.CodigoCupom : "")</td>
+                    <td>@(Model.CupomPromocional != null ? "R$ " + Model.CupomPromocional.ValorCupom.ToString("##.00") : "R$ 00,00")</td>
+                </tr>
+                <tr>
+                    <td>Cupom de troca</td>
+                    <td>R$ 00,00</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>R$ 00,00</td>
+                </tr>
+            </table>
         </div>
-        <div class="col-md-2 mt-2">
-            <button type="button" class="btn btn-primary mb-2" id="btnCalcFrete">Calcular</button>
+        <div class="row mr-0 ml-0 mb-2">
+            <div class="col-6 mt-3 pl-0 text-left">
+                <a class="btn btn-primary" href="index.html">Retornar à loja</a>
+            </div>
+            <div class="col-6 mt-3 pr-0 text-right">
+                <a class="btn btn-danger" href="checkout.html">Comprar</a>
+            </div>
         </div>
-    </div>
-    <!--resumo do carrinho -->
-    <h3>Resumo</h3>
-    <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-        <table class="table">
-            <tr>
-                <td>1 produto</td>
-                <td>R$ 29,90</td>
-            </tr>
-            <tr>
-                <td>Frete</td>
-                <td id="valorFrete">R$</td>
-            </tr>
-            <tr>
-                <td>Cupom promocional</td>
-                <td>R$ 00,00</td>
-            </tr>
-            <tr>
-                <td>Cupom de troca</td>
-                <td>R$ 00,00</td>
-            </tr>
-            <tr>
-                <td>Total</td>
-                <td>R$ 29,90</td>
-            </tr>
-        </table>
-    </div>
-    <div class="row mr-0 ml-0 mb-2">
-        <div class="col-6 mt-3 pl-0 text-left">
-            <a class="btn btn-primary" href="index.html">Retornar à loja</a>
-        </div>
-        <div class="col-6 mt-3 pr-0 text-right">
-            <a class="btn btn-danger" href="checkout.html">Comprar</a>
-        </div>
-    </div>
-</div> <!-- /container -->
+    </div> <!-- /container -->
 @section Scripts{
     <script src="~/js/carrinho/carrinho.js"></script>
 }
