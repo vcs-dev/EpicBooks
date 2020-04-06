@@ -56,7 +56,7 @@ namespace Core.Impl.Control
             #region Cupom
             CupomDAO cupomDAO = new CupomDAO();
 
-            daos.Add(nameof(Cupom), produtoDAO);
+            daos.Add(nameof(Cupom), cupomDAO);
 
             rns.Add(nameof(Cupom), null);
             #endregion

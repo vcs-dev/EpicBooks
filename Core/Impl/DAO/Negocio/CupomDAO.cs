@@ -22,10 +22,22 @@ namespace Core.Impl.DAO.Negocio
             {
                 Conectar();
 
-                if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo))
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo";
-                else if (cupom.UsuarioId != null && cupom.UsuarioId != 0)
+                if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo) &&
+                    cupom.DataExpiracao != DateTime.MinValue && cupom.Usado != null)
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                else if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo) &&
+                    cupom.DataExpiracao != DateTime.MinValue && cupom.Usado == null)
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= @DataExpiracao";
+                else if (cupom.Tipo != '\0' &&  cupom.Tipo != ' ' &&
+                    cupom.DataExpiracao != DateTime.MinValue && cupom.DataExpiracao != null && cupom.Usado != null)
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Tipo = @Tipo AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                else if (cupom.UsuarioId != null && cupom.UsuarioId != 0 &&
+                    cupom.DataExpiracao != DateTime.MinValue && cupom.DataExpiracao != null && cupom.Usado != null)
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                else if(cupom.UsuarioId != null && cupom.UsuarioId != 0)
                     cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId";
+                else
+                    cmdTextoCupom = "SELECT * FROM Cupons";
 
                 SqlCommand comandoCupom = new SqlCommand(cmdTextoCupom, conexao);
 
@@ -33,6 +45,12 @@ namespace Core.Impl.DAO.Negocio
                     comandoCupom.Parameters.AddWithValue("@Codigo", cupom.Codigo);
                 if (cupom.UsuarioId != null && cupom.UsuarioId != 0)
                     comandoCupom.Parameters.AddWithValue("@UsuarioId", cupom.UsuarioId);
+                if (cupom.DataExpiracao != DateTime.MinValue && cupom.DataExpiracao != null)
+                    comandoCupom.Parameters.AddWithValue("@DataExpiracao", cupom.DataExpiracao);
+                if (cupom.Usado != null)
+                    comandoCupom.Parameters.AddWithValue("@Usado", cupom.Usado);
+                if (cupom.Tipo != '\0' && cupom.Tipo != ' ')
+                    comandoCupom.Parameters.AddWithValue("@Tipo", cupom.Tipo);
 
                 SqlDataReader drCupom = comandoCupom.ExecuteReader();
                 comandoCupom.Dispose();
@@ -69,11 +87,14 @@ namespace Core.Impl.DAO.Negocio
                     {
                         Id = Convert.ToInt32(dataReader["CupomId"]),
                         Codigo = dataReader["Codigo"].ToString(),
-                        Status = Convert.ToByte(dataReader["Status"]),
                         Tipo = Convert.ToChar(dataReader["Tipo"]),
                         Valor = Convert.ToDouble(dataReader["Valor"]),
                     };
+                    if (!dataReader.IsDBNull(4))
+                        cupom.DataExpiracao = Convert.ToDateTime(dataReader["DataExpiracao"]);
                     if (!dataReader.IsDBNull(5))
+                        cupom.Usado = Convert.ToByte(dataReader["Usado"]);
+                    if (!dataReader.IsDBNull(6))
                         cupom.UsuarioId = Convert.ToInt32(dataReader["UsuarioId"]);
 
                     cupons.Add(cupom);

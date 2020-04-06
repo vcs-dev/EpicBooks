@@ -6,7 +6,7 @@ namespace Core.Util
     {
         public static SqlConnection GetConexao()
         {
-            return new SqlConnection("Server=DESKTOP-LTQQHLP\\SQLEXPRESS; Database=EpicBooks;Trusted_Connection=True;");
+            return new SqlConnection("Server=LOCALHOST\\SQLEXPRESS; Database=EpicBooks;Trusted_Connection=True;");
         }
     }
 }

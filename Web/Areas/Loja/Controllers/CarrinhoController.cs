@@ -19,6 +19,8 @@ namespace Web.Areas.Loja.Controllers
         public IActionResult Index()
         {
             Carrinho carrinho = new Carrinho();
+            Cupom cupom = new Cupom();
+            List<Cupom> cupons;
 
             if (HttpContext.Session.Keys.Count() > 0)
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");//Se o carrinho existir, carrega
@@ -35,6 +37,24 @@ namespace Web.Areas.Loja.Controllers
             if (string.IsNullOrEmpty(carrinho.Cep))
                 carrinho.Cep = "";
 
+            cupom.UsuarioId = 1;
+            cupom.DataExpiracao = DateTime.Now;
+            cupom.Usado = 0;
+            resultado = new Facade().Consultar(cupom);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return PartialView("_resumo", carrinho);
+            }
+            else
+            {
+                cupons = new List<Cupom>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cupons.Add((Cupom)item);
+                }
+            }
+            ViewBag.CuponsTroca = cupons;
             return View(carrinho);
         }
 
@@ -136,8 +156,10 @@ namespace Web.Areas.Loja.Controllers
                 carrinho.ItensPedido.Remove(itemPed);//Decrementa qtde em 1 se a qtde for maior que 1
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }
-
-            return PartialView("_itensPedido", carrinho.ItensPedido);
+            if(carrinho.ItensPedido.Count() > 0)
+                return PartialView("_itensPedido", carrinho.ItensPedido);
+            else
+                return PartialView(null);
         }
 
         //[Area("Loja")]
@@ -170,38 +192,31 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho;
             Cupom cupom;
-            //List<Cupom> cupons = new List<Cupom>();
+            List<Cupom> cupons = new List<Cupom>();
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
             if (cupom == null)
             {
-                //consultar cupom no banco
-                //cupom.Codigo = codCupom;
-                //resultado = new Facade().Consultar(cupom);
-                //if (!string.IsNullOrEmpty(resultado.Msg))
-                //{
-                //    TempData["MsgErro"] = resultado.Msg;
-                //    return Json("{ }");
-                //}
-                //else
-                //{
-                //    cupons = new List<Cupom>();
-                //    foreach (var item in resultado.Entidades)
-                //    {
-                //        cupons.Add((Cupom)item);
-                //    }
-                //    cupom = cupons.FirstOrDefault();
-                //}
-                cupom = new Cupom //teste temporario
+                cupom = new Cupom();
+                cupom.Codigo = codCupom;
+                cupom.DataExpiracao = DateTime.Now;
+                cupom.Usado = 0;
+                resultado = new Facade().Consultar(cupom);
+                if (!string.IsNullOrEmpty(resultado.Msg))
                 {
-                    Id = 23,
-                    Codigo = codCupom,
-                    Status = 1,
-                    Tipo = 'T',
-                    Valor = 25.00,
-                    UsuarioId = 1
-                };
+                    TempData["MsgErro"] = resultado.Msg;
+                    return PartialView("_resumo", carrinho);
+                }
+                else
+                {
+                    cupons = new List<Cupom>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        cupons.Add((Cupom)item);
+                    }
+                    cupom = cupons.FirstOrDefault();
+                }
                 carrinho.CuponsTroca.Add(cupom);//Se nao foi, adiciona
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }
@@ -228,37 +243,30 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho;
             Cupom cupom = new Cupom();
-            //List<Cupom> cupons;
+            List<Cupom> cupons;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             if (!string.IsNullOrEmpty(carrinho.CupomPromocional.Codigo) || 
                 carrinho.CupomPromocional.Codigo != codCupom)
             {
-                //consultar cupom no banco
-                //cupom.Codigo = codCupom;
-                //resultado = new Facade().Consultar(cupom);
-                //if (!string.IsNullOrEmpty(resultado.Msg))
-                //{
-                //    TempData["MsgErro"] = resultado.Msg;
-                //    return Json("{ }");
-                //}
-                //else
-                //{
-                //    cupons = new List<Cupom>();
-                //    foreach (var item in resultado.Entidades)
-                //    {
-                //        cupons.Add((Cupom)item);
-                //    }
-                //    cupom = cupons.FirstOrDefault();
-                //}
-                cupom = new Cupom //teste temporario
+                cupom.Codigo = codCupom;
+                cupom.DataExpiracao = DateTime.Now;
+                cupom.Usado = null;
+                resultado = new Facade().Consultar(cupom);
+                if (!string.IsNullOrEmpty(resultado.Msg))
                 {
-                    Id = 23,
-                    Codigo = codCupom,
-                    Status = 1,
-                    Tipo = 'P',
-                    Valor = 25.00
-                };
+                    TempData["MsgErro"] = resultado.Msg;
+                    return PartialView(null);
+                }
+                else
+                {
+                    cupons = new List<Cupom>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        cupons.Add((Cupom)item);
+                    }
+                    cupom = cupons.FirstOrDefault();
+                }
                 carrinho.CupomPromocional = cupom;
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }

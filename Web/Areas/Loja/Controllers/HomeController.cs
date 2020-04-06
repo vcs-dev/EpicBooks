@@ -69,7 +69,6 @@ namespace Web.Areas.Loja.Controllers
                 }
                 if (livros.FirstOrDefault().Status == 1)
                     livrosAtivos.Add(livros.FirstOrDefault());
-                livrosAtivos.FirstOrDefault().PrecoVenda = 30.00; //Teste
                 return View(livrosAtivos.FirstOrDefault());
             }
         }

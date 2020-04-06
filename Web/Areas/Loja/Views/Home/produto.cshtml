@@ -18,7 +18,7 @@
                     <div class="form-row">
                         <div class="form-group mb-0">
                             <div class="col-md-12 mb-3">
-                                <label>Preço: <span>@Model.PrecoVenda</span></label>
+                                <label>Preço: <span>@("R$ " + Model.PrecoVenda.ToString("##0.00"))</span></label>
                             </div>
                             <div class="col-md-6">
                                 <input type="submit" class="btn btn-secondary" role="button" value="Adicionar ao carrinho">

@@ -406,14 +406,11 @@ namespace Core.Impl.DAO.Produto
                         drAutor.Close();
                         item.Autores = autores;
 
-                        cmdTextoEstoque = "SELECT FORMAT(MAX(E.ValorCusto) * (1 + GP.PercentuaLucro), 'N', 'pt-br') AS PrecoVenda, " +
-                                                  "GP.PercentuaLucro " +
-                                          "FROM EntradaEstoque E " +
-                                          "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
-                                          "JOIN GruposPrecificacao GP on(GP.GrupoPrecificacaoId = P.GrupoPrecificacao) " +
-                                          "WHERE P.ProdutoId = @ProdutoId " +
-                                          "GROUP BY GP.PercentuaLucro";
-
+                        cmdTextoEstoque = "SELECT ROUND(E.ValorCusto * (1 + GP.PercentualLucro), 2) AS PrecoVenda " +
+                                          "FROM Estoque E " +
+                                              "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
+                                              "JOIN GruposPrecificacao GP on(GP.GrupoId = P.GrupoPrecificacao) " +
+                                          "WHERE P.ProdutoId = @ProdutoId";
                         SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao);
                         comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
                         SqlDataReader drValorCusto = comandoEstoque.ExecuteReader();
@@ -425,7 +422,7 @@ namespace Core.Impl.DAO.Produto
                         }
                         while (drValorCusto.Read())
                         {
-                            precoVenda = Convert.ToDouble(drValorCusto.GetString(0));
+                            precoVenda = Convert.ToDouble(drValorCusto.GetDecimal(0));
                         }
                         drValorCusto.Close();
                         item.PrecoVenda = precoVenda;

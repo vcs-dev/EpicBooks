@@ -1,4 +1,16 @@
 ﻿$(document).ready(function () {
+    if($('#cupomPromo').length > 0){
+        $('#codCupomPromo').prop('readonly', true);
+    }
+
+    if($('.cupomTroca').length > 0){
+        $('#selectCupomTroca option').each( function(){
+            var elem = $('.cupomTroca').find('button[value="' + $(this).val() +'"]');
+            if(elem.length > 0)
+                $(this).prop('disabled', true);
+        });
+    }
+
     if ($('#chkDoisCartoes').prop('checked')) {
         $('#pagarDoisCartoes').removeClass('d-none');
         $('.valorCartao').removeClass('d-none');
@@ -53,9 +65,13 @@
             data: { id: $(this).val() },
             dataType: "html",
             success: function (response) {
+                alert(response);
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
                 AtualizarResumo();
+            },
+            error: function () {
+                location.href="/Loja/Carrinho/Index/";
             }
         });
     });
@@ -71,6 +87,10 @@
                     $('#resumo').html(response);
                     $('#codCupomPromo').val('');
                     $('#codCupomPromo').prop('readonly', true);
+                    $('#labelCupomPromoErro').empty();
+                },
+                error: function(){
+                    $('#labelCupomPromoErro').text('Cupom inválido');
                 }
             });
         }

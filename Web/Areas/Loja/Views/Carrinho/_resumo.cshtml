@@ -30,34 +30,40 @@
             <td id="valorFrete">@("R$ " + Model.ValorFrete.ToString("##0.00"))</td>
             <td></td>
         </tr>
-        <tr id="cupomPromo">
-            @if (Model.CupomPromocional.Codigo != null)
-            {
+        @if (Model.CupomPromocional.Codigo != null)
+        {
+            <tr id="cupomPromo">
                 <td class="align-middle">Cupom promocional @(Model.CupomPromocional.Codigo != null ? Model.CupomPromocional.Codigo : "")</td>
                 <td class="align-middle">@("R$ " + Model.CupomPromocional.Valor.ToString("###.00"))</td>
-                <td class="text-right"><button class="btn btn-danger" id="btnRemoverCupomPromo"><i class="fa fa-trash-alt"></i></button></td>
-            }
-        </tr>
+                <td class="text-right"><button type="button" class="btn btn-danger" id="btnRemoverCupomPromo"><i class="fa fa-trash-alt"></i></button></td>
+            </tr>
+        }
         @foreach (var item in Model.CuponsTroca)
         {
             <tr id="@("cupomTroca" + item.Id)" class="cupomTroca">
                 <td class="align-middle">Cupom de troca @item.Codigo</td>
                 <td class="align-middle">@("R$ " + item.Valor.ToString("###.00"))</td>
                 <td class="text-right">
-                    <button class="btn btn-danger btnRemoverCupomTroca" value="@item.Codigo"><i class="fa fa-trash-alt"></i></button>
+                    <button type="button" class="btn btn-danger btnRemoverCupomTroca" value="@item.Codigo"><i class="fa fa-trash-alt"></i></button>
                 </td>
             </tr>
         }
         <tr>
-            @{ 
+            @{
                 double totalGeral = 00.00;
+                foreach (var item in Model.ItensPedido)
+                {
+                    totalGeral += item.Produto.PrecoVenda * item.Qtde;
+                }
                 if (!string.IsNullOrEmpty(Model.CupomPromocional.Codigo))
                     totalGeral -= Model.CupomPromocional.Valor;
                 if (Model.CuponsTroca.Count() > 0)
+                {
                     foreach (var item in Model.CuponsTroca)
                     {
                         totalGeral -= item.Valor;
                     }
+                }
             }
             <td>Total</td>
             <td>@("R$ " + totalGeral.ToString("##0.00"))</td>

@@ -10,7 +10,7 @@ namespace Domain.DadosCliente
         public string Numeracao { get; set; }
         public string NomeImpresso { get; set; }
         public string Validade { get; set; }
-        public int CodigoSeguranca { get; set; }
+        public int? CodigoSeguranca { get; set; }
         public int UsuarioId { get; set; }
         public int QtdeParcelas { get; set; }
         public double Valor { get; set; }
