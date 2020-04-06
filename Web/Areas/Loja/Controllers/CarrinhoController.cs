@@ -31,7 +31,7 @@ namespace Web.Areas.Loja.Controllers
                 carrinho.QtdeTotalItens += item.Qtde;
             }
             if (!string.IsNullOrEmpty(carrinho.Cep) && !string.IsNullOrWhiteSpace(carrinho.Cep))
-                carrinho.Frete = CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
+                carrinho.ValorFrete = CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
             if (string.IsNullOrEmpty(carrinho.Cep))
                 carrinho.Cep = "";
 
@@ -146,10 +146,10 @@ namespace Web.Areas.Loja.Controllers
         //    Carrinho carrinho;
 
         //    carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-        //    carrinho.Frete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
+        //    carrinho.ValorFrete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
         //    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
-        //    return Json("{\"valor\":" + "\"" + carrinho.Frete + "\"}");
+        //    return Json("{\"valor\":" + "\"" + carrinho.ValorFrete + "\"}");
         //}
 
         [Area("Loja")]
@@ -158,7 +158,7 @@ namespace Web.Areas.Loja.Controllers
             Carrinho carrinho;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            carrinho.Frete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
+            carrinho.ValorFrete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
             carrinho.Cep = cep;
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
@@ -170,7 +170,7 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho;
             Cupom cupom;
-            List<Cupom> cupons = new List<Cupom>();
+            //List<Cupom> cupons = new List<Cupom>();
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
@@ -203,7 +203,6 @@ namespace Web.Areas.Loja.Controllers
                     UsuarioId = 1
                 };
                 carrinho.CuponsTroca.Add(cupom);//Se nao foi, adiciona
-                cupons = carrinho.CuponsTroca;
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }
             return PartialView("_resumo", carrinho);
@@ -289,9 +288,19 @@ namespace Web.Areas.Loja.Controllers
             return PartialView("_resumo", carrinho);
         }
 
-        //[Area("Loja")]
-        //public PartialViewResult AdicionarCartaoCredito(int idCartao, double valor)
-        //{
-        //}
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult EnviarPedido(Carrinho carrinho)
+        {
+            Pedido pedido = new Pedido();
+            resultado = new Facade().Salvar(pedido);
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return View(carrinho);
+            }
+            TempData["MsgSucesso"] = "Pedido " + resultado.Entidades.FirstOrDefault().Id + " realizado com sucesso.";
+            return View(carrinho);
+        }
     }
 }

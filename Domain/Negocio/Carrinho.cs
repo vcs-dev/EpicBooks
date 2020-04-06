@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DadosCliente;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Negocio
@@ -11,16 +12,19 @@ namespace Domain.Negocio
             ItensPedido = new List<ItemPedido>();
             CupomPromocional = new Cupom();
             CuponsTroca = new List<Cupom>();
+            CartaoUm = new CartaoDeCredito();
+            CartaoDois = new CartaoDeCredito();
             Cep = "";
-            Frete = 00.00;
+            ValorFrete = 00.00;
         }
         public List<ItemPedido> ItensPedido { get; set; }
         public List<Cupom> CuponsTroca { get; set; }
         public Cupom CupomPromocional { get; set; }
         //public Usuario Usuario { get; set; }
         public string Cep { get; set; }
-        public IList<int> CartoesCredito { get; set; }
-        public double Frete { get; set; }
+        public CartaoDeCredito CartaoUm { get; set; }
+        public CartaoDeCredito CartaoDois { get; set; }
+        public double ValorFrete { get; set; }
         public int QtdeTotalItens { get; set; }
         public DateTime HoraUltimaInclusao { get; set; }
     }

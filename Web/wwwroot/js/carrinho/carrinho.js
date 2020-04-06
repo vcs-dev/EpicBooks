@@ -68,7 +68,7 @@
                 data: { codCupom: $('#codCupomPromo').val() },
                 dataType: "html",
                 success: function (response) {
-                    $("#resumo").html(response);
+                    $('#resumo').html(response);
                     $('#codCupomPromo').val('');
                     $('#codCupomPromo').prop('readonly', true);
                 }
@@ -77,18 +77,16 @@
     });
 
     $('#btnAddCupomTroca').on('click', function () {
-        if ($('#codCupomTroca').val() !== undefined && $('#codCupomTroca').val().trim() !== '') {
-            $.ajax({
-                type: "get",
-                url: "/Loja/Carrinho/AdicionarCupomTroca/",
-                data: { codCupom: $('#codCupomTroca').val() },
-                dataType: "html",
-                success: function (response) {
-                    $("#resumo").html(response);
-                    $('#codCupomTroca').val('');
-                }
-            });
-        }
+        $.ajax({
+            type: "get",
+            url: "/Loja/Carrinho/AdicionarCupomTroca/",
+            data: { codCupom: $('#selectCupomTroca option:selected').val() },
+            dataType: "html",
+            success: function (response) {
+                $('#resumo').html(response);
+                $('#selectCupomTroca option:selected').prop('disabled', true);
+            }
+        });
     });
 
     // $('#btnCalcFrete').on('click', function () {
@@ -105,11 +103,24 @@
         $.ajax({
             type: "get",
             url: "/Loja/Carrinho/RemoverCupomPromo/",
-            data: { id: $(this).val() },
             dataType: "html",
             success: function (response) {
-                $("#resumo").html(response);
+                $('#resumo').html(response);
                 $('#codCupomPromo').removeAttr('readonly');
+            }
+        });
+    });
+
+    $('#resumo').on('click', '.btnRemoverCupomTroca', function () {
+        var elem = $(this);
+        $.ajax({
+            type: "get",
+            url: "/Loja/Carrinho/RemoverCupomTroca/",
+            data: { codCupom: elem.val() },
+            dataType: "html",
+            success: function (response) {
+                $('#resumo').html(response);
+                $('#selectCupomTroca option[value="' + elem.val() + '"').removeAttr('disabled');
             }
         });
     });
@@ -122,7 +133,7 @@ function CalcularFrete(cep) {
         data: { cep: cep },
         dataType: "html",
         success: function (response) {
-            $("#resumo").html(response);
+            $('#resumo').html(response);
         }
     });
 }
@@ -133,7 +144,7 @@ function AtualizarResumo() {
         url: "/Loja/Carrinho/AtualizarResumo/",
         dataType: "html",
         success: function (response) {
-            $("#resumo").html(response);
+            $('#resumo').html(response);
         }
     });
 }

@@ -318,8 +318,8 @@ namespace Core.Impl.DAO.Produto
             string cmdTextolivro = "";
             string cmdTextoGenero;
             string cmdTextoAutor;
-            //string precoVenda = "";
-            //string cmdTextoEstoque;
+            double precoVenda = 0.0;
+            string cmdTextoEstoque;
             try
             {
                 Conectar();
@@ -406,30 +406,29 @@ namespace Core.Impl.DAO.Produto
                         drAutor.Close();
                         item.Autores = autores;
 
-                        //cmdTextoEstoque = "SELECT FORMAT(MAX(E.ValorCusto) * (1 + GP.PercentuaLucro), 'N', 'pt-br') AS PrecoVenda, " +
-                        //                          "GP.PercentuaLucro " +
-                        //                  "FROM EntradaEstoque E " +
-                        //                  "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
-                        //                  "JOIN GruposPrecificacao GP on(GP.GrupoPrecificacaoId = P.GrupoPrecificacao) " +
-                        //                  "WHERE P.ProdutoId = @ProdutoId " +
-                        //                  "GROUP BY GP.PercentuaLucro";
+                        cmdTextoEstoque = "SELECT FORMAT(MAX(E.ValorCusto) * (1 + GP.PercentuaLucro), 'N', 'pt-br') AS PrecoVenda, " +
+                                                  "GP.PercentuaLucro " +
+                                          "FROM EntradaEstoque E " +
+                                          "JOIN Produtos P on(E.ProdutoId = P.ProdutoId) " +
+                                          "JOIN GruposPrecificacao GP on(GP.GrupoPrecificacaoId = P.GrupoPrecificacao) " +
+                                          "WHERE P.ProdutoId = @ProdutoId " +
+                                          "GROUP BY GP.PercentuaLucro";
 
-                        //SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao);
-                        //comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
-                        //SqlDataReader drValorCusto = comandoEstoque.ExecuteReader();
-                        //comandoEstoque.Dispose();
+                        SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao);
+                        comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
+                        SqlDataReader drValorCusto = comandoEstoque.ExecuteReader();
+                        comandoEstoque.Dispose();
 
-                        //if (!drValorCusto.HasRows)
-                        //{
-                        //    throw new Exception("Sem Registros");
-                        //}
-                        //paisesProibicao = new List<int>();
-                        //while (drValorCusto.Read())
-                        //{
-                        //    precoVenda = Convert.ToDouble(drValorCusto.GetString(0)).ToString("0.00");
-                        //}
-                        //drValorCusto.Close();
-                        //item.PrecoVenda = precoVenda;
+                        if (!drValorCusto.HasRows)
+                        {
+                            throw new Exception("Sem Registros");
+                        }
+                        while (drValorCusto.Read())
+                        {
+                            precoVenda = Convert.ToDouble(drValorCusto.GetString(0));
+                        }
+                        drValorCusto.Close();
+                        item.PrecoVenda = precoVenda;
                     }
                 }
             }
