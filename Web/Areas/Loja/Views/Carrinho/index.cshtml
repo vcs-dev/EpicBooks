@@ -15,12 +15,14 @@
             </div>
             <div class="col-md-4 mt-2 mb-2 align-self-center">
                 <select class="custom-select" id="selectEndereco">
-                    <option value="" selected>Escolha</option>
-                    <option value="08830-745">
+                    <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
+                    <option selected=@(Model.Cep.Contains("08830-745")) value="08830-745">
                         Rua Maria da Glória, 240, Jd. Esplanada, Mogi das Cruzes-SP,
                         08830-740.
                     </option>
-                    <option value="04932-039">Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039</option>
+                    <option selected=@(Model.Cep.Contains("04932-039")) value="04932-039">
+                        Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039
+                    </option>
                 </select>
             </div>
         </div>
@@ -30,10 +32,10 @@
                 <label for="cupomPromocional">Cupom promocional</label>
             </div>
             <div class="col-md-2 mt-2">
-                <input type="text" class="form-control" id="cupomPromocional">
+                <input type="text" class="form-control" id="codCupomPromo">
             </div>
             <div class="col-md-2 mt-2">
-                <button type="button" class="btn btn-warning mb-2">Adicionar</button>
+                <button type="button" class="btn btn-warning mb-2" id="btnAddCupomPromo">Adicionar</button>
             </div>
         </div>
         <!--cupom de troca -->
@@ -42,10 +44,30 @@
                 <label for="cupomTroca">Cupom de troca</label>
             </div>
             <div class="col-md-2 mt-2">
-                <input type="text" class="form-control" id="cupomTroca">
+                <input type="text" class="form-control" id="codCupomTroca">
             </div>
             <div class="col-md-2 mt-2">
-                <button type="button" class="btn btn-warning mb-2">Adicionar</button>
+                <button type="button" class="btn btn-warning mb-2" id="btnAddCupomTroca">Adicionar</button>
+            </div>
+        </div>
+        <!--cupom de troca -->
+        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+            <div class="col-md-3 mt-2 align-self-center">
+                <label for="">Cupom de troca</label>
+            </div>
+            <div class="col-md-4 mt-2 mb-2 align-self-center">
+                <select class="custom-select" id="selectEndereco">
+                    <option selected value="">Escolha</option>
+                    <option value="T10123456789">
+                        T10123456789  - R$ 30,00
+                    </option>
+                    <option value="T19876543210">
+                        T19876543210  - R$ 23,50
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2 mt-2">
+                <button type="button" class="btn btn-warning mb-2" id="btnAddCupomTroca">Adicionar</button>
             </div>
         </div>
         <!--pagamento -->
@@ -167,32 +189,11 @@
                 <button type="button" class="btn btn-primary mb-2" id="btnCalcFrete">Calcular</button>
             </div>
         </div>*@
+
         <!--resumo do carrinho -->
-        <h3>Resumo</h3>
-        <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-            <table class="table">
-                <tr>
-                    <td>0 produtos</td>
-                    <td>R$ 00,00</td>
-                </tr>
-                <tr>
-                    <td>Frete</td>
-                    <td id="valorFrete">@(!string.IsNullOrEmpty(Model.Frete) ? Model.Frete: "R$ 00,00")</td>
-                </tr>
-                <tr>
-                    <td>Cupom promocional @(Model.CupomPromocional != null ? Model.CupomPromocional.CodigoCupom : "")</td>
-                    <td>@(Model.CupomPromocional != null ? "R$ " + Model.CupomPromocional.ValorCupom.ToString("##.00") : "R$ 00,00")</td>
-                </tr>
-                <tr>
-                    <td>Cupom de troca</td>
-                    <td>R$ 00,00</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td>R$ 00,00</td>
-                </tr>
-            </table>
-        </div>
+        <partial id="resumo">
+            @await Html.PartialAsync("_resumo", Model)
+        </partial>
         <div class="row mr-0 ml-0 mb-2">
             <div class="col-6 mt-3 pl-0 text-left">
                 <a class="btn btn-primary" href="index.html">Retornar à loja</a>

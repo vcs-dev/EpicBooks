@@ -3,10 +3,10 @@ namespace Core.Impl.Business
 {
     public static class CalculoFrete
     {
-        public static string Calcular(string cep, int qtdeItens)
+        public static double Calcular(string cep, int qtdeItens)
         {
             if (cep == null || qtdeItens == 0)
-                return "00,00";
+                return 00.00;
             
             int fatorMultiplicador = (Convert.ToInt32(cep.Substring(cep.Length - 1))) switch
             {
@@ -23,7 +23,7 @@ namespace Core.Impl.Business
                 _ => 20,
             };
             double valorFrete = qtdeItens * (fatorMultiplicador / 1.5);
-            return valorFrete.ToString("##.00");
+            return valorFrete;
         }
     }
 }

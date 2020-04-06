@@ -38,7 +38,7 @@ namespace Domain.Produto
         public string MotivoMudancaStatus { get; set; }
         public int? CategoriaAtivacao { get; set; }
         public int? CategoriaInativacao { get; set; }
-        public string PrecoVenda { get; set; }
+        public double PrecoVenda { get; set; }
         public bool AlterarImagem { get; set; }
     }
 }

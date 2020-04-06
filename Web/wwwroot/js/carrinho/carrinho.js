@@ -26,10 +26,10 @@
             dataType: "html",
             success: function (response) {
                 $("#itensPedido").html(response);
-                $(document).ready();
+                CalcularFrete($('#selectEndereco').val());
+                AtualizarResumo();
             }
         });
-        CalcularFrete($('#selectEndereco').val());
     });
 
     $('#itensPedido').on('click', '.btnDiminuirQtde', function () {
@@ -40,9 +40,10 @@
             dataType: "html",
             success: function (response) {
                 $("#itensPedido").html(response);
+                CalcularFrete($('#selectEndereco').val());
+                AtualizarResumo();
             }
         });
-        CalcularFrete($('#selectEndereco').val());
     });
 
     $('#itensPedido').on('click', '.btnRemoverItem', function () {
@@ -53,45 +54,112 @@
             dataType: "html",
             success: function (response) {
                 $("#itensPedido").html(response);
+                CalcularFrete($('#selectEndereco').val());
+                AtualizarResumo();
             }
         });
-        CalcularFrete();
     });
 
-    $('#btnCalcFrete').on('click', function () {
-        if ($('#inputCep').val() !== undefined && $('#inputCep').val().trim() !== '') {
-            CalcularFrete();
+    $('#btnAddCupomPromo').on('click', function () {
+        if ($('#codCupomPromo').val() !== undefined && $('#codCupomPromo').val().trim() !== '') {
+            $.ajax({
+                type: "get",
+                url: "/Loja/Carrinho/AdicionarCupomPromo/",
+                data: { codCupom: $('#codCupomPromo').val() },
+                dataType: "html",
+                success: function (response) {
+                    $("#resumo").html(response);
+                    $('#codCupomPromo').val('');
+                    $('#codCupomPromo').prop('readonly', true);
+                }
+            });
         }
     });
+
+    $('#btnAddCupomTroca').on('click', function () {
+        if ($('#codCupomTroca').val() !== undefined && $('#codCupomTroca').val().trim() !== '') {
+            $.ajax({
+                type: "get",
+                url: "/Loja/Carrinho/AdicionarCupomTroca/",
+                data: { codCupom: $('#codCupomTroca').val() },
+                dataType: "html",
+                success: function (response) {
+                    $("#resumo").html(response);
+                    $('#codCupomTroca').val('');
+                }
+            });
+        }
+    });
+
+    // $('#btnCalcFrete').on('click', function () {
+    //     if ($('#inputCep').val() !== undefined && $('#inputCep').val().trim() !== '') {
+    //         CalcularFrete();
+    //     }
+    // });
 
     $('#selectEndereco').on('change', function () {
         CalcularFrete($(this).val());
     });
+
+    $('#resumo').on('click', '#btnRemoverCupomPromo', function () {
+        $.ajax({
+            type: "get",
+            url: "/Loja/Carrinho/RemoverCupomPromo/",
+            data: { id: $(this).val() },
+            dataType: "html",
+            success: function (response) {
+                $("#resumo").html(response);
+                $('#codCupomPromo').removeAttr('readonly');
+            }
+        });
+    });
 });
 
 function CalcularFrete(cep) {
-    if (cep === undefined) {
-        $.ajax({
-            type: "get",
-            url: "/Loja/Carrinho/CalcularFrete/",
-            data: { cep: $('#inputCep').val() },
-            dataType: "json",
-            success: function (data) {
-                var retorno = JSON.parse(data);
-                $("#valorFrete").html('R$ ' + retorno.valor);
-            }
-        });
-    }
-    else{
-        $.ajax({
-            type: "get",
-            url: "/Loja/Carrinho/CalcularFrete/",
-            data: { cep: cep },
-            dataType: "json",
-            success: function (data) {
-                var retorno = JSON.parse(data);
-                $("#valorFrete").html('R$ ' + retorno.valor);
-            }
-        });
-    }
+    $.ajax({
+        type: "get",
+        url: "/Loja/Carrinho/CalcularFrete/",
+        data: { cep: cep },
+        dataType: "html",
+        success: function (response) {
+            $("#resumo").html(response);
+        }
+    });
 }
+
+function AtualizarResumo() {
+    $.ajax({
+        type: "get",
+        url: "/Loja/Carrinho/AtualizarResumo/",
+        dataType: "html",
+        success: function (response) {
+            $("#resumo").html(response);
+        }
+    });
+}
+// function CalcularFrete(cep) {
+//     if (cep === undefined) {
+//         $.ajax({
+//             type: "get",
+//             url: "/Loja/Carrinho/CalcularFrete/",
+//             data: { cep: $('#inputCep').val() },
+//             dataType: "json",
+//             success: function (data) {
+//                 var retorno = JSON.parse(data);
+//                 $("#valorFrete").html('R$ ' + retorno.valor);
+//             }
+//         });
+//     }
+//     else{
+//         $.ajax({
+//             type: "get",
+//             url: "/Loja/Carrinho/CalcularFrete/",
+//             data: { cep: cep },
+//             dataType: "json",
+//             success: function (data) {
+//                 var retorno = JSON.parse(data);
+//                 $("#valorFrete").html('R$ ' + retorno.valor);
+//             }
+//         });
+//     }
+//}

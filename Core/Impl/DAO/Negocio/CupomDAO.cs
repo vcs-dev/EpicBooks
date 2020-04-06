@@ -22,15 +22,15 @@ namespace Core.Impl.DAO.Negocio
             {
                 Conectar();
 
-                if (!string.IsNullOrEmpty(cupom.CodigoCupom) && !string.IsNullOrWhiteSpace(cupom.CodigoCupom))
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE CodigoCupom = @CodigoCupom";
+                if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo))
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo";
                 else if (cupom.UsuarioId != null && cupom.UsuarioId != 0)
                     cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId";
 
                 SqlCommand comandoCupom = new SqlCommand(cmdTextoCupom, conexao);
 
-                if (!string.IsNullOrEmpty(cupom.CodigoCupom) && !string.IsNullOrWhiteSpace(cupom.CodigoCupom))
-                    comandoCupom.Parameters.AddWithValue("@CodigoCupom", cupom.CodigoCupom);
+                if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo))
+                    comandoCupom.Parameters.AddWithValue("@Codigo", cupom.Codigo);
                 if (cupom.UsuarioId != null && cupom.UsuarioId != 0)
                     comandoCupom.Parameters.AddWithValue("@UsuarioId", cupom.UsuarioId);
 
@@ -68,10 +68,10 @@ namespace Core.Impl.DAO.Negocio
                     Cupom cupom = new Cupom
                     {
                         Id = Convert.ToInt32(dataReader["CupomId"]),
-                        CodigoCupom = dataReader["CodigoCupom"].ToString(),
+                        Codigo = dataReader["Codigo"].ToString(),
                         Status = Convert.ToByte(dataReader["Status"]),
-                        TipoCupom = Convert.ToChar(dataReader["TipoCupom"]),
-                        ValorCupom = Convert.ToDouble(dataReader["ValorCupom"]),
+                        Tipo = Convert.ToChar(dataReader["Tipo"]),
+                        Valor = Convert.ToDouble(dataReader["Valor"]),
                     };
                     if (!dataReader.IsDBNull(5))
                         cupom.UsuarioId = Convert.ToInt32(dataReader["UsuarioId"]);

@@ -25,12 +25,15 @@ namespace Web.Areas.Loja.Controllers
             else
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);//Senao, cria
 
+            carrinho.QtdeTotalItens = 0;
             foreach (var item in carrinho.ItensPedido)
             {
                 carrinho.QtdeTotalItens += item.Qtde;
             }
             if (!string.IsNullOrEmpty(carrinho.Cep) && !string.IsNullOrWhiteSpace(carrinho.Cep))
                 carrinho.Frete = CalculoFrete.Calcular(carrinho.Cep, carrinho.ItensPedido.Count());
+            if (string.IsNullOrEmpty(carrinho.Cep))
+                carrinho.Cep = "";
 
             return View(carrinho);
         }
@@ -136,35 +139,45 @@ namespace Web.Areas.Loja.Controllers
 
             return PartialView("_itensPedido", carrinho.ItensPedido);
         }
-        public class Teste
-        {
-            public string Valor { get; set; }
-        }
+
+        //[Area("Loja")]
+        //public JsonResult CalcularFrete(string cep)
+        //{
+        //    Carrinho carrinho;
+
+        //    carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+        //    carrinho.Frete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
+        //    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+        //    return Json("{\"valor\":" + "\"" + carrinho.Frete + "\"}");
+        //}
+
         [Area("Loja")]
-        public JsonResult CalcularFrete(string cep)
+        public PartialViewResult CalcularFrete(string cep)
         {
             Carrinho carrinho;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             carrinho.Frete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
+            carrinho.Cep = cep;
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
-            return Json("{\"valor\":" + "\"" + carrinho.Frete + "\"}");
+            return PartialView("_resumo", carrinho);
         }
 
         [Area("Loja")]
-        public JsonResult AdicionarCupomTroca(string codCupom)
+        public PartialViewResult AdicionarCupomTroca(string codCupom)
         {
             Carrinho carrinho;
             Cupom cupom;
-            //List<Cupom> cupons;
+            List<Cupom> cupons = new List<Cupom>();
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            cupom = carrinho.CuponsTroca.Find(x => x.CodigoCupom == codCupom);//Verifica se o cupom ja foi adicionado
+            cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
             if (cupom == null)
             {
                 //consultar cupom no banco
-                //cupom.CodigoCupom = codCupom;
+                //cupom.Codigo = codCupom;
                 //resultado = new Facade().Consultar(cupom);
                 //if (!string.IsNullOrEmpty(resultado.Msg))
                 //{
@@ -183,32 +196,47 @@ namespace Web.Areas.Loja.Controllers
                 cupom = new Cupom //teste temporario
                 {
                     Id = 23,
-                    CodigoCupom = codCupom,
+                    Codigo = codCupom,
                     Status = 1,
-                    TipoCupom = 'T',
-                    ValorCupom = 25.00,
+                    Tipo = 'T',
+                    Valor = 25.00,
                     UsuarioId = 1
                 };
                 carrinho.CuponsTroca.Add(cupom);//Se nao foi, adiciona
+                cupons = carrinho.CuponsTroca;
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
-                return Json("{\"adicionado\":\"1\"}");
             }
-            else
-                return Json("{\"adicionado\":\"0\"}");
+            return PartialView("_resumo", carrinho);
         }
 
         [Area("Loja")]
-        public JsonResult AdicionarCupomPromo(string codCupom)
+        public PartialViewResult RemoverCupomTroca(string codCupom)
         {
             Carrinho carrinho;
             Cupom cupom;
+
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
+            if (cupom != null)
+                carrinho.CuponsTroca.Remove(cupom);
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+            return PartialView("_resumo", carrinho);
+        }
+
+        [Area("Loja")]
+        public PartialViewResult AdicionarCupomPromo(string codCupom)
+        {
+            Carrinho carrinho;
+            Cupom cupom = new Cupom();
             //List<Cupom> cupons;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            if (carrinho.CupomPromocional.CodigoCupom != codCupom)
+            if (!string.IsNullOrEmpty(carrinho.CupomPromocional.Codigo) || 
+                carrinho.CupomPromocional.Codigo != codCupom)
             {
                 //consultar cupom no banco
-                //cupom.CodigoCupom = codCupom;
+                //cupom.Codigo = codCupom;
                 //resultado = new Facade().Consultar(cupom);
                 //if (!string.IsNullOrEmpty(resultado.Msg))
                 //{
@@ -227,18 +255,40 @@ namespace Web.Areas.Loja.Controllers
                 cupom = new Cupom //teste temporario
                 {
                     Id = 23,
-                    CodigoCupom = codCupom,
+                    Codigo = codCupom,
                     Status = 1,
-                    TipoCupom = 'P',
-                    ValorCupom = 25.00
+                    Tipo = 'P',
+                    Valor = 25.00
                 };
                 carrinho.CupomPromocional = cupom;
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
-                return Json("{\"adicionado\":\"1\"}");
             }
 
-            return Json("{\"adicionado\":\"0\"}");
+            return PartialView("_resumo", carrinho);
         }
+
+        [Area("Loja")]
+        public PartialViewResult RemoverCupomPromo()
+        {
+            Carrinho carrinho;
+
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            carrinho.CupomPromocional = new Cupom();
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
+            return PartialView("_resumo", carrinho);
+        }
+
+
+        [Area("Loja")]
+        public PartialViewResult AtualizarResumo()
+        {
+            Carrinho carrinho;
+
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            return PartialView("_resumo", carrinho);
+        }
+
         //[Area("Loja")]
         //public PartialViewResult AdicionarCartaoCredito(int idCartao, double valor)
         //{
