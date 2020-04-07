@@ -96,8 +96,11 @@ namespace Web.Areas.Loja.Controllers
         public IActionResult AdicionarItem(int id)
         {
             List<Livro> livros;
+            List<Estoque> estoqueProds;
             Carrinho carrinho;
+            Estoque estoque;
             ItemPedido itemPedido = new ItemPedido();
+
             Livro livro = new Livro
             {
                 Id = id
@@ -110,7 +113,7 @@ namespace Web.Areas.Loja.Controllers
                 return PartialView("_produtos");
             }
             else
-            {
+            {                
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {
@@ -127,12 +130,59 @@ namespace Web.Areas.Loja.Controllers
                 ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
 
                 if (itemPed != null)
-                    carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+                {
+                    estoque = new Estoque
+                    {
+                        ProdutoId = id
+                    };
+                    resultado = new Facade().Consultar(estoque);//Consulta estoque
+                    if (!string.IsNullOrEmpty(resultado.Msg))
+                    {
+                        TempData["MsgErro"] = resultado.Msg;
+                        return PartialView("_produtos");
+                    }
+                    else
+                    {
+                        estoqueProds = new List<Estoque>();
+                        foreach (var item in resultado.Entidades)
+                        {
+                            estoqueProds.Add((Estoque)item);
+                        }
+                        if (estoqueProds.FirstOrDefault().Qtde >= carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde + 1)
+                        {
+                            carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+                            carrinho.QtdeTotalItens += 1;
+                            carrinho.HoraUltimaInclusao = DateTime.Now;
+                        }
+                    }
+                }
                 else
-                    carrinho.ItensPedido.Add(itemPedido);//Senao, adiciona o novo item ao carrinho
-
-                carrinho.QtdeTotalItens += 1;
-                carrinho.HoraUltimaInclusao = DateTime.Now;
+                {
+                    estoque = new Estoque
+                    {
+                        ProdutoId = id
+                    };
+                    resultado = new Facade().Consultar(estoque);//Consulta estoque
+                    if (!string.IsNullOrEmpty(resultado.Msg))
+                    {
+                        TempData["MsgErro"] = resultado.Msg;
+                        return PartialView("_produtos");
+                    }
+                    else
+                    {
+                        estoqueProds = new List<Estoque>();
+                        foreach (var item in resultado.Entidades)
+                        {
+                            estoqueProds.Add((Estoque)item);
+                        }
+                        if (estoqueProds.FirstOrDefault().Qtde >= 1)
+                        {
+                            carrinho.ItensPedido.Add(itemPedido);
+                            carrinho.QtdeTotalItens += 1;
+                            carrinho.HoraUltimaInclusao = DateTime.Now;
+                        }
+                    }
+                }
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
                 return RedirectToAction("index");
@@ -143,12 +193,36 @@ namespace Web.Areas.Loja.Controllers
         public PartialViewResult AumentarQtde(int id)
         {
             Carrinho carrinho;
+            Estoque estoque;
+            List<Estoque> estoqueProds;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
 
-            ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
-            carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
-            carrinho.QtdeTotalItens += 1;
+            ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Busca o produto no carrinho
+
+            estoque = new Estoque
+            {
+                ProdutoId = id
+            };
+            resultado = new Facade().Consultar(estoque);//Consulta estoque
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return PartialView("_produtos");
+            }
+            else
+            {
+                estoqueProds = new List<Estoque>();
+                foreach (var item in resultado.Entidades)
+                {
+                    estoqueProds.Add((Estoque)item);
+                }
+                if (estoqueProds.FirstOrDefault().Qtde >= carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde + 1)
+                {
+                    carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+                    carrinho.QtdeTotalItens += 1;
+                }
+            }
 
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
@@ -230,6 +304,7 @@ namespace Web.Areas.Loja.Controllers
                 }
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
                 carrinho.Cep = enderecos.FirstOrDefault().Cep;
+                carrinho.EnderecoId = enderecos.FirstOrDefault().Id;
                 carrinho.ValorFrete = CalculoFrete.Calcular(carrinho.Cep, carrinho.QtdeTotalItens);
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
                 return PartialView("_resumo", carrinho);
@@ -347,16 +422,40 @@ namespace Web.Areas.Loja.Controllers
 
         [Area("Loja")]
         [HttpPost]
-        public IActionResult EnviarPedido(Carrinho carrinho)
+        public IActionResult EnviarPedido(CartaoDeCredito cartaoUm, CartaoDeCredito cartaoDois)
         {
-            Pedido pedido = new Pedido();
-            resultado = new Facade().Salvar(pedido);
+            Carrinho carrinho;
+            Pedido pedido;
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            pedido = new Pedido
+            {
+                ItensPedido = carrinho.ItensPedido,
+                CuponsTroca = carrinho.CuponsTroca,
+                CupomPromocional = carrinho.CupomPromocional,
+                ValorFrete = carrinho.ValorFrete,
+                CartaoUm = cartaoUm,
+                CartaoDois = cartaoDois,
+                EnderecoId = carrinho.EnderecoId,
+                UsuarioId = HttpContext.Session.Get<int>("idUsuario")
+            };
+
+            resultado = new Facade().Salvar(pedido);//Salva o pedido
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.MsgErro = resultado.Msg;
                 return View(carrinho);
             }
-            TempData["MsgSucesso"] = "Pedido " + resultado.Entidades.FirstOrDefault().Id + " realizado com sucesso.";
+
+            pedido.Status = 'A';
+            resultado = new Facade().Alterar(pedido);//Alterar o pedido
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                ViewBag.MsgErro = resultado.Msg;
+                return View(carrinho);
+            }
+
+            ViewBag.MsgSucesso = "Pedido " + pedido.Id + " realizado com sucesso";
+
             return View(carrinho);
         }
     }

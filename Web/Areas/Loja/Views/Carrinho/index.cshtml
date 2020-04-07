@@ -29,7 +29,7 @@
                     </select>
                 </div>*@
                 <div class="col-md-4 mt-2 mb-2 align-self-center">
-                    <select class="custom-select" id="selectEndereco">
+                    <select class="custom-select" name="EnderecoId" id="selectEndereco">
                         <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
                         @foreach (var item in ViewBag.Enderecos)
                         {
@@ -102,7 +102,7 @@
                     <label for="">Cartão:</label>
                 </div>
                 <div class="col-md-2 mt-2 mb-2">
-                    <select class="custom-select" name="Carrinho.CartaoUm.Id">
+                    <select class="custom-select" name="CartaoUm.Id">
                         <option selected value="">Escolha</option>
                         @foreach (var item in ViewBag.Cartoes)
                         {
@@ -117,7 +117,7 @@
                     <label for="cupomPromocional">Parcelas:</label>
                 </div>
                 <div class="col-md-2 mt-2 mb-2">
-                    <select class="custom-select" name="Carrinho.CartaoUm.QtdeParcelas">
+                    <select class="custom-select" name="CartaoUm.QtdeParcelas">
                         <option selected="@(Model.CartaoUm.QtdeParcelas == 1)" value="1">1x sem juros</option>
                         <option selected="@(Model.CartaoUm.QtdeParcelas == 2)" value="2">2x sem juros</option>
                         <option selected="@(Model.CartaoUm.QtdeParcelas == 3)" value="3">3x sem juros</option>
@@ -130,13 +130,13 @@
                     <label for="cupomPromocional">Cód. segurança</label>
                 </div>
                 <div class="col-md-1 mt-2">
-                    <input type="text" class="form-control" name="Carrinho.CartaoUm.CodigoSeguranca" value="@Model.CartaoUm.CodigoSeguranca">
+                    <input type="text" class="form-control" name="CartaoUm.CodigoSeguranca" value="@Model.CartaoUm.CodigoSeguranca">
                 </div>
                 <div class="col-md-1 mt-2 align-self-center valorCartao d-none">
                     <label for="cupomPromocional">Valor R$</label>
                 </div>
                 <div class="col-md-2 mt-2 valorCartao d-none">
-                    <input type="text" class="form-control" id="valorCartao1" name="Carrinho.CartaoUm.Valor" value="@Model.CartaoUm.Valor">
+                    <input type="text" class="form-control" id="valorCartao1" name="CartaoUm.Valor" value="@Model.CartaoUm.Valor">
                 </div>
             </div>
             <div id="pagarDoisCartoes" class="d-none">
@@ -146,7 +146,7 @@
                         <label for="">Cartão:</label>
                     </div>
                     <div class="col-md-2 mt-2 mb-2">
-                        <select class="custom-select" name="Carrinho.CartaoDois.Id">
+                        <select class="custom-select" name="CartaoDois.Id">
                             <option selected value="">Escolha</option>
                             @foreach (var item in ViewBag.Cartoes)
                             {
@@ -161,7 +161,7 @@
                         <label for="cupomPromocional">Parcelas:</label>
                     </div>
                     <div class="col-md-2 mt-2 mb-2">
-                        <select class="custom-select" name="Carrinho.CartaoDois.QtdeParcelas">
+                        <select class="custom-select" name="CartaoDois.QtdeParcelas">
                             <option selected="@(Model.CartaoDois.QtdeParcelas == 1)" value="1">1x sem juros</option>
                             <option selected="@(Model.CartaoDois.QtdeParcelas == 2)" value="2">2x sem juros</option>
                             <option selected="@(Model.CartaoDois.QtdeParcelas == 3)" value="3">3x sem juros</option>
@@ -174,13 +174,13 @@
                         <label for="cupomPromocional">Cód. segurança</label>
                     </div>
                     <div class="col-md-1 mt-2">
-                        <input type="text" class="form-control" name="Carrinho.CartaoDois.CodigoSeguranca" value="@Model.CartaoDois.CodigoSeguranca">
+                        <input type="text" class="form-control" name="CartaoDois.CodigoSeguranca" value="@Model.CartaoDois.CodigoSeguranca">
                     </div>
                     <div class="col-md-1 mt-2 align-self-center valorCartao d-none">
                         <label for="cupomPromocional">Valor R$</label>
                     </div>
                     <div class="col-md-2 mt-2 valorCartao d-none">
-                        <input type="text" class="form-control" id="valorCartao2" name="Carrinho.CartaoDois.Valor" value="@Model.CartaoDois.Valor">
+                        <input type="text" class="form-control" id="valorCartao2" name="CartaoDois.Valor" value="@Model.CartaoDois.Valor">
                     </div>
                 </div>
             </div>

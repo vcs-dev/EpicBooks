@@ -1,7 +1,6 @@
 ﻿using Domain.DadosCliente;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Negocio
 {
@@ -9,7 +8,7 @@ namespace Domain.Negocio
     {
         public Pedido()
         {
-            Status = '\0';
+            Status = 'P';
             ItensPedido = new List<ItemPedido>();
             SessaoGuid = Guid.Empty;
         }
@@ -23,6 +22,7 @@ namespace Domain.Negocio
         public double ValorFrete { get; set; }
         public double ValorTotalPedido { get; set; }
         public char Status { get; set; }
+        public string Observacao { get; set; }
         public Guid SessaoGuid { get; set; }
     }
 }

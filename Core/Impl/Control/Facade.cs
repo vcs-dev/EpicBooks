@@ -55,6 +55,29 @@ namespace Core.Impl.Control
             rns.Add(nameof(Livro), rnsProduto);
             #endregion
 
+            #region Pedido 
+            PedidoDAO pedidoDAO = new PedidoDAO();
+
+            daos.Add(nameof(Pedido), pedidoDAO);
+
+            //Regras de alterar
+            ValidadorRetornoOperadora validadorRetornoOperadora = new ValidadorRetornoOperadora();
+
+            List<IStrategy> rnsSalvarPedido = new List<IStrategy>();
+            List<IStrategy> rnsAlterarPedido = new List<IStrategy>();
+
+            rnsSalvarPedido.Add(inclusaoDataCadastro);
+
+            rnsAlterarPedido.Add(validadorRetornoOperadora);
+
+            Dictionary<string, List<IStrategy>> rnsPedido = new Dictionary<string, List<IStrategy>>();
+
+            rnsPedido.Add("SALVAR", rnsSalvarPedido);
+            rnsPedido.Add("ALTERAR", rnsAlterarPedido);
+
+            rns.Add(nameof(Pedido), rnsPedido);
+            #endregion
+
             #region Cupom
             CupomDAO cupomDAO = new CupomDAO();
 
@@ -77,6 +100,14 @@ namespace Core.Impl.Control
             daos.Add(nameof(CartaoDeCredito), cartaoDeCreditoDAO);
 
             rns.Add(nameof(CartaoDeCredito), null);
+            #endregion
+
+            #region Estoque
+            EstoqueDAO estoqueDAO = new EstoqueDAO();
+
+            daos.Add(nameof(Estoque), estoqueDAO);
+
+            rns.Add(nameof(Estoque), null);
             #endregion
 
         }

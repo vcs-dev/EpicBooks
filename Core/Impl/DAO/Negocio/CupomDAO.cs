@@ -24,16 +24,16 @@ namespace Core.Impl.DAO.Negocio
 
                 if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo) &&
                     cupom.DataExpiracao != DateTime.MinValue && cupom.Usado != null)
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= ISNULL(@DataExpiracao, '1999-01-01') AND Usado = @Usado";
                 else if (!string.IsNullOrEmpty(cupom.Codigo) && !string.IsNullOrWhiteSpace(cupom.Codigo) &&
                     cupom.DataExpiracao != DateTime.MinValue && cupom.Usado == null)
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= @DataExpiracao";
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Codigo = @Codigo AND  DataExpiracao >= ISNULL(@DataExpiracao, '1999-01-01')";
                 else if (cupom.Tipo != '\0' &&  cupom.Tipo != ' ' &&
                     cupom.DataExpiracao != DateTime.MinValue && cupom.DataExpiracao != null && cupom.Usado != null)
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Tipo = @Tipo AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE Tipo = @Tipo AND  DataExpiracao >= ISNULL(@DataExpiracao, '1999-01-01') AND Usado = @Usado";
                 else if (cupom.UsuarioId != null && cupom.UsuarioId != 0 &&
                     cupom.DataExpiracao != DateTime.MinValue && cupom.DataExpiracao != null && cupom.Usado != null)
-                    cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId AND  DataExpiracao >= @DataExpiracao AND Usado = @Usado";
+                    cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId AND  DataExpiracao >= ISNULL(@DataExpiracao, '1999-01-01') AND Usado = @Usado";
                 else if(cupom.UsuarioId != null && cupom.UsuarioId != 0)
                     cmdTextoCupom = "SELECT * FROM Cupons WHERE UsuarioId = @UsuarioId";
                 else

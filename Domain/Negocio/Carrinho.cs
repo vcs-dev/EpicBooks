@@ -8,7 +8,6 @@ namespace Domain.Negocio
     {
         public Carrinho()
         {
-            //Usuario = new Usuario();
             ItensPedido = new List<ItemPedido>();
             CupomPromocional = new Cupom();
             CuponsTroca = new List<Cupom>();
@@ -20,7 +19,6 @@ namespace Domain.Negocio
         public List<ItemPedido> ItensPedido { get; set; }
         public List<Cupom> CuponsTroca { get; set; }
         public Cupom CupomPromocional { get; set; }
-        //public Usuario Usuario { get; set; }
         public string Cep { get; set; }
         public CartaoDeCredito CartaoUm { get; set; }
         public CartaoDeCredito CartaoDois { get; set; }
