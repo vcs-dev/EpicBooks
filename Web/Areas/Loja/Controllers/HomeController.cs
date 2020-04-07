@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Produto;
@@ -39,6 +40,11 @@ namespace Web.Areas.Loja.Controllers
                     if (item.Status == 1)
                         livrosAtivos.Add(item);
                 }
+                var nome = "Fulano da Silva";
+                var id = "1";
+                HttpContext.Session.Set("nomeUsuario", Encoding.ASCII.GetBytes(nome));
+                HttpContext.Session.Set("idUsuario", Encoding.ASCII.GetBytes(id));
+
                 return View(livrosAtivos);
             }
         }

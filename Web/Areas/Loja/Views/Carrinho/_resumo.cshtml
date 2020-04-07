@@ -64,6 +64,7 @@
                         totalGeral -= item.Valor;
                     }
                 }
+                totalGeral += Model.ValorFrete;
             }
             <td>Total</td>
             <td>@("R$ " + totalGeral.ToString("##0.00"))</td>

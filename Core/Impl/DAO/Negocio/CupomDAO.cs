@@ -55,7 +55,7 @@ namespace Core.Impl.DAO.Negocio
                 SqlDataReader drCupom = comandoCupom.ExecuteReader();
                 comandoCupom.Dispose();
 
-                cupons = DataReadercupomParaList(drCupom);
+                cupons = DataReaderCupomParaList(drCupom);
             }
             catch (SqlException e)
             {
@@ -71,7 +71,7 @@ namespace Core.Impl.DAO.Negocio
             }
             return cupons.ToList<EntidadeDominio>();
         }
-        public List<Cupom> DataReadercupomParaList(SqlDataReader dataReader)
+        public List<Cupom> DataReaderCupomParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
             {

@@ -1,12 +1,12 @@
 ﻿$(document).ready(function () {
-    if($('#cupomPromo').length > 0){
+    if ($('#cupomPromo').length > 0) {
         $('#codCupomPromo').prop('readonly', true);
     }
 
-    if($('.cupomTroca').length > 0){
-        $('#selectCupomTroca option').each( function(){
-            var elem = $('.cupomTroca').find('button[value="' + $(this).val() +'"]');
-            if(elem.length > 0)
+    if ($('.cupomTroca').length > 0) {
+        $('#selectCupomTroca option').each(function () {
+            var elem = $('.cupomTroca').find('button[value="' + $(this).val() + '"]');
+            if (elem.length > 0)
                 $(this).prop('disabled', true);
         });
     }
@@ -39,7 +39,7 @@
             success: function (response) {
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                AtualizarResumo();
+                //AtualizarResumo();
             }
         });
     });
@@ -53,7 +53,7 @@
             success: function (response) {
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                AtualizarResumo();
+                //AtualizarResumo();
             }
         });
     });
@@ -68,10 +68,10 @@
                 alert(response);
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                AtualizarResumo();
+                //AtualizarResumo();
             },
             error: function () {
-                location.href="/Loja/Carrinho/Index/";
+                location.href = "/Loja/Carrinho/Index/";
             }
         });
     });
@@ -89,7 +89,7 @@
                     $('#codCupomPromo').prop('readonly', true);
                     $('#labelCupomPromoErro').empty();
                 },
-                error: function(){
+                error: function () {
                     $('#labelCupomPromoErro').text('Cupom inválido');
                 }
             });
@@ -146,16 +146,20 @@
     });
 });
 
-function CalcularFrete(cep) {
-    $.ajax({
-        type: "get",
-        url: "/Loja/Carrinho/CalcularFrete/",
-        data: { cep: cep },
-        dataType: "html",
-        success: function (response) {
-            $('#resumo').html(response);
-        }
-    });
+function CalcularFrete(id) {
+    if (parseInt(id) > 0) {
+        $.ajax({
+            type: "get",
+            url: "/Loja/Carrinho/CalcularFrete/",
+            data: { id: id },
+            dataType: "html",
+            success: function (response) {
+                $('#resumo').html(response);
+            }
+        });
+    }
+    else
+        AtualizarResumo();
 }
 
 function AtualizarResumo() {

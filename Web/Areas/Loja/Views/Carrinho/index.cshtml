@@ -16,7 +16,7 @@
                 <div class="col-md-3 mt-2 align-self-center">
                     <label for="">Endereço de entrega:</label>
                 </div>
-                <div class="col-md-4 mt-2 mb-2 align-self-center">
+                @*<div class="col-md-4 mt-2 mb-2 align-self-center">
                     <select class="custom-select" id="selectEndereco">
                         <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
                         <option selected=@(Model.Cep.Contains("08830-745")) value="08830-745">
@@ -26,6 +26,17 @@
                         <option selected=@(Model.Cep.Contains("04932-039")) value="04932-039">
                             Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039
                         </option>
+                    </select>
+                </div>*@
+                <div class="col-md-4 mt-2 mb-2 align-self-center">
+                    <select class="custom-select" id="selectEndereco">
+                        <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
+                        @foreach (var item in ViewBag.Enderecos)
+                        {
+                            <option selected=@(Model.EnderecoId == item.Id) value="@item.Id">
+                                @(item.Logradouro + " ," + item.Numero + ", CEP " + item.Cep)
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
@@ -50,16 +61,16 @@
                     <label for="">Cupom de troca</label>
                 </div>
                 @*<div class="col-md-2 mt-2 mb-2 align-self-center">
-            <select class="custom-select" id="selectCupomTroca">
-                <option selected value="">Escolha</option>
-                <option value="T10123456789">
-                    T10123456789  - R$ 30,00
-                </option>
-                <option value="T19876543210">
-                    T19876543210  - R$ 23,50
-                </option>
-            </select>
-        </div>*@
+                        <select class="custom-select" id="selectCupomTroca">
+                            <option selected value="">Escolha</option>
+                            <option value="T10123456789">
+                                T10123456789  - R$ 30,00
+                            </option>
+                            <option value="T19876543210">
+                                T19876543210  - R$ 23,50
+                            </option>
+                        </select>
+                    </div>*@
                 <div class="col-md-2 mt-2 mb-2 align-self-center">
                     <select class="custom-select" id="selectCupomTroca">
                         @if (ViewBag.CuponsTroca != null)
@@ -81,7 +92,7 @@
             <!--pagamento -->
             <div class="row mr-0 ml-0 mt-3 mb-2">
                 <div class="col-12 custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="chkDoisCartoes">
+                    <input type="checkbox" class="custom-control-input" id="chkDoisCartoes" name="MultiplosCartoes" checked="@(Model.MultiplosCartoes == 1)">
                     <label class="custom-control-label" for="chkDoisCartoes">Pagar com mais de um cartão de crédito</label>
                 </div>
             </div>
@@ -93,8 +104,10 @@
                 <div class="col-md-2 mt-2 mb-2">
                     <select class="custom-select" name="Carrinho.CartaoUm.Id">
                         <option selected value="">Escolha</option>
-                        <option value="1">VISA final 0493</option>
-                        <option value="2">Mastercard final 4839</option>
+                        @foreach (var item in ViewBag.Cartoes)
+                        {
+                            <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                        }
                     </select>
                 </div>
                 @*<div class="col-md-2 mt-2 mb-2">
@@ -105,12 +118,12 @@
                 </div>
                 <div class="col-md-2 mt-2 mb-2">
                     <select class="custom-select" name="Carrinho.CartaoUm.QtdeParcelas">
-                        <option selected value="1">1x sem juros</option>
-                        <option value="2">2x sem juros</option>
-                        <option value="3">3x sem juros</option>
-                        <option value="4">4x sem juros</option>
-                        <option value="5">5x sem juros</option>
-                        <option value="6">6x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 1)" value="1">1x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 2)" value="2">2x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 3)" value="3">3x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 4)" value="4">4x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 5)" value="5">5x sem juros</option>
+                        <option selected="@(Model.CartaoUm.QtdeParcelas == 6)" value="6">6x sem juros</option>
                     </select>
                 </div>
                 <div class="col-md-2 mt-2 align-self-center">
@@ -123,7 +136,7 @@
                     <label for="cupomPromocional">Valor R$</label>
                 </div>
                 <div class="col-md-2 mt-2 valorCartao d-none">
-                    <input type="text" class="form-control" id="valorCartao1" name="Carrinho.CartaoUm.ValorCartao" value="@Model.CartaoUm.Valor">
+                    <input type="text" class="form-control" id="valorCartao1" name="Carrinho.CartaoUm.Valor" value="@Model.CartaoUm.Valor">
                 </div>
             </div>
             <div id="pagarDoisCartoes" class="d-none">
@@ -135,8 +148,10 @@
                     <div class="col-md-2 mt-2 mb-2">
                         <select class="custom-select" name="Carrinho.CartaoDois.Id">
                             <option selected value="">Escolha</option>
-                            <option value="1">VISA final 0493</option>
-                            <option value="2">Mastercard final 4839</option>
+                            @foreach (var item in ViewBag.Cartoes)
+                            {
+                                <option selected="@(Model.CartaoDois.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                            }
                         </select>
                     </div>
                     @*<div class="col-md-2 mt-2 mb-2">
@@ -147,12 +162,12 @@
                     </div>
                     <div class="col-md-2 mt-2 mb-2">
                         <select class="custom-select" name="Carrinho.CartaoDois.QtdeParcelas">
-                            <option selected value="1">1x sem juros</option>
-                            <option value="2">2x sem juros</option>
-                            <option value="3">3x sem juros</option>
-                            <option value="4">4x sem juros</option>
-                            <option value="5">5x sem juros</option>
-                            <option value="6">6x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 1)" value="1">1x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 2)" value="2">2x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 3)" value="3">3x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 4)" value="4">4x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 5)" value="5">5x sem juros</option>
+                            <option selected="@(Model.CartaoDois.QtdeParcelas == 6)" value="6">6x sem juros</option>
                         </select>
                     </div>
                     <div class="col-md-2 mt-2 align-self-center">
@@ -165,7 +180,7 @@
                         <label for="cupomPromocional">Valor R$</label>
                     </div>
                     <div class="col-md-2 mt-2 valorCartao d-none">
-                        <input type="text" class="form-control" id="valorCartao2" name="Carrinho.CartaoDois.ValorCartao" value="@Model.CartaoDois.Valor">
+                        <input type="text" class="form-control" id="valorCartao2" name="Carrinho.CartaoDois.Valor" value="@Model.CartaoDois.Valor">
                     </div>
                 </div>
             </div>

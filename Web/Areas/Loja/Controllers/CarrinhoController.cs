@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Application;
 using Core.Impl.Business;
 using Core.Impl.Control;
+using Domain.DadosCliente;
 using Domain.Negocio;
 using Domain.Produto;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,15 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho = new Carrinho();
             Cupom cupom = new Cupom();
+            Endereco endereco = new Endereco();
+            CartaoDeCredito cartao = new CartaoDeCredito();
             List<Cupom> cupons;
+            List<Endereco> enderecos;
+            List<CartaoDeCredito> cartoes;
 
-            if (HttpContext.Session.Keys.Count() > 0)
-                carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");//Se o carrinho existir, carrega
-            else
-                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);//Senao, cria
+            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            if (carrinho == null)
+                carrinho = new Carrinho();
 
             carrinho.QtdeTotalItens = 0;
             foreach (var item in carrinho.ItensPedido)
@@ -37,15 +41,13 @@ namespace Web.Areas.Loja.Controllers
             if (string.IsNullOrEmpty(carrinho.Cep))
                 carrinho.Cep = "";
 
-            cupom.UsuarioId = 1;
+            cupom.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
             cupom.DataExpiracao = DateTime.Now;
             cupom.Usado = 0;
-            resultado = new Facade().Consultar(cupom);
+
+            resultado = new Facade().Consultar(cupom);//Busca cupons
             if (!string.IsNullOrEmpty(resultado.Msg))
-            {
                 TempData["MsgErro"] = resultado.Msg;
-                return PartialView("_resumo", carrinho);
-            }
             else
             {
                 cupons = new List<Cupom>();
@@ -53,8 +55,40 @@ namespace Web.Areas.Loja.Controllers
                 {
                     cupons.Add((Cupom)item);
                 }
+                ViewBag.CuponsTroca = cupons;
             }
-            ViewBag.CuponsTroca = cupons;
+
+            endereco.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+
+            resultado = new Facade().Consultar(endereco);//Busca enderecos
+            if (!string.IsNullOrEmpty(resultado.Msg))
+                TempData["MsgErro"] = resultado.Msg;
+            else
+            {
+                enderecos = new List<Endereco>();
+                foreach (var item in resultado.Entidades)
+                {
+                    enderecos.Add((Endereco)item);
+                }
+                ViewBag.Enderecos = enderecos;
+            }
+
+            cartao.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+
+            resultado = new Facade().Consultar(cartao);//Busca cartoes
+            if (!string.IsNullOrEmpty(resultado.Msg))
+                TempData["MsgErro"] = resultado.Msg;
+            else
+            {
+                cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                ViewBag.Cartoes = cartoes;
+            }
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
             return View(carrinho);
         }
 
@@ -86,12 +120,9 @@ namespace Web.Areas.Loja.Controllers
                 itemPedido.HoraInclusao = DateTime.Now;
                 itemPedido.Produto = livros.FirstOrDefault();
 
-                if (HttpContext.Session.Keys.Count() > 0)
-                    carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");//Se o carrinho existir, carrega
-                else
-                    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());//Senao, cria
-
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+                if (carrinho == null)
+                    carrinho = new Carrinho();
 
                 ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
 
@@ -175,16 +206,34 @@ namespace Web.Areas.Loja.Controllers
         //}
 
         [Area("Loja")]
-        public PartialViewResult CalcularFrete(string cep)
+        public PartialViewResult CalcularFrete(int id)
         {
             Carrinho carrinho;
+            List<Endereco> enderecos;
+            Endereco endereco = new Endereco()
+            {
+                Id = id
+            };
 
-            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            carrinho.ValorFrete = CalculoFrete.Calcular(cep, carrinho.QtdeTotalItens);
-            carrinho.Cep = cep;
-            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
-
-            return PartialView("_resumo", carrinho);
+            resultado = new Facade().Consultar(endereco);//Busca enderecos
+            if (!string.IsNullOrEmpty(resultado.Msg))
+            {
+                TempData["MsgErro"] = resultado.Msg;
+                return PartialView(null);
+            }
+            else
+            {
+                enderecos = new List<Endereco>();
+                foreach (var item in resultado.Entidades)
+                {
+                    enderecos.Add((Endereco)item);
+                }
+                carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+                carrinho.Cep = enderecos.FirstOrDefault().Cep;
+                carrinho.ValorFrete = CalculoFrete.Calcular(carrinho.Cep, carrinho.QtdeTotalItens);
+                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+                return PartialView("_resumo", carrinho);
+            }
         }
 
         [Area("Loja")]

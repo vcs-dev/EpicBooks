@@ -20,8 +20,8 @@
                             <div class="col-md-12 mb-3">
                                 <label>Preço: <span>@("R$ " + Model.PrecoVenda.ToString("##0.00"))</span></label>
                             </div>
-                            <div class="col-md-6">
-                                <input type="submit" class="btn btn-secondary" role="button" value="Adicionar ao carrinho">
+                            <div class="col-md-12">
+                                <a class="btn btn-secondary" href="/Loja/Carrinho/AdicionarItem/@Model.Id" role="button">Adicionar ao carrinho</a>
                             </div>
                         </div>
                     </div>

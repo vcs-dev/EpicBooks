@@ -1,9 +1,11 @@
 ﻿using Core.Application;
 using Core.Impl.Business;
+using Core.Impl.DAO.DadosCliente;
 using Core.Impl.DAO.Negocio;
 using Core.Impl.DAO.Produto;
 using Core.Interfaces;
 using Domain;
+using Domain.DadosCliente;
 using Domain.Negocio;
 using Domain.Produto;
 using System;
@@ -59,6 +61,22 @@ namespace Core.Impl.Control
             daos.Add(nameof(Cupom), cupomDAO);
 
             rns.Add(nameof(Cupom), null);
+            #endregion
+
+            #region Endereco
+            EnderecoDAO enderecoDAO = new EnderecoDAO();
+
+            daos.Add(nameof(Endereco), enderecoDAO);
+
+            rns.Add(nameof(Endereco), null);
+            #endregion
+
+            #region CartaoDeCredito
+            CartaoDeCreditoDAO cartaoDeCreditoDAO = new CartaoDeCreditoDAO();
+
+            daos.Add(nameof(CartaoDeCredito), cartaoDeCreditoDAO);
+
+            rns.Add(nameof(CartaoDeCredito), null);
             #endregion
 
         }

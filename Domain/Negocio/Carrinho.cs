@@ -27,5 +27,7 @@ namespace Domain.Negocio
         public double ValorFrete { get; set; }
         public int QtdeTotalItens { get; set; }
         public DateTime HoraUltimaInclusao { get; set; }
+        public int EnderecoId { get; set; }
+        public int MultiplosCartoes { get; set; }
     }
 }
