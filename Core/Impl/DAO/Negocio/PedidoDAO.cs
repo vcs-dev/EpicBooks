@@ -1,14 +1,16 @@
 ﻿using Domain;
 using Domain.Negocio;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace Core.Impl.DAO.Negocio
 {
     public class PedidoDAO : AbstractDAO
     {
-        public PedidoDAO():base("Pedidos", "PedidoId")
+        public PedidoDAO() : base("Pedidos", "PedidoId")
         {
         }
 
@@ -25,12 +27,14 @@ namespace Core.Impl.DAO.Negocio
 
                 cmdTextoPedido = "INSERT INTO Pedidos(UsuarioId, " +
                                                    "EnderecoId, " +
+                                                   "ValorFrete, " +
                                                    "DataPedido, " +
                                                    "Status, " +
                                                    "Observacao" +
                                   ") " +
                                   "VALUES(@UsuarioId, " +
                                          "@EnderecoId, " +
+                                         "@ValorFrete, " +
                                          "@DataPedido, " +
                                          "@Status," +
                                          "@Observacao" +
@@ -40,8 +44,9 @@ namespace Core.Impl.DAO.Negocio
 
                 comandoPedido.Parameters.AddWithValue("@UsuarioId", pedido.UsuarioId);
                 comandoPedido.Parameters.AddWithValue("@EnderecoId", pedido.EnderecoId);
+                comandoPedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
                 comandoPedido.Parameters.AddWithValue("@DataPedido", pedido.DataCadastro);
-                if(string.IsNullOrEmpty(pedido.Observacao) || string.IsNullOrWhiteSpace(pedido.Observacao))
+                if (string.IsNullOrEmpty(pedido.Observacao) || string.IsNullOrWhiteSpace(pedido.Observacao))
                     comandoPedido.Parameters.AddWithValue("@Observacao", DBNull.Value);
                 else
                     comandoPedido.Parameters.AddWithValue("@Observacao", pedido.Observacao);
@@ -277,6 +282,116 @@ namespace Core.Impl.DAO.Negocio
             {
                 Desconectar();
             }
+        }
+        public override List<EntidadeDominio> Consultar(EntidadeDominio entidade)
+        {
+            Pedido pedido = (Pedido)entidade;
+            List<Pedido> pedidos = new List<Pedido>();
+            string cmdTextoPedido;
+
+            try
+            {
+                Conectar();
+
+                if (pedido.Id > 0)
+                    cmdTextoPedido = "SELECT * FROM Pedidos WHERE PedidoId = @PedidoId";
+                if (pedido.Status != '\0')
+                    cmdTextoPedido = "SELECT * FROM Pedidos WHERE Status = @Status";
+                else
+                    cmdTextoPedido = "SELECT * FROM Pedidos";
+
+                SqlCommand comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+
+                if (pedido.Id > 0)
+                    comandopedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                else if (pedido.Status != '\0')
+                    comandopedido.Parameters.AddWithValue("@Status", pedido.Status);
+
+                SqlDataReader drPedido = comandopedido.ExecuteReader();
+                comandopedido.Parameters.Clear();
+
+                pedidos = DataReaderPedidoParaList(drPedido);
+
+                if (pedido.Status != 'A')
+                {
+                    foreach (var item in pedidos)
+                    {
+                        cmdTextoPedido = "SELECT ItemId, Qtde, PrecoUnitario" +
+                                         "FROM Pedidos P " +
+                                         "JOIN PedidosItens PI ON(P.PedidoId = PI.PedidoId) " +
+                                         "WHERE P.PedidoId = @PedidoId";
+
+                        comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+
+                        comandopedido.Parameters.AddWithValue("@PedidoId", item.Id);
+                        drPedido = comandopedido.ExecuteReader();
+
+                        if (!drPedido.HasRows)
+                        {
+                            throw new Exception("Sem Registros");
+                        }
+
+                        while (drPedido.Read())
+                        {
+                            ItemPedido temp = new ItemPedido
+                            {
+                                Id = drPedido.GetInt32(0),
+                                Qtde = drPedido.GetInt32(1),
+                                Produto = new Domain.Produto.Livro { PrecoVenda = Convert.ToDouble(drPedido.GetDecimal(2))}
+                            };
+                        }
+                        drPedido.Close();
+                    }
+                }
+                comandopedido.Dispose();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+            catch (InvalidOperationException e)
+            {
+                throw e;
+            }
+            finally
+            {
+                Desconectar();
+            }
+            return pedidos.ToList<EntidadeDominio>();
+        }
+        public List<Pedido> DataReaderPedidoParaList(SqlDataReader dataReader)
+        {
+            if (!dataReader.HasRows)
+            {
+                throw new Exception("Sem Registros");
+            }
+
+            List<Pedido> pedidos = new List<Pedido>();
+            while (dataReader.Read())
+            {
+                try
+                {
+                    Pedido pedido = new Pedido
+                    {
+                        Id = Convert.ToInt32(dataReader["UsuarioId"]),
+                        EnderecoId = Convert.ToInt32(dataReader["EnderecoId"]),
+                        ValorFrete = Convert.ToDouble(dataReader["ValorFrete"]),
+                        DataCadastro = Convert.ToDateTime(dataReader["DataPedido"]),
+                        Status = Convert.ToChar(dataReader["Status"]),
+                    };
+                    if (!dataReader.IsDBNull(6))
+                        pedido.Observacao = dataReader["Observacao"].ToString();
+
+                    pedidos.Add(pedido);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            dataReader.Close();
+
+            return pedidos.ToList();
         }
     }
 }

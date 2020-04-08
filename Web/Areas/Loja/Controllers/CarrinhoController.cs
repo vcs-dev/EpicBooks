@@ -426,7 +426,11 @@ namespace Web.Areas.Loja.Controllers
         {
             Carrinho carrinho;
             Pedido pedido;
+
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+            if (carrinho.ValorFrete == 0)
+                return View(carrinho);
+
             pedido = new Pedido
             {
                 ItensPedido = carrinho.ItensPedido,

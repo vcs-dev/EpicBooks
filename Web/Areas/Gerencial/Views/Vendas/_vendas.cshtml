@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Domain.Negocio.Pedido>
+
+<table class="table table-striped text-center self-align-center">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Quantidade de produtos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                var soma = 0.0;
+                double valorTotaPedido = 0;
+                foreach (var item1 in Model)
+                {
+                    soma = item1.ItensPedido.Count;
+                    foreach (var item2 in item1.ItensPedido)
+                    {
+                        valorTotaPedido = item2.Produto.PrecoVenda * item2.Qtde;
+                    }
+                }
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@valorTotaPedido</td>
+                    <td>@item.DataCadastro</td>
+                    <td>@soma</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
