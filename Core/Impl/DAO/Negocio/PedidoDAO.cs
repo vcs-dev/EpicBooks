@@ -312,11 +312,11 @@ namespace Core.Impl.DAO.Negocio
 
                 pedidos = DataReaderPedidoParaList(drPedido);
 
-                if (pedido.Status != 'A')
+                if (pedido.Status == 'A')
                 {
                     foreach (var item in pedidos)
                     {
-                        cmdTextoPedido = "SELECT ItemId, Qtde, PrecoUnitario" +
+                        cmdTextoPedido = "SELECT ItemId, Qtde, PrecoUnitario " +
                                          "FROM Pedidos P " +
                                          "JOIN PedidosItens PI ON(P.PedidoId = PI.PedidoId) " +
                                          "WHERE P.PedidoId = @PedidoId";
@@ -337,8 +337,43 @@ namespace Core.Impl.DAO.Negocio
                             {
                                 Id = drPedido.GetInt32(0),
                                 Qtde = drPedido.GetInt32(1),
-                                Produto = new Domain.Produto.Livro { PrecoVenda = Convert.ToDouble(drPedido.GetDecimal(2))}
+                                Produto = new Domain.Produto.Livro { PrecoVenda = Convert.ToDouble(drPedido.GetDecimal(2)) }
                             };
+                            item.ItensPedido.Add(temp);
+                        }
+                        drPedido.Close();
+                    }
+                    foreach (var item in pedidos)
+                    {
+                        cmdTextoPedido = "SELECT C.CupomId, Tipo, Valor " +
+                                         "FROM Cupons C " +
+                                         "JOIN PedidosCupons PC ON(C.CupomId = PC.CupomId) " +
+                                         "JOIN Pedidos P ON(PC.PedidoId = P.PedidoId) " +
+                                         "WHERE P.PedidoId = @PedidoId";
+
+                        comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+
+                        comandopedido.Parameters.AddWithValue("@PedidoId", item.Id);
+                        drPedido = comandopedido.ExecuteReader();
+
+                        if (!drPedido.HasRows)
+                        {
+                            throw new Exception("Sem Registros");
+                        }
+
+                        item.CuponsTroca = new List<Cupom>();
+                        while (drPedido.Read())
+                        {
+                            Cupom temp = new Cupom
+                            {
+                                Id = drPedido.GetInt32(0),
+                                Tipo = Convert.ToChar(drPedido.GetString(1)),
+                                Valor = Convert.ToDouble(drPedido.GetDecimal(2))
+                            };
+                            if (temp.Tipo == 'P')
+                                item.CupomPromocional = temp;
+                            else
+                                item.CuponsTroca.Add(temp);
                         }
                         drPedido.Close();
                     }
@@ -373,7 +408,8 @@ namespace Core.Impl.DAO.Negocio
                 {
                     Pedido pedido = new Pedido
                     {
-                        Id = Convert.ToInt32(dataReader["UsuarioId"]),
+                        Id = Convert.ToInt32(dataReader["PedidoId"]),
+                        UsuarioId = Convert.ToInt32(dataReader["UsuarioId"]),
                         EnderecoId = Convert.ToInt32(dataReader["EnderecoId"]),
                         ValorFrete = Convert.ToDouble(dataReader["ValorFrete"]),
                         DataCadastro = Convert.ToDateTime(dataReader["DataPedido"]),

@@ -429,7 +429,7 @@ namespace Web.Areas.Loja.Controllers
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             if (carrinho.ValorFrete == 0)
-                return View(carrinho);
+                return RedirectToAction("Index", "Carrinho");
 
             pedido = new Pedido
             {
@@ -447,7 +447,7 @@ namespace Web.Areas.Loja.Controllers
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
                 ViewBag.MsgErro = resultado.Msg;
-                return View(carrinho);
+                return RedirectToAction("Index", "Carrinho");
             }
 
             pedido.Status = 'A';
@@ -455,12 +455,12 @@ namespace Web.Areas.Loja.Controllers
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
                 ViewBag.MsgErro = resultado.Msg;
-                return View(carrinho);
+                return RedirectToAction("Index", "Carrinho");
             }
 
             ViewBag.MsgSucesso = "Pedido " + pedido.Id + " realizado com sucesso";
 
-            return View(carrinho);
+            return RedirectToAction("Index", "Carrinho");
         }
     }
 }
