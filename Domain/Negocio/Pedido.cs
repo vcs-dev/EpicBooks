@@ -22,6 +22,7 @@ namespace Domain.Negocio
         public double ValorFrete { get; set; }
         public double ValorTotalPedido { get; set; }
         public char Status { get; set; }
+        public string DescricaoStatus { get; set; }
         public string Observacao { get; set; }
         public byte MultiplosCartoes { get; set; }
         public Guid SessaoGuid { get; set; }

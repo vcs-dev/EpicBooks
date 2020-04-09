@@ -1,0 +1,25 @@
+﻿@model Domain.Negocio.Pedido
+
+<table class="table table-striped text-center self-align-center">
+    <thead>
+        <tr>
+            <th>Id do Produto</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ItensPedido)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td><a href="/Loja/Home/Produto/@item.Id">@item.Produto.Nome</a></td>
+                <td>@item.Qtde</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Status == 'E')
+{
+    <a href="/Loja/MinhaConta/SolicitarTroca/@Model.Id" class="btn btn-primary">Solicitar troca</a>
+}
