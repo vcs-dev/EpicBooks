@@ -1,9 +1,11 @@
-﻿using Core.Interfaces;
+﻿using Core.Application;
+using Core.Impl.Control;
+using Core.Impl.DAO;
+using Core.Interfaces;
 using Domain;
+using Domain.DadosCliente;
 using Domain.Negocio;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Impl.Business
 {
@@ -14,9 +16,53 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Pedido"))
             {
                 Pedido pedido = (Pedido)entidade;
+                Result resultado;
+                List<CartaoDeCredito> cartoes;
 
-                if (pedido.CartaoUm.Id < 1 && pedido.CartaoDois.Id < 1)
+                resultado = new Facade().Consultar(new CartaoDeCredito { UsuarioId = pedido.UsuarioId });
+                if (resultado.Msg != null)
+                {
+                    pedido.Status = 'R';
+                    return "Não foi possível validar o cartão.\n" + resultado.Msg;
+                }
+                cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+
+                CartaoDeCredito temp = cartoes.Find(x => x.Id == pedido.CartaoUm.Id);
+
+                if (temp != null)
+                    pedido.CartaoUm.Numeracao = temp.Numeracao;
+
+                if (pedido.CartaoDois.Id > 0)
+                {
+                    temp = null;
+
+                    temp = cartoes.Find(x => x.Id == pedido.CartaoDois.Id);
+                    if (temp != null)
+                        pedido.CartaoDois.Numeracao = temp.Numeracao;
+                }
+                OperadoraCartaoDAO operadoraCartaoDAO = new OperadoraCartaoDAO();
+
+                resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoUm);
+                if (resultado.Entidades.Count > 0)
+                {
+                    pedido.Status = 'R';
                     return null;
+                }
+
+                if (pedido.CartaoDois.Id > 0)
+                {
+                    resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoDois);
+                    if (resultado.Entidades.Count > 0)
+                    {
+                        pedido.Status = 'R';
+                        return null;
+                    }
+                }
+                pedido.Status = 'A';
             }
             else
             {

@@ -196,6 +196,22 @@ namespace Core.Impl.DAO.Negocio
 
                         comandoPedidosCupons.Dispose();
 
+                        cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
+                                                "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
+
+                        comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
+                        comandoPedidosCupons.Parameters.AddWithValue("@Codigo", pedido.CupomTrocaGerado.Codigo + pedido.Id);
+                        comandoPedidosCupons.Parameters.AddWithValue("@Tipo", pedido.CupomTrocaGerado.Tipo);
+                        comandoPedidosCupons.Parameters.AddWithValue("@Valor", pedido.CupomTrocaGerado.Valor);
+                        comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
+                        if(pedido.CupomTrocaGerado.DataExpiracao == null)
+                            comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
+                        else
+                            comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
+                        comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
+                        comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
+                        pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
+
                         //verificar o codigo abaixo
                         //cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE SessaoGuid = @SessaoGuid";
 

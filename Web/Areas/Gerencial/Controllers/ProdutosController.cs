@@ -166,7 +166,7 @@ namespace Web.Areas.Gerencial.Controllers
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
                 TempData["MsgErro"] = resultado.Msg;
-                return View();
+                return View("editar", livro.Id);
             }
             else
             {
@@ -211,13 +211,17 @@ namespace Web.Areas.Gerencial.Controllers
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
                 TempData["MsgErro"] = resultado.Msg;
-                return View();
+                return View("editar", livro.Id);
             }
             else
             {
                 TempData["MsgSucesso"] = resultado.Msg;
-                FileInfo fi = new FileInfo(caminhoWebRoot + caminhoImagemAntiga);
-                fi.Delete();
+                string temp = caminhoImagemAntiga.Replace("\\", "/");
+                if (!temp.Equals(livro.CaminhoImagem))
+                {
+                    FileInfo fi = new FileInfo(caminhoWebRoot + caminhoImagemAntiga);
+                    fi.Delete();
+                }
                 return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
             }
         }

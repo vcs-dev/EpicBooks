@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Core.Application;
 using Core.Impl.Business;
 using Core.Impl.Control;
 using Domain.DadosCliente;
 using Domain.Negocio;
 using Domain.Produto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Util;
 
@@ -19,7 +21,7 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Index()
         {
-            Carrinho carrinho = new Carrinho();
+            Carrinho carrinho;
             Cupom cupom = new Cupom();
             Endereco endereco = new Endereco();
             CartaoDeCredito cartao = new CartaoDeCredito();
@@ -30,6 +32,15 @@ namespace Web.Areas.Loja.Controllers
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             if (carrinho == null)
                 carrinho = new Carrinho();
+            else
+            {
+                char statusPedido = Convert.ToChar(HttpContext.Session.Get("statusPedido"));
+                if (statusPedido != '\0' && statusPedido == 'A' || statusPedido == 'R')
+                {
+                    carrinho = new Carrinho();
+                    HttpContext.Session.Remove("statusPedido");
+                }
+            }
 
             carrinho.QtdeTotalItens = 0;
             foreach (var item in carrinho.ItensPedido)
@@ -47,7 +58,7 @@ namespace Web.Areas.Loja.Controllers
 
             resultado = new Facade().Consultar(cupom);//Busca cupons
             if (!string.IsNullOrEmpty(resultado.Msg))
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
             else
             {
                 cupons = new List<Cupom>();
@@ -62,7 +73,7 @@ namespace Web.Areas.Loja.Controllers
 
             resultado = new Facade().Consultar(endereco);//Busca enderecos
             if (!string.IsNullOrEmpty(resultado.Msg))
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
             else
             {
                 enderecos = new List<Endereco>();
@@ -77,7 +88,7 @@ namespace Web.Areas.Loja.Controllers
 
             resultado = new Facade().Consultar(cartao);//Busca cartoes
             if (!string.IsNullOrEmpty(resultado.Msg))
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
             else
             {
                 cartoes = new List<CartaoDeCredito>();
@@ -88,7 +99,14 @@ namespace Web.Areas.Loja.Controllers
                 ViewBag.Cartoes = cartoes;
             }
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+            string msg = HttpContext.Session.GetString("mensagemCarrinho");
 
+            if (!string.IsNullOrEmpty(msg) && !string.IsNullOrWhiteSpace(msg))
+            {
+                ViewBag.Mensagem = msg;
+                HttpContext.Session.Remove("mensagemCarrinho");
+            }
+                
             return View(carrinho);
         }
 
@@ -248,7 +266,7 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public PartialViewResult RemoverItem(int id)
+        public IActionResult RemoverItem(int id)
         {
             Carrinho carrinho;
 
@@ -261,10 +279,11 @@ namespace Web.Areas.Loja.Controllers
                 carrinho.ItensPedido.Remove(itemPed);//Decrementa qtde em 1 se a qtde for maior que 1
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }
-            if(carrinho.ItensPedido.Count() > 0)
-                return PartialView("_itensPedido", carrinho.ItensPedido);
-            else
-                return PartialView(null);
+            if (carrinho.ItensPedido.Count() > 0)
+                return PartialView("_resumo", carrinho.ItensPedido);
+
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());
+            return null;
         }
 
         //[Area("Loja")]
@@ -422,43 +441,64 @@ namespace Web.Areas.Loja.Controllers
 
         [Area("Loja")]
         [HttpPost]
-        public IActionResult EnviarPedido(CartaoDeCredito cartaoUm, CartaoDeCredito cartaoDois)
+        public IActionResult EnviarPedido(CartaoDeCredito cartaoUm, CartaoDeCredito cartaoDois, byte multiplosCartoes)
         {
             Carrinho carrinho;
             Pedido pedido;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            if (carrinho.ValorFrete == 0)
-                return RedirectToAction("Index", "Carrinho");
-
+            
             pedido = new Pedido
             {
+                MultiplosCartoes = carrinho.MultiplosCartoes = multiplosCartoes,
                 ItensPedido = carrinho.ItensPedido,
                 CuponsTroca = carrinho.CuponsTroca,
                 CupomPromocional = carrinho.CupomPromocional,
                 ValorFrete = carrinho.ValorFrete,
-                CartaoUm = cartaoUm,
-                CartaoDois = cartaoDois,
+                CartaoUm = carrinho.CartaoUm = cartaoUm,
+                CartaoDois = carrinho.CartaoDois = cartaoDois,
                 EnderecoId = carrinho.EnderecoId,
                 UsuarioId = HttpContext.Session.Get<int>("idUsuario")
             };
 
+            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
             resultado = new Facade().Salvar(pedido);//Salva o pedido
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
-                ViewBag.MsgErro = resultado.Msg;
+                string msg = resultado.Msg;
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
                 return RedirectToAction("Index", "Carrinho");
             }
 
-            pedido.Status = 'A';
             resultado = new Facade().Alterar(pedido);//Alterar o pedido
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
-                ViewBag.MsgErro = resultado.Msg;
+                string msg = resultado.Msg;
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
                 return RedirectToAction("Index", "Carrinho");
             }
-
-            ViewBag.MsgSucesso = "Pedido " + pedido.Id + " realizado com sucesso";
+            if (pedido.Status == 'A')
+            {
+                string msg = "Pedido " + pedido.Id + " realizado com sucesso";
+                char statusPedido = 'A';
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                HttpContext.Session.Set("statusPedido", statusPedido);
+            }
+            if (pedido.Status == 'R')
+            {
+                string msg = "Pedido " + pedido.Id + " Recusado.\n Contate a operadora de cartão de crédito";
+                char statusPedido = 'R';
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                HttpContext.Session.Set("statusPedido", statusPedido);
+            }
+            else
+            {
+                string msg = "Pedido efetuado com sucesso";
+                char statusPedido = 'P';
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                HttpContext.Session.Set("statusPedido", statusPedido);
+            }
 
             return RedirectToAction("Index", "Carrinho");
         }

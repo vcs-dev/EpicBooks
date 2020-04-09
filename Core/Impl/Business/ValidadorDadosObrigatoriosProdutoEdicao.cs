@@ -26,12 +26,12 @@ namespace Core.Impl.Business
                     string.IsNullOrEmpty(livro.Isbn) || string.IsNullOrWhiteSpace(livro.Isbn) ||
                     livro.QtdePaginas == null || livro.QtdePaginas == 0 || livro.TipoCapa == 0)
                     return "Os campos com * são de preenchimento obrigatório.";
-                if (livro.Status == 0 && (string.IsNullOrEmpty(livro.MotivoMudancaStatus) || string.IsNullOrWhiteSpace(livro.MotivoMudancaStatus) ||
-                    livro.CategoriaInativacao == null || livro.CategoriaInativacao == 0))
-                    return "Os campos com * são de preenchimento obrigatório.";
-                else if (livro.Status == 1 && (string.IsNullOrEmpty(livro.MotivoMudancaStatus) || string.IsNullOrWhiteSpace(livro.MotivoMudancaStatus) ||
-                    livro.CategoriaAtivacao == null || livro.CategoriaAtivacao == 0))
-                    return "Os campos com * são de preenchimento obrigatório.";
+                //if (livro.Status == 0 && (string.IsNullOrEmpty(livro.MotivoMudancaStatus) || string.IsNullOrWhiteSpace(livro.MotivoMudancaStatus) ||
+                //    livro.CategoriaInativacao == null || livro.CategoriaInativacao == 0))
+                //    return "Os campos com * são de preenchimento obrigatório.";
+                //else if (livro.Status == 1 && (string.IsNullOrEmpty(livro.MotivoMudancaStatus) || string.IsNullOrWhiteSpace(livro.MotivoMudancaStatus) ||
+                //    livro.CategoriaAtivacao == null || livro.CategoriaAtivacao == 0))
+                //    return "Os campos com * são de preenchimento obrigatório.";
             }
             else
             {

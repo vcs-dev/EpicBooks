@@ -26,6 +26,6 @@ namespace Domain.Negocio
         public int QtdeTotalItens { get; set; }
         public DateTime HoraUltimaInclusao { get; set; }
         public int EnderecoId { get; set; }
-        public int MultiplosCartoes { get; set; }
+        public byte MultiplosCartoes { get; set; }
     }
 }

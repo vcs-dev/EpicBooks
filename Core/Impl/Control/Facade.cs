@@ -60,12 +60,30 @@ namespace Core.Impl.Control
 
             daos.Add(nameof(Pedido), pedidoDAO);
 
+            //Regras de salvar
+            CalculoValorTotalPedido calculoValorTotalPedido = new CalculoValorTotalPedido();
+            ValidadorDadosObrigatoriosPedido validadorDadosObrigatoriosPedido = new ValidadorDadosObrigatoriosPedido();       
+            ValidadorCartoesDiferentes validadorCartoesDiferentes = new ValidadorCartoesDiferentes();
+            ValidadorNecessidadePgtoCartao validadorNecessidadePgtoCartao = new ValidadorNecessidadePgtoCartao();
+            ValidadorValorMinimoCartao validadorValorMinimoCartao = new ValidadorValorMinimoCartao();
+            ValidadorCupons validadorCupons = new ValidadorCupons();
+            ValidadorDivisaoValorCartoes validadorDivisaoValorCartoes = new ValidadorDivisaoValorCartoes();
+            VerificadorNecessidadeGeracaoCupomTroca verificadorNecessidadeGeracaoCupomTroca = new VerificadorNecessidadeGeracaoCupomTroca();
+
             //Regras de alterar
             ValidadorRetornoOperadora validadorRetornoOperadora = new ValidadorRetornoOperadora();
 
             List<IStrategy> rnsSalvarPedido = new List<IStrategy>();
             List<IStrategy> rnsAlterarPedido = new List<IStrategy>();
 
+            rnsSalvarPedido.Add(calculoValorTotalPedido);
+            rnsSalvarPedido.Add(validadorDadosObrigatoriosPedido);
+            rnsSalvarPedido.Add(validadorCartoesDiferentes);
+            rnsSalvarPedido.Add(validadorNecessidadePgtoCartao);
+            rnsSalvarPedido.Add(validadorValorMinimoCartao);
+            rnsSalvarPedido.Add(validadorCupons);
+            rnsSalvarPedido.Add(validadorDivisaoValorCartoes);
+            rnsSalvarPedido.Add(verificadorNecessidadeGeracaoCupomTroca);
             rnsSalvarPedido.Add(inclusaoDataCadastro);
 
             rnsAlterarPedido.Add(validadorRetornoOperadora);

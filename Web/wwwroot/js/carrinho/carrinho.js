@@ -16,6 +16,9 @@
         $('.valorCartao').removeClass('d-none');
     }
 
+    if($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
+        $('#modalCarrinhoMsg').modal('show');
+
     $('#chkDoisCartoes').on('change', function () {
         if ($('#chkDoisCartoes').prop('checked')) {
             $('#pagarDoisCartoes').removeClass('d-none');

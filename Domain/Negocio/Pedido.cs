@@ -23,6 +23,8 @@ namespace Domain.Negocio
         public double ValorTotalPedido { get; set; }
         public char Status { get; set; }
         public string Observacao { get; set; }
+        public byte MultiplosCartoes { get; set; }
         public Guid SessaoGuid { get; set; }
+        public Cupom CupomTrocaGerado { get; set; }
     }
 }
