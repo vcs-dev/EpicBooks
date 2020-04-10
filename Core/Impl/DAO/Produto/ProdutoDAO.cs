@@ -106,6 +106,7 @@ namespace Core.Impl.DAO.Produto
                 comandolivro.Parameters.AddWithValue("@GrupoPrecificacao", livro.GrupoPrecificacao);
 
                 livro.Id = Convert.ToInt32(comandolivro.ExecuteScalar());
+                comandolivro.Dispose();
 
                 cmdTextoGenero = "INSERT INTO ProdutosGeneros" +
                                      "(ProdutoId," +
@@ -124,6 +125,7 @@ namespace Core.Impl.DAO.Produto
                     comandoGenero.ExecuteNonQuery();
                     comandoGenero.Parameters.Clear();
                 }
+                comandoGenero.Dispose();
 
                 cmdTextoAutor = "INSERT INTO ProdutosAutores" +
                                      "(ProdutoId," +
@@ -142,10 +144,9 @@ namespace Core.Impl.DAO.Produto
                     comandoAutor.ExecuteNonQuery();
                     comandoAutor.Parameters.Clear();
                 }
+                comandoAutor.Dispose();
 
                 Commit();
-                comandolivro.Dispose();
-                comandoGenero.Dispose();
             }
             catch (SqlException e)
             {

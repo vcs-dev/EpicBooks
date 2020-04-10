@@ -117,6 +117,7 @@ namespace Core.Impl.DAO.Negocio
                 comandopedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
 
                 comandopedido.ExecuteNonQuery();
+                comandopedido.Dispose();
 
                 if (pedido.Status == 'A')
                 {
@@ -151,7 +152,6 @@ namespace Core.Impl.DAO.Negocio
                         comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoDois.QtdeParcelas);
                         comandoPedidosCartoes.ExecuteNonQuery();
                     }
-
                     comandoPedidosCartoes.Dispose();
 
                     if (pedido.CuponsTroca.Count > 0 || pedido.CupomPromocional.Id > 0)
@@ -210,7 +210,6 @@ namespace Core.Impl.DAO.Negocio
                         comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
                         comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
                         pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
-
                         comandoPedidosCupons.Dispose();
                         //verificar o codigo abaixo
                         //cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE SessaoGuid = @SessaoGuid";
@@ -238,7 +237,6 @@ namespace Core.Impl.DAO.Negocio
                     comandoVenda.Parameters.AddWithValue("@DataVenda", DateTime.Now);
                     comandoVenda.ExecuteNonQuery();
                     comandoVenda.Parameters.Clear();
-
                     comandoVenda.Dispose();
 
                     cmdTextoEstoque = "Update Estoque " +

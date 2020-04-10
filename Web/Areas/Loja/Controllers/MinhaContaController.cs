@@ -87,14 +87,25 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public IActionResult SolicitarTroca(int pedidoId)
+        public JsonResult SolicitarTroca(int itemId, int qtde, int pedidoId)
         {
-            return View();
+            Troca troca = new Troca 
+            { 
+                ItemId = itemId,
+                PedidoId = pedidoId,
+                Qtde = qtde,
+                Status = 'P'
+            };
+            resultado = new Facade().Salvar(troca);//inserir RNs na fachada
+            if(resultado.Msg != null)
+                ViewBag.Mensagem = resultado.Msg;
+
+            return Json("{\"Mensagem\":" + "\"" + ViewBag.Mensagem + "\"}");
         }
 
         [Area("Loja")]
         [HttpPost]
-        public IActionResult EnviarSolicitacaoTroca(int pedidoId)
+        public IActionResult EnviarSolicitacaoTroca(int id)
         {
             return View();
         }

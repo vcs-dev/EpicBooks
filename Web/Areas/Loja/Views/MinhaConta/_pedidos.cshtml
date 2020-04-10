@@ -9,7 +9,6 @@
                 <th>Data</th>
                 <th>Status</th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -20,14 +19,6 @@
                     <td>@item.DataCadastro</td>
                     <td>@item.DescricaoStatus</td>
                     <td><a href="/Loja/MinhaConta/Detalhes/@item.Id" class="btn btn-primary" title="Detalhes"><i class="fa fa-info-circle"></i></a></td>
-                    @if (item.Status == 'E')
-                    {
-                        <td><a href="/Loja/MinhaConta/SolicitarTroca/@item.Id" class="btn btn-primary" title="Solicitar troca"><i class="fa fa-exchange-alt"></i></a></td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
                 </tr>
             }
         </tbody>
