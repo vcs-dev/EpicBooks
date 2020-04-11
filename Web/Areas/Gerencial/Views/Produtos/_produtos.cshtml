@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<Domain.Produto.Livro>
 
-<table class="table table-striped text-center self-align-center">
-    <thead>
-        <tr>
-            <th>Capa</th>
-            <th>ISBN</th>
-            <th>Título</th>
-            <th>Status</th>
-            <th>Lançamento</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            foreach (var item in Model)
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped text-center self-align-center">
+        <thead>
+            <tr>
+                <th>Capa</th>
+                <th>ISBN</th>
+                <th>Título</th>
+                <th>Status</th>
+                <th>Lançamento</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
                 <tr>
                     <td><img src="@(item.CaminhoImagem)" width="50" height="70" alt="Capa" class="img-thumbnail" /></td>
@@ -31,18 +31,6 @@
                     <td><a href="/Gerencial/Produtos/Editar/@item.Id" class="btn btn-secondary" title="Editar"><i class="fa fa-edit"></i></a></td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}

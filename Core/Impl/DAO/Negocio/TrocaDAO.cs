@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Text;
+using System.Linq;
 
 namespace Core.Impl.DAO.Negocio
 {
@@ -75,6 +75,7 @@ namespace Core.Impl.DAO.Negocio
                 Desconectar();
             }
         }
+
         public override void Alterar(EntidadeDominio entidade)
         {
             Troca troca = (Troca)entidade;
@@ -192,6 +193,107 @@ namespace Core.Impl.DAO.Negocio
             {
                 Desconectar();
             }
+        }
+
+        public override List<EntidadeDominio> Consultar(EntidadeDominio entidade)
+        {
+            Troca troca = (Troca)entidade;
+            List<Troca> trocas = new List<Troca>();
+            string cmdTextoTroca;
+
+            try
+            {
+                Conectar();
+
+                if (troca.UsuarioId > 0)
+                    cmdTextoTroca = "SELECT " +
+                                         "T.TrocaId, " +
+                                         "T.PedidoId, " +
+                                         "T.ItemId, " +
+                                         "T.Status, " +
+                                         "T.Qtde, " +
+                                         "T.DataSolicitacao " +
+                                     "FROM Trocas T " +
+                                         "JOIN Produtos PR ON(T.ItemId = PR.ProdutoId) " +
+                                         "JOIN Pedidos P ON(T.PedidoId = P.PedidoId) " +
+                                         "JOIN Usuarios U ON(P.UsuarioId = U.UsuarioId) " +
+                                     "WHERE P.UsuarioId = @UsuarioId " +
+                                     "ORDER BY TrocaId";
+                else
+                    cmdTextoTroca = "SELECT " +
+                                         "PR.Nome, " +
+                                         "T.TrocaId, " +
+                                         "T.PedidoId, " +
+                                         "T.ItemId, " +
+                                         "T.Status, " +
+                                         "T.Qtde, " +
+                                         "T.DataSolicitacao " +
+                                     "FROM Trocas T " +
+                                         "JOIN Produtos PR ON(T.ItemId = PR.ProdutoId) " +
+                                     "WHERE T.Status = @Status " +
+                                     "ORDER BY DataSolicitacao ASC";
+
+                SqlCommand comandotroca = new SqlCommand(cmdTextoTroca, conexao);
+
+                if (troca.UsuarioId > 0)
+                    comandotroca.Parameters.AddWithValue("@UsuarioId", troca.UsuarioId);
+                else if (troca.Status > 0)
+                    comandotroca.Parameters.AddWithValue("@Status", troca.Status);
+
+                SqlDataReader drTroca = comandotroca.ExecuteReader();
+                comandotroca.Parameters.Clear();
+
+                trocas = DataReaderTrocaParaList(drTroca);
+
+                comandotroca.Dispose();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+            catch (InvalidOperationException e)
+            {
+                throw e;
+            }
+            finally
+            {
+                Desconectar();
+            }
+            return trocas.ToList<EntidadeDominio>();
+        }
+
+        public List<Troca> DataReaderTrocaParaList(SqlDataReader dataReader)
+        {
+            if (!dataReader.HasRows)
+                return new List<Troca>();
+
+            List<Troca> trocas = new List<Troca>();
+            while (dataReader.Read())
+            {
+                try
+                {
+                    Troca troca = new Troca
+                    {
+                        Id = Convert.ToInt32(dataReader["TrocaId"]),
+                        PedidoId = Convert.ToInt32(dataReader["PedidoId"]),
+                        ItemId = Convert.ToInt32(dataReader["ItemId"]),
+                        Status = Convert.ToChar(dataReader["Status"]),
+                        Qtde = Convert.ToInt32(dataReader["DataTroca"]),
+                        DataCadastro = Convert.ToDateTime(dataReader["DataSolicitacao"]),
+                    };
+                    if (!Convert.IsDBNull(dataReader["Nome"]))
+                        troca.NomeItem = (dataReader["Nome"]).ToString();
+
+                    trocas.Add(troca);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            dataReader.Close();
+
+            return trocas.ToList();
         }
     }
 }

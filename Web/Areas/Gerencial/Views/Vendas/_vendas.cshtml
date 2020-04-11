@@ -1,55 +1,44 @@
 ﻿@model IEnumerable<Domain.Negocio.Pedido>
 
-<table class="table table-striped text-center self-align-center">
-    <thead>
-        <tr>
-            <th>Código</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Quantidade de itens</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Count() > 0)
-        {
-
-            foreach (var item in Model)
-            {
-                var soma = 0;
-                double valorTotaPedido = 0;
-                foreach (var item1 in item.ItensPedido)
-                {
-                    soma += item1.Qtde;
-                }
-
-                foreach (var itemPedido in item.ItensPedido)
-                {
-                    valorTotaPedido += itemPedido.Produto.PrecoVenda * itemPedido.Qtde;
-                }
-                valorTotaPedido += item.ValorFrete;
-                valorTotaPedido -= item.CupomPromocional.Valor;
-
-                foreach (var cuponsTroca in item.CuponsTroca)
-                {
-                    valorTotaPedido -= cuponsTroca.Valor;
-                }
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@("R$ " + (valorTotaPedido).ToString("##0.00"))</td>
-                    <td>@item.DataCadastro</td>
-                    <td>@soma</td>
-                </tr>
-            }
-        }
-        else
-        {
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped text-center self-align-center">
+        <thead>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <th>Código</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Quantidade de itens</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            var soma = 0;
+            double valorTotaPedido = 0;
+            foreach (var item1 in item.ItensPedido)
+            {
+            soma += item1.Qtde;
+            }
+
+            foreach (var itemPedido in item.ItensPedido)
+            {
+            valorTotaPedido += itemPedido.Produto.PrecoVenda * itemPedido.Qtde;
+            }
+            valorTotaPedido += item.ValorFrete;
+            valorTotaPedido -= item.CupomPromocional.Valor;
+
+            foreach (var cuponsTroca in item.CuponsTroca)
+            {
+            valorTotaPedido -= cuponsTroca.Valor;
+            }
+            <tr>
+                <td>@item.Id</td>
+                <td>@("R$ " + (valorTotaPedido).ToString("##0.00"))</td>
+                <td>@item.DataCadastro</td>
+                <td>@soma</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

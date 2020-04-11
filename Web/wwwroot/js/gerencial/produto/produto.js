@@ -1,6 +1,9 @@
 $(document).ready(function () {
     const valStatus = $('#status').val();
 
+    if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
+        $('#modalMensagem').modal('show');
+
     $('#status').on('change', function () {
         if ($('#status').val() !== valStatus) {
             $('#divMudaStatus').removeClass('d-none');

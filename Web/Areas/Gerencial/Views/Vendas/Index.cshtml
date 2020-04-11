@@ -5,5 +5,9 @@
 
 <h1>Vendas</h1>
 
-<partial>@await Html.PartialAsync("_vendas", Model)</partial>
+@await Html.PartialAsync("_vendas", Model)
+@await Html.PartialAsync("_modalMensagem")
 
+@section Scripts{
+    <script src="~/js/gerencial/venda/venda.js"></script>
+}

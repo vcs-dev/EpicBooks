@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Negocio;
@@ -14,7 +12,7 @@ namespace Web.Areas.Loja.Controllers
 {
     public class MinhaContaController : Controller
     {
-        Result resultado;
+        private Result resultado;
 
         [Area("Loja")]
         public IActionResult Index()
@@ -25,19 +23,23 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult MeusPedidos()
         {
-            List<Pedido> pedidos;
-            resultado = new Facade().Consultar(new Pedido { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });//Busca cupons
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            resultado = new Facade().Consultar(new Pedido { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+            if (resultado.Msg != null)
             {
                 ViewBag.Mensagem = resultado.Msg;
                 return View("meusPedidos", new List<Pedido>());
             }
-
-            pedidos = new List<Pedido>();
+            if (resultado.Entidades.Count == 0)
+            {
+                ViewBag.Mensagem = "No momento você não possui pedidos.";
+                return View("meusPedidos", new List<Pedido>());
+            }
+            List<Pedido> pedidos = new List<Pedido>();
             foreach (var item in resultado.Entidades)
             {
                 pedidos.Add((Pedido)item);
             }
+
             return View("meusPedidos", pedidos);
         }
 
@@ -87,7 +89,7 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public JsonResult SolicitarTroca(int itemId, int qtde, int pedidoId)
+        public JsonResult EnviarSolicitacaoTroca(int itemId, int qtde, int pedidoId)
         {
             string msg;
             Troca troca = new Troca 
@@ -107,10 +109,26 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        [HttpPost]
-        public IActionResult EnviarSolicitacaoTroca(int id)
+        public IActionResult MinhasTrocas()
         {
-            return View();
+            resultado = new Facade().Consultar(new Troca { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+            if (resultado.Msg != null)
+            {
+                ViewBag.Mensagem = resultado.Msg;
+                return View("minhasTrocas", new List<Troca>());
+            }
+            if(resultado.Entidades.Count == 0)
+            {
+                ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
+                return View("minhasTrocas", new List<Troca>());
+            }
+            List<Troca> trocas = new List<Troca>();
+            foreach (var item in resultado.Entidades)
+            {
+                trocas.Add((Troca)item);
+            }
+
+            return View("minhasTrocas", trocas);
         }
     }
 }

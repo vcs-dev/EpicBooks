@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Domain.Negocio.Pedido>
+﻿@model IEnumerable<Domain.Negocio.Troca>
 @{
-    ViewData["Title"] = "Meus Pedidos";
+    ViewData["Title"] = "Detalhes do Pedido";
 }
 
 <div class="container">
@@ -9,13 +9,13 @@
             @await Html.PartialAsync("_menu")
         </div>
         <div class="col-md-9">
-            <h4>Meus pedidos</h4>
-            @await Html.PartialAsync("_pedidos", Model)
+            <h4>Minhas solicitações de troca</h4>
+            @await Html.PartialAsync("_trocas", Model)
         </div>
     </div>
 </div> <!-- /container -->
 @await Html.PartialAsync("_modalMensagem")
 
 @section Scripts{
-    <script src="~/js/loja/minhaconta/meus-pedidos.js"></script>
+    <script src="~/js/loja/minhaconta/minhas-trocas.js"></script>
 }

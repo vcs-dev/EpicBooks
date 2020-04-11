@@ -5,6 +5,7 @@
         public int UsuarioId { get; set; }
         public int PedidoId { get; set; }
         public int ItemId { get; set; }
+        public string NomeItem { get; set; }
         public char Status { get; set; }
         public int MyProperty { get; set; }
         public int Qtde { get; set; }

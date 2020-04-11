@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Negocio;
@@ -7,31 +9,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Gerencial.Controllers
 {
-    public class VendasController : Controller
+    public class TrocasController : Controller
     {
         private Result resultado;
 
         [Area("Gerencial")]
         public IActionResult Index()
         {
-            resultado = new Facade().Consultar(new Pedido { Status = 'A' });
+            resultado = new Facade().Consultar(new Troca { Status = 'P' });
             if (resultado.Msg != null)
             {
                 ViewBag.Mensagem = resultado.Msg;
-                return View();
+                return View(new List<Troca>());
             }
             if (resultado.Entidades.Count == 0)
             {
-                ViewBag.Mensagem = "Ainda não existem vendas no sistema.";
-                return View(new List<Pedido>());
+                ViewBag.Mensagem = "Não existem solicitações de troca pendentes.";
+                return View(new List<Troca>());
             }
-            List<Pedido> pedidos = new List<Pedido>();
+            List<Troca> trocas = new List<Troca>();
             foreach (var item in resultado.Entidades)
             {
-                pedidos.Add((Pedido)item);
+                trocas.Add((Troca)item);
             }
 
-            return View(pedidos);
+            return View(trocas);
         }
     }
 }

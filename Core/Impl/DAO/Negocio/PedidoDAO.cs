@@ -456,9 +456,7 @@ namespace Core.Impl.DAO.Negocio
         public List<Pedido> DataReaderPedidoParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
-            {
-                throw new Exception("Sem Registros");
-            }
+                return new List<Pedido>();
 
             List<Pedido> pedidos = new List<Pedido>();
             while (dataReader.Read())

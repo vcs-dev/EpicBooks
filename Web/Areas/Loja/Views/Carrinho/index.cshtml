@@ -16,18 +16,6 @@
                 <div class="col-md-3 mt-2 align-self-center">
                     <label for="">Endereço de entrega:</label>
                 </div>
-                @*<div class="col-md-4 mt-2 mb-2 align-self-center">
-                        <select class="custom-select" id="selectEndereco">
-                            <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
-                            <option selected=@(Model.Cep.Contains("08830-745")) value="08830-745">
-                                Rua Maria da Glória, 240, Jd. Esplanada, Mogi das Cruzes-SP,
-                                08830-740.
-                            </option>
-                            <option selected=@(Model.Cep.Contains("04932-039")) value="04932-039">
-                                Rua dos Timbiras, 49, Centro, São Paulo-SP, 04932-039
-                            </option>
-                        </select>
-                    </div>*@
                 <div class="col-md-4 mt-2 mb-2 align-self-center">
                     <select class="custom-select" name="EnderecoId" id="selectEndereco">
                         <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
@@ -60,17 +48,6 @@
                 <div class="col-md-2 mt-2 align-self-center">
                     <label for="">Cupom de troca</label>
                 </div>
-                @*<div class="col-md-2 mt-2 mb-2 align-self-center">
-                        <select class="custom-select" id="selectCupomTroca">
-                            <option selected value="">Escolha</option>
-                            <option value="T10123456789">
-                                T10123456789  - R$ 30,00
-                            </option>
-                            <option value="T19876543210">
-                                T19876543210  - R$ 23,50
-                            </option>
-                        </select>
-                    </div>*@
                 <div class="col-md-2 mt-2 mb-2 align-self-center">
                     <select class="custom-select" id="selectCupomTroca">
                         @if (ViewBag.CuponsTroca != null)
@@ -112,8 +89,8 @@
                         </select>
                     </div>
                     @*<div class="col-md-2 mt-2 mb-2">
-            <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-        </div>*@
+                            <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+                        </div>*@
                     <div class="col-md-6 mt-2 align-self-center">
                         <label for="cupomPromocional">Parcelas</label>
                     </div>
@@ -161,8 +138,8 @@
                         </select>
                     </div>
                     @*<div class="col-md-2 mt-2 mb-2">
-                <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-            </div>*@
+                            <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+                        </div>*@
                     <div class="col-md-6 mt-2 align-self-center">
                         <label for="cupomPromocional">Parcelas</label>
                     </div>
@@ -223,21 +200,7 @@
             </div>
         </div> <!-- /container -->
     }
-    <div class="modal" tabindex="-1" role="dialog" id="modalCarrinhoMsg">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mensagem</h5>
-                </div>
-                <div class="modal-body">
-                    <p id="textoModal">@ViewBag.Mensagem</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Html.PartialAsync("_modalMensagem")
 }
 else
 {
@@ -245,6 +208,7 @@ else
         <h3 class="mb-5 text-center">Você ainda não possui itens no carrinho =( </h3>
     </div>
 }
+
 @section Scripts{
-    <script src="~/js/carrinho/carrinho.js"></script>
+    <script src="~/js/loja/carrinho/carrinho.js"></script>
 }

@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewData["Title"] = "Solicitações de troca";
+}
+
+<h1>Solicitações de troca</h1>
+@model IEnumerable<Domain.Negocio.Troca>
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped table-bordered text-center self-align-center">
+        <thead>
+            <tr>
+                <th class="align-middle">Nº</th>
+                <th class="align-middle">Data</th>
+                <th class="align-middle">Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.PedidoId</td>
+                    <td>@item.NomeItem</td>
+                    @{switch (item.Status)
+                        {
+                            case 'P':
+                                <td>AGUARDANDO CHEGADA DO PRODUTO</td>
+                                break;
+                            case 'A':
+                                <td>CONCLUÍDA</td>
+                                break;
+                            default:
+                                <td>DESCONHECIDA</td>
+                                break;
+                        }
+                    }
+                    <td>@item.Qtde</td>
+                    <td>@item.DataCadastro</td>
+                    <td>@item.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/gerencial/troca/trocas.js"></script>
+}

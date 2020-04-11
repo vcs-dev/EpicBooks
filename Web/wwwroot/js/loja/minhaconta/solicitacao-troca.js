@@ -15,7 +15,7 @@
 
         $.ajax({
             type: "get",
-            url: "/Loja/MinhaConta/SolicitarTroca/",
+            url: "/Loja/MinhaConta/EnviarSolicitacaoTroca/",
             data: {itemId: itemId, qtde: qtde, pedidoId: pedidoId},
             dataType: "json",
             success: function (response) {

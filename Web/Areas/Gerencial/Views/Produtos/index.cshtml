@@ -5,13 +5,19 @@
 @*@section Styles{
         <link rel="stylesheet" href="css/form-validation.css">
     }*@
+<h1>Produtos</h1>
+@if (Model.Count() > 0)
+{
+    <div class="row mt-3 mb-3">
+        <div class="form-group col-10">
+            <input type="text" id="stringBusca" class="form-control" placeholder="Título">
+        </div>
+        <div class="col-2">
+            <button id="btnConsultarProduto" class="btn btn-primary">Consultar</button>
+        </div>
+    </div>
+}
 <div class="row mt-3 mb-3">
-    <div class="form-group col-10">
-        <input type="text" id="stringBusca" class="form-control" placeholder="Título">
-    </div>
-    <div class="col-2">
-        <button id="btnConsultarProduto" class="btn btn-primary">Consultar</button>
-    </div>
     <div class="col-12">
         <a href="/Gerencial/Produtos/Cadastrar" class="btn btn-primary" title="">Cadastrar livro <i class="fa fa-plus"></i></a>
     </div>
@@ -19,7 +25,7 @@
 <partial id="listaProdutos">
     @await Html.PartialAsync("_produtos", Model)
 </partial>
-
+@await Html.PartialAsync("_modalMensagem", Model)
 @section Scripts{
-        <script src="~/js/produto/produto.js"></script>
-    }
+    <script src="~/js/gerencial/produto/produto.js"></script>
+}

@@ -17,7 +17,7 @@
     }
 
     if($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
-        $('#modalCarrinhoMsg').modal('show');
+        $('#modalMensagem').modal('show');
 
     $('#chkDoisCartoes').on('change', function () {
         if ($('#chkDoisCartoes').prop('checked')) {

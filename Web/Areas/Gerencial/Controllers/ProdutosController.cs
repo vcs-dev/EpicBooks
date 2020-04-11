@@ -24,25 +24,24 @@ namespace Web.Areas.Gerencial.Controllers
         [Area("Gerencial")]
         public IActionResult Index()
         {
-            Livro livro = new Livro();
-            List<Livro> livros;
+            resultado = new Facade().Consultar(new Livro());
+            if (resultado.Msg != null)
+            {
+                ViewBag.Mensagem = resultado.Msg;
+                return View(new List<Livro>());
+            }
+            if (resultado.Entidades.Count == 0)
+            {
+                ViewBag.Mensagem = "Não existem produtos cadastrados.";
+                return View(new List<Livro>());
+            }
+            List<Livro> livros = new List<Livro>();
+            foreach (var item in resultado.Entidades)
+            {
+                livros.Add((Livro)item);
+            }
 
-            resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
-            {
-                TempData["MsgErro"] = resultado.Msg;
-                return View();
-            }
-            else
-            {
-                TempData["MsgSucesso"] = resultado.Msg;
-                livros = new List<Livro>();
-                foreach (var item in resultado.Entidades)
-                {
-                    livros.Add((Livro)item);
-                }
-                return View(livros);
-            }
+            return View(livros);
         }
 
         [Area("Gerencial")]
@@ -160,8 +159,8 @@ namespace Web.Areas.Gerencial.Controllers
             Livro livroConsulta = new Livro();
             List<Livro> livros;
             livroConsulta.Id = livro.Id;
-                            string caminhoWebRoot = _appEnvironment.WebRootPath;
-                string caminhoImagemAntiga = livro.CaminhoImagemBackup.Replace("/", "\\");
+            string caminhoWebRoot = _appEnvironment.WebRootPath;
+            string caminhoImagemAntiga = livro.CaminhoImagemBackup.Replace("/", "\\");
             resultado = new Facade().Consultar(livroConsulta);
             if (!string.IsNullOrEmpty(resultado.Msg))
             {
@@ -178,9 +177,9 @@ namespace Web.Areas.Gerencial.Controllers
                 }
             }
             if (livro.Imagem == null)
-                    livro.CaminhoImagem = livro.CaminhoImagemBackup;
+                livro.CaminhoImagem = livro.CaminhoImagemBackup;
             else
-            {   
+            {
                 string pastaDestino = "produtos";
                 string nomeArquivo = Path.GetRandomFileName();
                 if (livro.Imagem.FileName.Contains("jpg"))
