@@ -17,49 +17,54 @@ namespace Core.Impl.Business
             {
                 Pedido pedido = (Pedido)entidade;
                 Result resultado;
-                List<CartaoDeCredito> cartoes;
-
-                resultado = new Facade().Consultar(new CartaoDeCredito { UsuarioId = pedido.UsuarioId });
-                if (resultado.Msg != null)
+                if (pedido.CartaoUm.Id > 0)
                 {
-                    pedido.Status = 'R';
-                    return "Não foi possível validar o cartão.\n" + resultado.Msg;
-                }
-                cartoes = new List<CartaoDeCredito>();
-                foreach (var item in resultado.Entidades)
-                {
-                    cartoes.Add((CartaoDeCredito)item);
-                }
+                    resultado = new Facade().Consultar(new CartaoDeCredito { UsuarioId = pedido.UsuarioId });
+                    if (resultado.Msg != null)
+                    {
+                        pedido.Status = 'R';
+                        return "Não foi possível validar o cartão.\n" + resultado.Msg;
+                    }
+                    List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        cartoes.Add((CartaoDeCredito)item);
+                    }
 
-                CartaoDeCredito temp = cartoes.Find(x => x.Id == pedido.CartaoUm.Id);
+                    CartaoDeCredito temp = cartoes.Find(x => x.Id == pedido.CartaoUm.Id);
 
-                if (temp != null)
-                    pedido.CartaoUm.Numeracao = temp.Numeracao;
-
-                if (pedido.CartaoDois.Id > 0)
-                {
-                    temp = null;
-
-                    temp = cartoes.Find(x => x.Id == pedido.CartaoDois.Id);
                     if (temp != null)
-                        pedido.CartaoDois.Numeracao = temp.Numeracao;
-                }
-                OperadoraCartaoDAO operadoraCartaoDAO = new OperadoraCartaoDAO();
+                        pedido.CartaoUm.Numeracao = temp.Numeracao;
+                    else
+                        return "Cartão não encontrado na base";
 
-                resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoUm);
-                if (resultado.Entidades.Count > 0)
-                {
-                    pedido.Status = 'R';
-                    return null;
-                }
+                    if (pedido.CartaoDois.Id > 0)
+                    {
+                        temp = null;
 
-                if (pedido.CartaoDois.Id > 0)
-                {
-                    resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoDois);
+                        temp = cartoes.Find(x => x.Id == pedido.CartaoDois.Id);
+                        if (temp != null)
+                            pedido.CartaoDois.Numeracao = temp.Numeracao;
+                        else
+                            return "Cartão não encontrado na base";
+                    }
+                    OperadoraCartaoDAO operadoraCartaoDAO = new OperadoraCartaoDAO();
+
+                    resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoUm);
                     if (resultado.Entidades.Count > 0)
                     {
                         pedido.Status = 'R';
                         return null;
+                    }
+
+                    if (pedido.CartaoDois.Id > 0)
+                    {
+                        resultado.Entidades = operadoraCartaoDAO.Consultar(pedido.CartaoDois);
+                        if (resultado.Entidades.Count > 0)
+                        {
+                            pedido.Status = 'R';
+                            return null;
+                        }
                     }
                 }
                 pedido.Status = 'A';

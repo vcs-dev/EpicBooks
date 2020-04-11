@@ -1,15 +1,13 @@
 ﻿$(document).ready(function () {
     $('.btnSolicitarTroca').on('click', function () {
         var indice = $('.btnSolicitarTroca').index(this);
-        //var texto = $('tbody').find('.itemId').eq(indice).text();
-        //$('#btnEnviarSolicitacaoTroca').val(texto);
         $('#indiceItem').val(indice);
         $('#modalTrocaQtde').modal('show');
     });
 
     $('#btnEnviarSolicitacaoTroca').on('click', function () {
         var indice = $('#indiceItem').val();
-        var itemId = $('tbody').find('.itemId').eq(indice).text();
+        var itemId = $('#tbodyIemPedido').find('.itemId').eq(indice).text();
         var qtde = $('#inputQtde').val();
         var pedidoId = $('#idPedido').val();
 

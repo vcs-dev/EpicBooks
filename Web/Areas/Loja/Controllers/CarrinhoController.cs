@@ -34,8 +34,8 @@ namespace Web.Areas.Loja.Controllers
                 carrinho = new Carrinho();
             else
             {
-                char statusPedido = Convert.ToChar(HttpContext.Session.Get("statusPedido"));
-                if (statusPedido != '\0' && statusPedido == 'A' || statusPedido == 'R')
+                char statusPedido = HttpContext.Session.Get<char>("statusPedido");
+                if (statusPedido != '\0' && statusPedido == 'A')
                 {
                     carrinho = new Carrinho();
                     HttpContext.Session.Remove("statusPedido");
@@ -53,7 +53,7 @@ namespace Web.Areas.Loja.Controllers
                 carrinho.Cep = "";
 
             cupom.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
-            cupom.DataExpiracao = DateTime.Now;
+            cupom.Tipo = 'T';
             cupom.Usado = 0;
 
             resultado = new Facade().Consultar(cupom);//Busca cupons
@@ -143,7 +143,10 @@ namespace Web.Areas.Loja.Controllers
 
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
                 if (carrinho == null)
+                {
                     carrinho = new Carrinho();
+                    HttpContext.Session.Set("statusPedido", '\0');
+                }
 
                 ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
 
@@ -343,7 +346,6 @@ namespace Web.Areas.Loja.Controllers
             {
                 cupom = new Cupom();
                 cupom.Codigo = codCupom;
-                cupom.DataExpiracao = DateTime.Now;
                 cupom.Usado = 0;
                 resultado = new Facade().Consultar(cupom);
                 if (!string.IsNullOrEmpty(resultado.Msg))
@@ -480,12 +482,16 @@ namespace Web.Areas.Loja.Controllers
             }
             if (pedido.Status == 'A')
             {
-                string msg = "Pedido " + pedido.Id + " realizado com sucesso";
+                string msg;
+                if (pedido.CupomTrocaGerado.Id > 0)
+                    msg = "Pedido " + pedido.Id + " realizado com sucesso.\nCupom de troca gerado no valor de R$ " + pedido.CupomTrocaGerado.Valor + ".";
+                else
+                    msg = "Pedido " + pedido.Id + " realizado com sucesso";
                 char statusPedido = 'A';
                 HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
                 HttpContext.Session.Set("statusPedido", statusPedido);
             }
-            if (pedido.Status == 'R')
+            else if (pedido.Status == 'R')
             {
                 string msg = "Pedido " + pedido.Id + " Recusado.\n Contate a operadora de cartão de crédito";
                 char statusPedido = 'R';

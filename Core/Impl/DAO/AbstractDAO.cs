@@ -3,6 +3,7 @@ using Core.Util;
 using Domain;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -70,7 +71,7 @@ namespace Core.Impl.DAO
         {
             try
             {
-                if (conexao == null)
+                if (conexao == null || conexao.State == ConnectionState.Closed)
                 {
                     conexao = ConexaoBd.GetConexao();
                     conexao.Open();

@@ -15,7 +15,7 @@
             }
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tbodyIemPedido">
         @if (Model.Status == 'E' || Model.Status == 'X')
         {
             @foreach (var item in Model.ItensPedido)

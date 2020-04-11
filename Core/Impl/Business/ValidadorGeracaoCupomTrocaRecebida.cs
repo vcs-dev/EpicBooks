@@ -50,8 +50,6 @@ namespace Core.Impl.Business
                     cupomTroca.Codigo += DateTime.Now.Year;
                     cupomTroca.Codigo += DateTime.Now.Month;
                     cupomTroca.Codigo += DateTime.Now.Day;
-                    cupomTroca.Codigo += DateTime.Now.Hour;
-                    cupomTroca.Codigo += DateTime.Now.Minute;
 
                     troca.CupomTroca = cupomTroca;
                 }

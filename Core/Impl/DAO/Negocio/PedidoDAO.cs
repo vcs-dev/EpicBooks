@@ -121,38 +121,41 @@ namespace Core.Impl.DAO.Negocio
 
                 if (pedido.Status == 'A')
                 {
-                    cmdTextoPedidosCartoes = "INSERT INTO PedidosCartoes(" +
-                                                                        "PedidoId, " +
-                                                                        "CartaoId, " +
-                                                                        "Valor, " +
-                                                                        "Parcelas" +
-                                             ") " +
-                                             "Values(" +
-                                                    "@PedidoId, " +
-                                                    "@CartaoId, " +
-                                                    "@Valor, " +
-                                                    "@Parcelas" +
-                                             ")";
-
-                    SqlCommand comandoPedidosCartoes = new SqlCommand(cmdTextoPedidosCartoes, conexao, transacao);
-
-                    comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                    comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoUm.Id);
-                    if (pedido.CartaoUm.Valor != null)
-                        comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoUm.Valor);
-                    comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoUm.QtdeParcelas);
-                    comandoPedidosCartoes.ExecuteNonQuery();
-                    comandoPedidosCartoes.Parameters.Clear();
-
-                    if (pedido.CartaoDois.Id > 0)
+                    if (pedido.CartaoUm.Id > 0)
                     {
+                        cmdTextoPedidosCartoes = "INSERT INTO PedidosCartoes(" +
+                                                                            "PedidoId, " +
+                                                                            "CartaoId, " +
+                                                                            "Valor, " +
+                                                                            "Parcelas" +
+                                                 ") " +
+                                                 "Values(" +
+                                                        "@PedidoId, " +
+                                                        "@CartaoId, " +
+                                                        "@Valor, " +
+                                                        "@Parcelas" +
+                                                 ")";
+
+                        SqlCommand comandoPedidosCartoes = new SqlCommand(cmdTextoPedidosCartoes, conexao, transacao);
+
                         comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                        comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoDois.Id);
-                        comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoDois.Valor);
-                        comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoDois.QtdeParcelas);
+                        comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoUm.Id);
+                        if (pedido.CartaoUm.Valor != null)
+                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoUm.Valor);
+                        comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoUm.QtdeParcelas);
                         comandoPedidosCartoes.ExecuteNonQuery();
+                        comandoPedidosCartoes.Parameters.Clear();
+
+                        if (pedido.CartaoDois.Id > 0)
+                        {
+                            comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                            comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoDois.Id);
+                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoDois.Valor);
+                            comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoDois.QtdeParcelas);
+                            comandoPedidosCartoes.ExecuteNonQuery();
+                        }
+                        comandoPedidosCartoes.Dispose();
                     }
-                    comandoPedidosCartoes.Dispose();
 
                     if (pedido.CuponsTroca.Count > 0 || pedido.CupomPromocional.Id > 0)
                     {
@@ -195,22 +198,24 @@ namespace Core.Impl.DAO.Negocio
                             }
                         }
 
-                        cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
-                                                "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
+                        if (pedido.CupomTrocaGerado.Id > 0)
+                        {
+                            cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
+                                                    "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
 
-                        comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
-                        comandoPedidosCupons.Parameters.AddWithValue("@Codigo", pedido.CupomTrocaGerado.Codigo + pedido.Id);
-                        comandoPedidosCupons.Parameters.AddWithValue("@Tipo", pedido.CupomTrocaGerado.Tipo);
-                        comandoPedidosCupons.Parameters.AddWithValue("@Valor", pedido.CupomTrocaGerado.Valor);
-                        comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
-                        if (pedido.CupomTrocaGerado.DataExpiracao == null)
-                            comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
-                        else
-                            comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
-                        comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
-                        comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
-                        pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
-                        comandoPedidosCupons.Dispose();
+                            comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
+                            comandoPedidosCupons.Parameters.AddWithValue("@Codigo", pedido.CupomTrocaGerado.Codigo + pedido.Id);
+                            comandoPedidosCupons.Parameters.AddWithValue("@Tipo", pedido.CupomTrocaGerado.Tipo);
+                            comandoPedidosCupons.Parameters.AddWithValue("@Valor", pedido.CupomTrocaGerado.Valor);
+                            if (pedido.CupomTrocaGerado.DataExpiracao == null)
+                                comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
+                            else
+                                comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
+                            comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
+                            comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
+                            pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
+                            comandoPedidosCupons.Dispose();
+                        }
                         //verificar o codigo abaixo
                         //cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE SessaoGuid = @SessaoGuid";
 

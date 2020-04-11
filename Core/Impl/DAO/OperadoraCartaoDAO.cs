@@ -50,9 +50,7 @@ namespace Core.Impl.DAO
         public List<CartaoDeCredito> DataReaderCartaoParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
-            {
-                throw new Exception("Sem Registros");
-            }
+                return new List<CartaoDeCredito>();
 
             List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
             while (dataReader.Read())

@@ -3,6 +3,7 @@ using Domain;
 using Domain.Negocio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Core.Impl.Business
 {
@@ -14,24 +15,27 @@ namespace Core.Impl.Business
             {
                 Pedido pedido = (Pedido)entidade;
 
-                if(pedido.ValorTotalPedido < 0.00)
+                    if(pedido.ValorTotalPedido < 0.00)
                 {
                     List<Cupom> cuponsASeremUtilizados = new List<Cupom>();
                     double valorTotalPedido = pedido.ValorTotalPedido;
 
-                    valorTotalPedido -= pedido.CupomPromocional.Valor;
-                    if (valorTotalPedido <= 0.00)
+                    valorTotalPedido += pedido.CupomPromocional.Valor;
+                    if (valorTotalPedido >= 0.00)
                     {
-                        pedido.CuponsTroca = new List<Cupom>();
+                        pedido.CupomPromocional = new Cupom();
                         return null;
                     }
 
+                    pedido.CuponsTroca = pedido.CuponsTroca.OrderByDescending(x => x.Valor).ToList();                   
+
                     foreach (var item in pedido.CuponsTroca)
                     {
-                        valorTotalPedido -= item.Valor;
+                        valorTotalPedido += item.Valor;
                         if(valorTotalPedido >= 0)
                         {
                             cuponsASeremUtilizados.Add(item);
+                            break;
                         }
                     }
                     pedido.CuponsTroca = cuponsASeremUtilizados;
@@ -40,7 +44,7 @@ namespace Core.Impl.Business
                     {
                         UsuarioId = pedido.UsuarioId,
                         Tipo = 'T',
-                        Valor = pedido.ValorTotalPedido * -1,
+                        Valor = Math.Round(pedido.ValorTotalPedido * -1, 2),
                         Usado = 0,
                         DataCadastro = DateTime.Now,
                         DataExpiracao = null
@@ -50,8 +54,6 @@ namespace Core.Impl.Business
                     cupomTroca.Codigo += DateTime.Now.Year;
                     cupomTroca.Codigo += DateTime.Now.Month;
                     cupomTroca.Codigo += DateTime.Now.Day;
-                    cupomTroca.Codigo += DateTime.Now.Hour;
-                    cupomTroca.Codigo += DateTime.Now.Minute;
 
                     pedido.CupomTrocaGerado = cupomTroca;
                     pedido.ValorTotalPedido = 0;
