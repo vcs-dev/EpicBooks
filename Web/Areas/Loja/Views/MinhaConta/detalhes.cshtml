@@ -14,3 +14,45 @@
         </div>
     </div>
 </div> <!-- /container -->
+<!--modal mensagem-->
+<div class="modal" tabindex="-1" role="dialog" id="modalTrocaMsg">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensagem</h5>
+            </div>
+            <div class="modal-body text-center">
+                <p id="textoModal"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal form qtde item-->
+<div class="modal" tabindex="-1" role="dialog" id="modalTrocaQtde">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solicitação de troca</h5>
+            </div>
+            <div class="modal-body row text-center">
+                <div class="col-12">
+                    <label for="inputQtde">Informe a quantidade do item</label>
+                </div>
+                <div class="col-12">
+                    <input type="text" class="form-control" id="inputQtde" />
+                </div>
+                <input type="hidden" id="indiceItem" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary text-right" id="btnEnviarSolicitacaoTroca">Solicitar troca</button>
+                <button type="button" class="btn btn-danger text-right" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/minhaconta/solicitacao-troca.js"></script>
+}

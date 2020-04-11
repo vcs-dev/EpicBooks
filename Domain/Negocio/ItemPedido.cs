@@ -10,6 +10,7 @@ namespace Domain.Negocio
             IsBloqueado = false;
             Produto = new Livro();
         }
+        public int PedidoId { get; set; }
         public Livro Produto { get; set; }
         public int Qtde { get; set; }
         public DateTime HoraInclusao { get; set; }

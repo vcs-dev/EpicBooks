@@ -96,6 +96,35 @@ namespace Core.Impl.Control
             rns.Add(nameof(Pedido), rnsPedido);
             #endregion
 
+            #region Troca 
+            TrocaDAO trocaDAO = new TrocaDAO();
+
+            daos.Add(nameof(Troca), trocaDAO);
+
+            //Regras de salvar
+            ValidadorDadosObrigatoriosTroca validadorDadosObrigatoriosTroca = new ValidadorDadosObrigatoriosTroca();
+            ValidadorQtdeTrocaCompativelComPedido validadorQtdeTrocaCompativelComTroca = new ValidadorQtdeTrocaCompativelComPedido();
+
+            //Regras de alterar
+            ValidadorGeracaoCupomTrocaRecebida validadorGeracaoCupomTrocaRecebida = new ValidadorGeracaoCupomTrocaRecebida();
+
+            List<IStrategy> rnsSalvarTroca = new List<IStrategy>();
+            List<IStrategy> rnsAlterarTroca = new List<IStrategy>();
+
+            rnsSalvarTroca.Add(inclusaoDataCadastro);
+            rnsSalvarTroca.Add(validadorDadosObrigatoriosTroca);
+            rnsSalvarTroca.Add(validadorQtdeTrocaCompativelComTroca);
+
+            rnsAlterarTroca.Add(validadorGeracaoCupomTrocaRecebida);
+
+            Dictionary<string, List<IStrategy>> rnsTroca = new Dictionary<string, List<IStrategy>>();
+
+            rnsTroca.Add("SALVAR", rnsSalvarTroca);
+            rnsTroca.Add("ALTERAR", rnsAlterarTroca);
+
+            rns.Add(nameof(Troca), rnsTroca);
+            #endregion
+
             #region Cupom
             CupomDAO cupomDAO = new CupomDAO();
 

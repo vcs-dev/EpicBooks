@@ -89,6 +89,7 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public JsonResult SolicitarTroca(int itemId, int qtde, int pedidoId)
         {
+            string msg;
             Troca troca = new Troca 
             { 
                 ItemId = itemId,
@@ -96,11 +97,13 @@ namespace Web.Areas.Loja.Controllers
                 Qtde = qtde,
                 Status = 'P'
             };
-            resultado = new Facade().Salvar(troca);//inserir RNs na fachada
-            if(resultado.Msg != null)
-                ViewBag.Mensagem = resultado.Msg;
+            resultado = new Facade().Salvar(troca);
+            if (resultado.Msg != null)
+                msg = resultado.Msg;
+            else
+                msg = "Troca solicitada com sucesso!";
 
-            return Json("{\"Mensagem\":" + "\"" + ViewBag.Mensagem + "\"}");
+            return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
         }
 
         [Area("Loja")]

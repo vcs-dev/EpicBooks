@@ -2,6 +2,7 @@
 {
     public class Troca : EntidadeDominio
     {
+        public int UsuarioId { get; set; }
         public int PedidoId { get; set; }
         public int ItemId { get; set; }
         public char Status { get; set; }

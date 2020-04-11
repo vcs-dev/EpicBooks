@@ -54,7 +54,7 @@ namespace Core.Impl.Business
                     cupomTroca.Codigo += DateTime.Now.Minute;
 
                     pedido.CupomTrocaGerado = cupomTroca;
-
+                    pedido.ValorTotalPedido = 0;
                 }
             }
             else

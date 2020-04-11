@@ -311,7 +311,8 @@ namespace Core.Impl.DAO.Negocio
                                          "SPD.Descricao " +
                                      "FROM Pedidos P " +
                                          "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status) " +
-                                     "WHERE UsuarioId = @UsuarioId";
+                                     "WHERE UsuarioId = @UsuarioId " +
+                                     "ORDER BY PedidoId";
                 else if (pedido.Id > 0)
                     cmdTextoPedido = "SELECT " +
                                          "PedidoId, " +
@@ -324,7 +325,8 @@ namespace Core.Impl.DAO.Negocio
                                          "SPD.Descricao " +
                                       "FROM Pedidos P " +
                                          "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status) " +
-                                      "WHERE PedidoId = @PedidoId";
+                                      "WHERE PedidoId = @PedidoId " +
+                                      "ORDER BY PedidoId";
                 else if (pedido.Status != '\0')
                     cmdTextoPedido = "SELECT " +
                                          "PedidoId, " +
@@ -337,7 +339,8 @@ namespace Core.Impl.DAO.Negocio
                                          "SPD.Descricao " +
                                      "FROM Pedidos P " +
                                          "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status) " +
-                                     "WHERE P.Status = @Status";
+                                     "WHERE P.Status = @Status " +
+                                     "ORDER BY PedidoId";
                 else
                     cmdTextoPedido = "SELECT " +
                                          "PedidoId, " +
@@ -349,7 +352,8 @@ namespace Core.Impl.DAO.Negocio
                                          "Observacao, " +
                                          "SPD.Descricao " +
                                      "FROM Pedidos P " +
-                                     "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status)";
+                                     "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status) " +
+                                     "ORDER BY PedidoId";
 
                 SqlCommand comandopedido = new SqlCommand(cmdTextoPedido, conexao);
 

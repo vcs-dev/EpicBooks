@@ -1,27 +1,32 @@
 ﻿@model Domain.Negocio.Pedido
 
-<table class="table table-striped text-center self-align-center">
+<input type="hidden" id="idPedido" value="@Model.Id" />
+<table class="table table-striped table-bordered text-center self-align-center mb-5">
     <thead>
         <tr>
-            <th>Id do Produto</th>
-            <th>Nome</th>
-            <th>Quantidade</th>
-            @if (Model.Status == 'E')
+            <th class="align-middle">Id do Produto</th>
+            <th class="align-middle">Nome</th>
+            <th class="align-middle">Quantidade</th>
+            <th class="align-middle">Preço unitário</th>
+            <th class="align-middle">Total por item</th>
+            @if (Model.Status == 'E' || Model.Status == 'X')
             {
                 <th></th>
             }
         </tr>
     </thead>
     <tbody>
-        @if (Model.Status == 'E')
+        @if (Model.Status == 'E' || Model.Status == 'X')
         {
             @foreach (var item in Model.ItensPedido)
             {
                 <tr>
-                    <td>@item.Id</td>
-                    <td><a href="/Loja/Home/Produto/@item.Id">@item.Produto.Nome</a></td>
-                    <td>@item.Qtde</td>
-                    <td><a href="/Loja/MinhaConta/SolicitarTroca/@item.Id" class="btn btn-primary" title="Solicitar troca"><i class="fa fa-exchange-alt"></i></a></td>
+                    <td class="align-middle itemId">@item.Id</td>
+                    <td class="align-middle"><a href="/Loja/Home/Produto/@item.Id">@item.Produto.Nome</a></td>
+                    <td class="align-middle">@item.Qtde</td>
+                    <td class="align-middle">@item.Produto.PrecoVenda</td>
+                    <td class="align-middle">@("R$ " + (item.Produto.PrecoVenda * @item.Qtde).ToString("##0.00"))</td>
+                    <td class="align-middle"><button type="button" class="btn btn-primary btnSolicitarTroca" title="Solicitar troca"><i class="fa fa-exchange-alt"></i></button></td>
                 </tr>
             }
         }
@@ -30,11 +35,60 @@
             @foreach (var item in Model.ItensPedido)
             {
                 <tr>
-                    <td>@item.Id</td>
-                    <td><a href="/Loja/Home/Produto/@item.Id">@item.Produto.Nome</a></td>
-                    <td>@item.Qtde</td>
+                    <td class="align-middle">@item.Id</td>
+                    <td class="align-middle"><a href="/Loja/Home/Produto/@item.Id">@item.Produto.Nome</a></td>
+                    <td class="align-middle">@item.Qtde</td>
+                    <td class="align-middle">@item.Produto.PrecoVenda</td>
+                    <td class="align-middle">@("R$ " + (item.Produto.PrecoVenda * @item.Qtde).ToString("##0.00"))</td>
                 </tr>
             }
         }
     </tbody>
 </table>
+@if (Model.Status != 'R')
+{
+
+    double totalCupons = 0;
+    double valorTotalPedido = 0;
+    double totalItens = 0;
+    totalCupons += Model.CupomPromocional.Valor;
+    foreach (var item in Model.CuponsTroca)
+    {
+        totalCupons += item.Valor;
+    }
+
+    foreach (var item in Model.ItensPedido)
+    {
+        totalItens += item.Produto.PrecoVenda * item.Qtde;
+    }
+    valorTotalPedido += totalItens;
+    valorTotalPedido += Model.ValorFrete;
+    valorTotalPedido -= totalCupons;
+    if (valorTotalPedido < 0)
+        valorTotalPedido = 0;
+
+    <div class="col-6 pl-0">
+        <table class="table table-striped table-bordered text-center self-align-center">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-left">Valor dos itens</td>
+                    <td>@("R$ " + totalItens.ToString("##0.00"))</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Valor do frete</td>
+                    <td>@("R$ " + Model.ValorFrete.ToString("##0.00"))</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Desconto de cupons</td>
+                    <td>@("R$ " + totalCupons.ToString("##0.00"))</td>
+                </tr>
+                <tr>
+                    <td class="text-left">Total da compra</td>
+                    <td>@("R$ " + valorTotalPedido.ToString("##0.00"))</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

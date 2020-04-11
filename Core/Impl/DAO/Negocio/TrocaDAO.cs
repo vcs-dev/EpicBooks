@@ -18,6 +18,7 @@ namespace Core.Impl.DAO.Negocio
         {
             Troca troca = (Troca)entidade;
             string cmdTextoTroca;
+            string cmdTextoPedido;
 
             try
             {
@@ -46,11 +47,18 @@ namespace Core.Impl.DAO.Negocio
                 comandoTroca.Parameters.AddWithValue("@Status", troca.Status);
                 comandoTroca.Parameters.AddWithValue("@Qtde", troca.Qtde);
                 comandoTroca.Parameters.AddWithValue("@DataSolicitacao", troca.DataCadastro);
-
                 troca.Id = Convert.ToInt32(comandoTroca.ExecuteScalar());
+                comandoTroca.Dispose();
+
+                cmdTextoPedido = "UPDATE Pedidos SET Status = 'X' WHERE PedidoId = @PedidoId";
+
+                SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+
+                comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                comandoPedido.ExecuteNonQuery();
+                comandoPedido.Dispose();
 
                 Commit();
-                comandoTroca.Dispose();
             }
             catch (SqlException e)
             {

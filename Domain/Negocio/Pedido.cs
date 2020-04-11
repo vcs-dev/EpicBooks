@@ -10,6 +10,10 @@ namespace Domain.Negocio
         {
             Status = 'P';
             ItensPedido = new List<ItemPedido>();
+            CuponsTroca = new List<Cupom>();
+            CupomPromocional = new Cupom();
+            CartaoUm = new CartaoDeCredito();
+            CartaoDois = new CartaoDeCredito();
             SessaoGuid = Guid.Empty;
         }
         public int UsuarioId { get; set; }
