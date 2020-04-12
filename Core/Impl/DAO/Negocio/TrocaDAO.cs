@@ -278,7 +278,7 @@ namespace Core.Impl.DAO.Negocio
                         PedidoId = Convert.ToInt32(dataReader["PedidoId"]),
                         ItemId = Convert.ToInt32(dataReader["ItemId"]),
                         Status = Convert.ToChar(dataReader["Status"]),
-                        Qtde = Convert.ToInt32(dataReader["DataTroca"]),
+                        Qtde = Convert.ToInt32(dataReader["Qtde"]),
                         DataCadastro = Convert.ToDateTime(dataReader["DataSolicitacao"]),
                     };
                     if (!Convert.IsDBNull(dataReader["Nome"]))

@@ -109,15 +109,15 @@ namespace Core.Impl.DAO.Negocio
                 else
                     cmdTextoPedido = "UPDATE Pedidos SET Status = @Status WHERE PedidoId = @PedidoId";
 
-                SqlCommand comandopedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+                SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
 
-                comandopedido.Parameters.AddWithValue("@Status", pedido.Status);
+                comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
                 if (pedido.Status == 'A')
-                    comandopedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
-                comandopedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                    comandoPedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
+                comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
 
-                comandopedido.ExecuteNonQuery();
-                comandopedido.Dispose();
+                comandoPedido.ExecuteNonQuery();
+                comandoPedido.Dispose();
 
                 if (pedido.Status == 'A')
                 {
@@ -142,6 +142,8 @@ namespace Core.Impl.DAO.Negocio
                         comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoUm.Id);
                         if (pedido.CartaoUm.Valor != null)
                             comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoUm.Valor);
+                        else
+                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", DBNull.Value);
                         comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoUm.QtdeParcelas);
                         comandoPedidosCartoes.ExecuteNonQuery();
                         comandoPedidosCartoes.Parameters.Clear();
@@ -262,7 +264,7 @@ namespace Core.Impl.DAO.Negocio
                 }
 
                 Commit();
-                comandopedido.Dispose();
+                comandoPedido.Dispose();
             }
             catch (SqlException e)
             {
@@ -360,17 +362,16 @@ namespace Core.Impl.DAO.Negocio
                                      "JOIN StatusDePedidos SPD ON(P.Status = SPD.Status) " +
                                      "ORDER BY PedidoId";
 
-                SqlCommand comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+                SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao);
 
                 if (pedido.UsuarioId > 0)
-                    comandopedido.Parameters.AddWithValue("@UsuarioId", pedido.UsuarioId);
+                    comandoPedido.Parameters.AddWithValue("@UsuarioId", pedido.UsuarioId);
                 else if (pedido.Id > 0)
-                    comandopedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
                 if (pedido.Status != '\0')
-                    comandopedido.Parameters.AddWithValue("@Status", pedido.Status);
+                    comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
 
-                SqlDataReader drPedido = comandopedido.ExecuteReader();
-                comandopedido.Parameters.Clear();
+                SqlDataReader drPedido = comandoPedido.ExecuteReader();
 
                 pedidos = DataReaderPedidoParaList(drPedido);
 
@@ -383,11 +384,11 @@ namespace Core.Impl.DAO.Negocio
                                      "JOIN PedidosItens PI ON(P.PedidoId = PI.PedidoId) " +
                                      "WHERE P.PedidoId = @PedidoId AND P.Status = @Status";
 
-                    comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+                    comandoPedido = new SqlCommand(cmdTextoPedido, conexao);
 
-                    comandopedido.Parameters.AddWithValue("@PedidoId", item.Id);
-                    comandopedido.Parameters.AddWithValue("@Status", item.Status);
-                    drPedido = comandopedido.ExecuteReader();
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", item.Id);
+                    comandoPedido.Parameters.AddWithValue("@Status", item.Status);
+                    drPedido = comandoPedido.ExecuteReader();
 
                     if (drPedido.HasRows)
                     {
@@ -412,10 +413,10 @@ namespace Core.Impl.DAO.Negocio
                                      "JOIN Pedidos P ON(PC.PedidoId = P.PedidoId) " +
                                      "WHERE P.PedidoId = @PedidoId";
 
-                    comandopedido = new SqlCommand(cmdTextoPedido, conexao);
+                    comandoPedido = new SqlCommand(cmdTextoPedido, conexao);
 
-                    comandopedido.Parameters.AddWithValue("@PedidoId", item.Id);
-                    drPedido = comandopedido.ExecuteReader();
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", item.Id);
+                    drPedido = comandoPedido.ExecuteReader();
 
                     if (drPedido.HasRows)
                     {
@@ -437,7 +438,7 @@ namespace Core.Impl.DAO.Negocio
                     drPedido.Close();
                 }
                 //}
-                comandopedido.Dispose();
+                comandoPedido.Dispose();
             }
             catch (SqlException e)
             {

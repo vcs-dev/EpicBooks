@@ -460,6 +460,7 @@ namespace Web.Areas.Loja.Controllers
                 CartaoUm = carrinho.CartaoUm = cartaoUm,
                 CartaoDois = carrinho.CartaoDois = cartaoDois,
                 EnderecoId = carrinho.EnderecoId,
+                CupomTrocaGerado = new Cupom(),
                 UsuarioId = HttpContext.Session.Get<int>("idUsuario")
             };
 

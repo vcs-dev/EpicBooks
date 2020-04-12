@@ -8,10 +8,11 @@ namespace Domain.Negocio
     {
         public Pedido()
         {
-            Status = 'P';
+            Status = '\0';
             ItensPedido = new List<ItemPedido>();
             CuponsTroca = new List<Cupom>();
             CupomPromocional = new Cupom();
+            CupomTrocaGerado = new Cupom();
             CartaoUm = new CartaoDeCredito();
             CartaoDois = new CartaoDeCredito();
             SessaoGuid = Guid.Empty;

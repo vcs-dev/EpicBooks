@@ -23,6 +23,7 @@
                 if(text.Mensagem !== undefined && text.Mensagem !== ''){
                     $('#textoModal').text(text.Mensagem);
                     $('#modalTrocaMsg').modal('show');
+                    $('#btnOkModal').prop('href', '/Loja/MinhaConta/MeusPedidos/');
                 }
             }
         });

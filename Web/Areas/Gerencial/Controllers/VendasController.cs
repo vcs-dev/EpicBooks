@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Negocio;
@@ -14,7 +15,7 @@ namespace Web.Areas.Gerencial.Controllers
         [Area("Gerencial")]
         public IActionResult Index()
         {
-            resultado = new Facade().Consultar(new Pedido { Status = 'A' });
+            resultado = new Facade().Consultar(new Pedido());
             if (resultado.Msg != null)
             {
                 ViewBag.Mensagem = resultado.Msg;
@@ -25,11 +26,12 @@ namespace Web.Areas.Gerencial.Controllers
                 ViewBag.Mensagem = "Ainda não existem vendas no sistema.";
                 return View(new List<Pedido>());
             }
-            List<Pedido> pedidos = new List<Pedido>();
+            IList<Pedido> pedidos = new List<Pedido>();
             foreach (var item in resultado.Entidades)
             {
                 pedidos.Add((Pedido)item);
             }
+            pedidos = pedidos.Where(x => x.Status != 'P' && x.Status != 'R').ToList();
 
             return View(pedidos);
         }
