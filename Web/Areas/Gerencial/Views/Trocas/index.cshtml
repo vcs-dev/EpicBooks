@@ -1,10 +1,9 @@
-﻿
+﻿@model IEnumerable<Domain.Negocio.Troca>
 @{
     ViewData["Title"] = "Solicitações de troca";
 }
 
 <h1>Solicitações de troca</h1>
-@model IEnumerable<Domain.Negocio.Troca>
 
 @if (Model.Count() > 0)
 {
@@ -13,39 +12,75 @@
             <tr>
                 <th class="align-middle">Id da troca</th>
                 <th class="align-middle">Id do Pedido</th>
+                <th class="align-middle">Id do Usuário</th>
+                <th class="align-middle">Id do Item</th>
                 <th class="align-middle">Nome do produto</th>
                 <th class="align-middle">Quantidade</th>
                 <th class="align-middle">Situação</th>
                 <th class="align-middle">Data da Solicitação</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbodyItemTroca">
             @foreach (var item in Model)
             {
             <tr>
-                <td>@item.Id</td>
-                <td>@item.PedidoId</td>
-                <td>@item.NomeItem</td>
-                <td>@item.Qtde</td>
+                <td class="align-middle">@item.Id</td>
+                <td class="align-middle pedidoId">@item.PedidoId</td>
+                <td class="align-middle usuarioId">@item.UsuarioId</td>
+                <td class="align-middle itemId">@item.ItemId</td>
+                <td class="align-middle">@item.NomeItem</td>
+                <td class="align-middle qtde">@item.Qtde</td>
                 @{switch (item.Status)
                     {
                         case 'P':
-                            <td>AGUARDANDO CHEGADA DO PRODUTO</td>
+                            <td class="align-middle">AGUARDANDO CHEGADA DO PRODUTO</td>
                             break;
                         case 'A':
-                            <td>CONCLUÍDA</td>
+                            <td class="align-middle">CONCLUÍDA</td>
                             break;
                         default:
-                            <td>DESCONHECIDA</td>
+                            <td class="align-middle">DESCONHECIDA</td>
                             break;
                     }
                 }
-                <td>@item.DataCadastro</td>
+                <td class="align-middle">@item.DataCadastro</td>
+                <td><button type="button" class="btn btn-primary btnAbreModalTroca" title="Confirmar recebimento"><i class="fa fa-clipboard-check"></i></button></td>
             </tr>
             }
         </tbody>
     </table>
 }
+<!--modal form retorna para estoque-->
+<div class="modal" tabindex="-1" role="dialog" id="modalTroca">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solicitação de troca</h5>
+            </div>
+            <div class="modal-body row text-center">
+                <div class="col-12">
+                    <label for="inputPergunta">Deseja que o item retorne para o estoque?</label>
+                </div>
+                <div class="col-12">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radioSim" name="customRadio" class="custom-control-input" value="1" checked>
+                        <label class="custom-control-label" for="radioSim">Sim</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radioNao" name="customRadio" class="custom-control-input" value="0">
+                        <label class="custom-control-label" for="radioNao">Não</label>
+                    </div>
+                </div>
+                <input type="hidden" id="indiceItem" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary text-right" id="btnConfirmarRebebimento">Receber item</button>
+                <button type="button" class="btn btn-danger text-right" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @await Html.PartialAsync("_modalMensagem")
 
 @section Scripts{

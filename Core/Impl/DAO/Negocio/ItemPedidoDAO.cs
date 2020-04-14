@@ -17,7 +17,7 @@ namespace Core.Impl.DAO.Negocio
 
         public override List<EntidadeDominio> Consultar(EntidadeDominio entidade)
         {
-            Pedido pedido = (Pedido)entidade;
+            ItemPedido itemPed = (ItemPedido)entidade;
             List<ItemPedido> itensPed = new List<ItemPedido>();
             string cmdTextoItemPedido;
 
@@ -29,7 +29,7 @@ namespace Core.Impl.DAO.Negocio
 
                 SqlCommand comandoItemPedido = new SqlCommand(cmdTextoItemPedido, conexao);
 
-                comandoItemPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                comandoItemPedido.Parameters.AddWithValue("@PedidoId", itemPed.Id);
 
                 SqlDataReader drPedidosItens = comandoItemPedido.ExecuteReader();
                 comandoItemPedido.Parameters.Clear();

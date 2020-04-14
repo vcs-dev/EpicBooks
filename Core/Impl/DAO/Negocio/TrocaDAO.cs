@@ -120,8 +120,10 @@ namespace Core.Impl.DAO.Negocio
                 comandoTroca.Parameters.AddWithValue("@Codigo", troca.CupomTroca.Codigo);
                 comandoTroca.Parameters.AddWithValue("@Tipo", troca.CupomTroca.Tipo);
                 comandoTroca.Parameters.AddWithValue("@Valor", troca.CupomTroca.Valor);
-                comandoTroca.Parameters.AddWithValue("@DataExpiracao", troca.CupomTroca.DataExpiracao);
-                comandoTroca.Parameters.AddWithValue("@Usado", troca.CupomTroca.Usado);
+                if(troca.CupomTroca.DataExpiracao == null)
+                    comandoTroca.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
+                else
+                    comandoTroca.Parameters.AddWithValue("@DataExpiracao", troca.CupomTroca.DataExpiracao);
                 comandoTroca.Parameters.AddWithValue("@Usado", troca.CupomTroca.Usado);
                 comandoTroca.Parameters.AddWithValue("@UsuarioId", troca.CupomTroca.UsuarioId);
                 comandoTroca.ExecuteNonQuery();
@@ -208,8 +210,10 @@ namespace Core.Impl.DAO.Negocio
                 if (troca.UsuarioId > 0)
                     cmdTextoTroca = "SELECT " +
                                          "T.TrocaId, " +
+                                         "P.UsuarioId," +
                                          "T.PedidoId, " +
                                          "T.ItemId, " +
+                                         "PR.Nome, " +
                                          "T.Status, " +
                                          "T.Qtde, " +
                                          "T.DataSolicitacao " +
@@ -221,15 +225,17 @@ namespace Core.Impl.DAO.Negocio
                                      "ORDER BY TrocaId";
                 else
                     cmdTextoTroca = "SELECT " +
-                                         "PR.Nome, " +
                                          "T.TrocaId, " +
+                                         "P.UsuarioId," +
                                          "T.PedidoId, " +
                                          "T.ItemId, " +
-                                         "T.Status, " +
+                                         "PR.Nome, " +
                                          "T.Qtde, " +
+                                         "T.Status, " +
                                          "T.DataSolicitacao " +
                                      "FROM Trocas T " +
                                          "JOIN Produtos PR ON(T.ItemId = PR.ProdutoId) " +
+                                         "JOIN Pedidos P ON(T.PedidoId = P.PedidoId) " +
                                      "WHERE T.Status = @Status " +
                                      "ORDER BY DataSolicitacao ASC";
 
@@ -283,6 +289,8 @@ namespace Core.Impl.DAO.Negocio
                     };
                     if (!Convert.IsDBNull(dataReader["Nome"]))
                         troca.NomeItem = (dataReader["Nome"]).ToString();
+                    if (!Convert.IsDBNull(dataReader["UsuarioId"]))
+                        troca.UsuarioId = Convert.ToInt32(dataReader["UsuarioId"]);
 
                     trocas.Add(troca);
                 }

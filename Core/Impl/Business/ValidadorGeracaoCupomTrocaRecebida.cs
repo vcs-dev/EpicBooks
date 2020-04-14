@@ -16,16 +16,14 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Troca"))
             {
                 Troca troca = (Troca)entidade;
-                List<ItemPedido> itensPed;
 
                 if(troca.Status == 'A')
                 {
-                    Result resultado = new Facade().Consultar(new Pedido { Id = troca.PedidoId });
+                    Result resultado = new Facade().Consultar(new ItemPedido { Id = troca.PedidoId });
                     if (resultado.Msg != null)
                         return "Não foi possível confirmar o recebimento.\n" + resultado.Msg;
 
-                    itensPed = new List<ItemPedido>();
-
+                    List<ItemPedido> itensPed = new List<ItemPedido>();
                     foreach (var item in resultado.Entidades)
                     {
                         itensPed.Add((ItemPedido)item);
@@ -34,11 +32,21 @@ namespace Core.Impl.Business
                     if (itensPed.Count == 0)
                         return "Erro. Item de pedido não encontrado.";
 
+                    resultado = new Facade().Consultar(new Pedido { Id = troca.PedidoId });
+                    if (resultado.Msg != null)
+                        return "Não foi possível confirmar o recebimento.\n" + resultado.Msg;
+
+                    List<Pedido> pedidos = new List<Pedido>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        pedidos.Add((Pedido)item);
+                    }
+
                     Cupom cupomTroca = new Cupom
                     {
                         UsuarioId = troca.UsuarioId,
                         Tipo = 'T',
-                        Valor = itensPed.FirstOrDefault().Produto.PrecoVenda * itensPed.FirstOrDefault().Qtde,
+                        Valor = (itensPed.FirstOrDefault().Produto.PrecoVenda * itensPed.FirstOrDefault().Qtde) + pedidos.FirstOrDefault().ValorFrete,
                         Usado = 0,
                         DataCadastro = DateTime.Now,
                         DataExpiracao = null

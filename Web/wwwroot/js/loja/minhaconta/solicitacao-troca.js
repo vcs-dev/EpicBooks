@@ -7,7 +7,7 @@
 
     $('#btnEnviarSolicitacaoTroca').on('click', function () {
         var indice = $('#indiceItem').val();
-        var itemId = $('#tbodyIemPedido').find('.itemId').eq(indice).text();
+        var itemId = $('#tbodyItemPedido').find('.itemId').eq(indice).text();
         var qtde = $('#inputQtde').val();
         var pedidoId = $('#idPedido').val();
 

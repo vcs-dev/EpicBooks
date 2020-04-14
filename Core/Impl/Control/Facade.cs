@@ -125,6 +125,14 @@ namespace Core.Impl.Control
             rns.Add(nameof(Troca), rnsTroca);
             #endregion
 
+            #region ItemPedido
+            ItemPedidoDAO itemPedidoDAO = new ItemPedidoDAO();
+
+            daos.Add(nameof(ItemPedido), itemPedidoDAO);
+
+            rns.Add(nameof(ItemPedido), null);
+            #endregion
+
             #region Cupom
             CupomDAO cupomDAO = new CupomDAO();
 
