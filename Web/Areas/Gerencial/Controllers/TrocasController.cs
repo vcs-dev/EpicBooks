@@ -45,9 +45,9 @@ namespace Web.Areas.Gerencial.Controllers
                                               ItemId = itemId,
                                               Qtde = qtde,
                                               Status = 'A',
-                                              EstoqueObservacao = "Reentrada - troca",
+                                              EstoqueObservacao = "REENTRADA - TROCA",
                                               VoltaParEstoque = Convert.ToBoolean(voltaParaEstoque),
-            });
+                                            });
             if (resultado.Msg != null)
                 msg = resultado.Msg;
             else

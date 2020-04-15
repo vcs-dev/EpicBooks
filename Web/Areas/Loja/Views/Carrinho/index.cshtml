@@ -200,7 +200,6 @@
             </div>
         </div> <!-- /container -->
     }
-    @await Html.PartialAsync("_modalMensagem")
 }
 else
 {
@@ -208,6 +207,7 @@ else
         <h3 class="mb-5 text-center">Você ainda não possui itens no carrinho =( </h3>
     </div>
 }
+@await Html.PartialAsync("_modalMensagem")
 
 @section Scripts{
     <script src="~/js/loja/carrinho/carrinho.js"></script>

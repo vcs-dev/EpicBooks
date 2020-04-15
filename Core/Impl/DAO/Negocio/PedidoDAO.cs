@@ -200,7 +200,7 @@ namespace Core.Impl.DAO.Negocio
                             }
                         }
 
-                        if (pedido.CupomTrocaGerado.Id > 0)
+                        if (pedido.CupomTrocaGerado.Codigo != null && pedido.CupomTrocaGerado.Valor > 0)
                         {
                             cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
                                                     "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
@@ -218,17 +218,6 @@ namespace Core.Impl.DAO.Negocio
                             pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
                             comandoPedidosCupons.Dispose();
                         }
-                        //verificar o codigo abaixo
-                        //cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE SessaoGuid = @SessaoGuid";
-
-                        //SqlCommand comandoBloqueados = new SqlCommand(cmdTextoBloqueados, conexao, transacao);
-                        //foreach (var item in pedido.ItensPedido)
-                        //{
-                        //    comandoBloqueados.Parameters.AddWithValue("@SessaoGuid", pedido.SessaoGuid);
-                        //    comandoBloqueados.ExecuteNonQuery();
-                        //    comandoBloqueados.Parameters.Clear();
-                        //}
-                        //comandoBloqueados.Dispose();
                     }
 
                     cmdTextoVenda = "INSERT INTO Vendas(PedidoId, " +
@@ -261,6 +250,19 @@ namespace Core.Impl.DAO.Negocio
                         comandoEstoque.Parameters.Clear();
                     }
                     comandoEstoque.Dispose();
+                }
+                if (pedido.Status == 'A' || pedido.Status == 'R')
+                {
+                    cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE ItemId = @ItemId";
+
+                    SqlCommand comandoBloqueados = new SqlCommand(cmdTextoBloqueados, conexao, transacao);
+                    foreach (var item in pedido.ItensPedido)
+                    {
+                        comandoBloqueados.Parameters.AddWithValue("@ItemId", item.Produto.Id);
+                        comandoBloqueados.ExecuteNonQuery();
+                        comandoBloqueados.Parameters.Clear();
+                    }
+                    comandoBloqueados.Dispose();
                 }
 
                 Commit();

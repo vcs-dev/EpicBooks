@@ -81,6 +81,7 @@ namespace Core.Impl.DAO.Negocio
             Troca troca = (Troca)entidade;
             string cmdTextoTroca;
             string cmdTextoEstoque;
+            string cmdTextoPedido;
 
             try
             {
@@ -163,6 +164,14 @@ namespace Core.Impl.DAO.Negocio
                     comandoEstoque.Parameters.AddWithValue("@ProdutoId", troca.ItemId);
                     comandoEstoque.ExecuteNonQuery();
                     comandoEstoque.Dispose();
+
+                    cmdTextoPedido = "UPDATE Pedidos SET Status = 'T' WHERE PedidoId = @PedidoId";
+
+                    SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                    comandoPedido.ExecuteNonQuery();
+                    comandoPedido.Dispose();
                 }
                 Commit();
             }

@@ -133,6 +133,14 @@ namespace Core.Impl.Control
             rns.Add(nameof(ItemPedido), null);
             #endregion
 
+            #region ItemBloqueado
+            ItemBoqueadoDAO itemBoqueadoDAO = new ItemBoqueadoDAO();
+
+            daos.Add(nameof(ItemBloqueado), itemBoqueadoDAO);
+
+            rns.Add(nameof(ItemBloqueado), null);
+            #endregion
+
             #region Cupom
             CupomDAO cupomDAO = new CupomDAO();
 

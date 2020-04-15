@@ -106,7 +106,7 @@ namespace Web.Areas.Loja.Controllers
                 ViewBag.Mensagem = msg;
                 HttpContext.Session.Remove("mensagemCarrinho");
             }
-                
+
             return View(carrinho);
         }
 
@@ -131,14 +131,13 @@ namespace Web.Areas.Loja.Controllers
                 return PartialView("_produtos");
             }
             else
-            {                
+            {
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {
                     livros.Add((Livro)item);
                 }
                 itemPedido.Qtde = 1;
-                itemPedido.HoraInclusao = DateTime.Now;
                 itemPedido.Produto = livros.FirstOrDefault();
 
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
@@ -147,11 +146,20 @@ namespace Web.Areas.Loja.Controllers
                     carrinho = new Carrinho();
                     HttpContext.Session.Set("statusPedido", '\0');
                 }
+                //Verificacao de itens do carrinho
+                VerificacaoItensTempoLimiteAtingido verificacaoItens = new VerificacaoItensTempoLimiteAtingido();
+                string msg = verificacaoItens.VerificarItensCarrinho(carrinho);
+                if (msg != null)
+                {
+                    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    return RedirectToAction("index", "carrinho");
+                }
 
                 ItemPedido itemPed = carrinho.ItensPedido.Find(x => x.Produto.Id == id);//Verifica se o produto ja esta no carrinho
 
                 if (itemPed != null)
-                {
+                {//Encontrou produto no carrinho
                     estoque = new Estoque
                     {
                         ProdutoId = id
@@ -171,14 +179,27 @@ namespace Web.Areas.Loja.Controllers
                         }
                         if (estoqueProds.FirstOrDefault().Qtde >= carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde + 1)
                         {
-                            carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;//Se sim, incrementa qtde em 1
+                            carrinho.ItensPedido[carrinho.ItensPedido.IndexOf(itemPed)].Qtde += 1;
                             carrinho.QtdeTotalItens += 1;
-                            carrinho.HoraUltimaInclusao = DateTime.Now;
                         }
                     }
                 }
                 else
                 {
+                    //verificar se produto está na lista de itens bloqueados
+                    resultado = new Facade().Consultar(new ItemBloqueado { Id = id });
+                    if(resultado.Msg != null)
+                    {
+                        ViewBag.Mensagem = resultado.Msg;
+                        return RedirectToAction("Index", "Carrinho");
+                    }
+                    else if(resultado.Entidades.Count > 0)
+                    {
+                        string retornoMsg = "Produto bloqueado temporariamente";
+                        HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(retornoMsg));
+                        return RedirectToAction("Index", "Carrinho");
+                    }
+                    itemPedido.HoraInclusao = DateTime.Now;//Grava a hora da insercao desse produto no carrinho
                     estoque = new Estoque
                     {
                         ProdutoId = id
@@ -200,13 +221,20 @@ namespace Web.Areas.Loja.Controllers
                         {
                             carrinho.ItensPedido.Add(itemPedido);
                             carrinho.QtdeTotalItens += 1;
-                            carrinho.HoraUltimaInclusao = DateTime.Now;
+                            carrinho.HoraUltimaInclusao = DateTime.Now;//Grava a hora da ultima insercao no carrinho
+
+                            resultado = new Facade().Salvar(new ItemBloqueado { Id = id });
+                            if(resultado.Msg != null)
+                            {
+                                ViewBag.Mensagem = resultado.Msg;
+                                return RedirectToAction("index", "carrinho");
+                            }
                         }
                     }
                 }
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
-                return RedirectToAction("index");
+                return RedirectToAction("index", "carrinho");
             }
         }
 
@@ -280,6 +308,8 @@ namespace Web.Areas.Loja.Controllers
             {
                 carrinho.QtdeTotalItens -= itemPed.Qtde;
                 carrinho.ItensPedido.Remove(itemPed);//Decrementa qtde em 1 se a qtde for maior que 1
+                ExclusaoItemBloqueado exclusaoItemBloqueado = new ExclusaoItemBloqueado();
+                exclusaoItemBloqueado.Excluir(itemPed);
                 SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             }
             if (carrinho.ItensPedido.Count() > 0)
@@ -325,6 +355,7 @@ namespace Web.Areas.Loja.Controllers
                     enderecos.Add((Endereco)item);
                 }
                 carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
                 carrinho.Cep = enderecos.FirstOrDefault().Cep;
                 carrinho.EnderecoId = enderecos.FirstOrDefault().Id;
                 carrinho.ValorFrete = CalculoFrete.Calcular(carrinho.Cep, carrinho.QtdeTotalItens);
@@ -341,6 +372,7 @@ namespace Web.Areas.Loja.Controllers
             List<Cupom> cupons = new List<Cupom>();
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
             cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
             if (cupom == null)
             {
@@ -350,7 +382,7 @@ namespace Web.Areas.Loja.Controllers
                 resultado = new Facade().Consultar(cupom);
                 if (!string.IsNullOrEmpty(resultado.Msg))
                 {
-                    TempData["MsgErro"] = resultado.Msg;
+                    ViewBag.Mensagem = resultado.Msg;
                     return PartialView("_resumo", carrinho);
                 }
                 else
@@ -375,6 +407,7 @@ namespace Web.Areas.Loja.Controllers
             Cupom cupom;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
             cupom = carrinho.CuponsTroca.Find(x => x.Codigo == codCupom);//Verifica se o cupom ja foi adicionado
             if (cupom != null)
                 carrinho.CuponsTroca.Remove(cupom);
@@ -391,7 +424,8 @@ namespace Web.Areas.Loja.Controllers
             List<Cupom> cupons;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            if (!string.IsNullOrEmpty(carrinho.CupomPromocional.Codigo) || 
+
+            if (!string.IsNullOrEmpty(carrinho.CupomPromocional.Codigo) ||
                 carrinho.CupomPromocional.Codigo != codCupom)
             {
                 cupom.Codigo = codCupom;
@@ -425,6 +459,7 @@ namespace Web.Areas.Loja.Controllers
             Carrinho carrinho;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
             carrinho.CupomPromocional = new Cupom();
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
@@ -438,6 +473,7 @@ namespace Web.Areas.Loja.Controllers
             Carrinho carrinho;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
             return PartialView("_resumo", carrinho);
         }
 
@@ -449,7 +485,7 @@ namespace Web.Areas.Loja.Controllers
             Pedido pedido;
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-            
+
             pedido = new Pedido
             {
                 MultiplosCartoes = carrinho.MultiplosCartoes = multiplosCartoes,
@@ -463,8 +499,18 @@ namespace Web.Areas.Loja.Controllers
                 CupomTrocaGerado = new Cupom(),
                 UsuarioId = HttpContext.Session.Get<int>("idUsuario")
             };
+            //Verificacao de itens do carrinho
+            VerificacaoItensTempoLimiteAtingido verificacaoItens = new VerificacaoItensTempoLimiteAtingido();
+            string retornoMsg = verificacaoItens.VerificarItensCarrinho(carrinho);
+            if (retornoMsg != null)
+            {
+                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());
+                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(retornoMsg));
+                return RedirectToAction("index", "carrinho");
+            }
 
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+
 
             resultado = new Facade().Salvar(pedido);//Salva o pedido
             if (!string.IsNullOrEmpty(resultado.Msg))

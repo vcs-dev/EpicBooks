@@ -16,7 +16,7 @@
         $('.valorCartao').removeClass('d-none');
     }
 
-    if($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
+    if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
         $('#modalMensagem').modal('show');
 
     $('#chkDoisCartoes').on('change', function () {

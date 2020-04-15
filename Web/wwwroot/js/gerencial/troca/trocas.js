@@ -33,7 +33,7 @@
                 if(text.Mensagem !== undefined && text.Mensagem !== ''){
                     $('#textoModal').text(text.Mensagem);
                     $('#modalMensagem').modal('show');
-                    location.reload(); 
+                    //location.reload(); 
                     $('#btnOkModal').prop('href', '/Gerencial/Trocas/');
                 }
             }
