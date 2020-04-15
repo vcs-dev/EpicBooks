@@ -14,27 +14,34 @@
         <tbody>
             @foreach (var item in Model)
             {
-            var soma = 0;
-            double valorTotaPedido = 0;
-            foreach (var item1 in item.ItensPedido)
-            {
-            soma += item1.Qtde;
-            }
+                var soma = 0;
+                double valorTotaPedido = 0;
+                foreach (var item1 in item.ItensPedido)
+                {
+                    soma += item1.Qtde;
+                }
 
-            foreach (var itemPedido in item.ItensPedido)
-            {
-            valorTotaPedido += itemPedido.Produto.PrecoVenda * itemPedido.Qtde;
-            }
-            valorTotaPedido += item.ValorFrete;
-            valorTotaPedido -= item.CupomPromocional.Valor;
+                foreach (var itemPedido in item.ItensPedido)
+                {
+                    valorTotaPedido += itemPedido.Produto.PrecoVenda * itemPedido.Qtde;
+                }
+                valorTotaPedido += item.ValorFrete;
+                valorTotaPedido -= item.CupomPromocional.Valor;
 
-            foreach (var cuponsTroca in item.CuponsTroca)
-            {
-            valorTotaPedido -= cuponsTroca.Valor;
-            }
+                foreach (var cuponsTroca in item.CuponsTroca)
+                {
+                    valorTotaPedido -= cuponsTroca.Valor;
+                }
             <tr>
                 <td>@item.Id</td>
-                <td>@("R$ " + (valorTotaPedido).ToString("##0.00"))</td>
+                @if (valorTotaPedido >= 0)
+                {
+                    <td>@("R$ " + (valorTotaPedido).ToString("##0.00"))</td>
+                }
+                else
+                {
+                    <td>R$ 00,00</td>
+                }
                 <td>@item.DataCadastro</td>
                 <td>@soma</td>
             </tr>
