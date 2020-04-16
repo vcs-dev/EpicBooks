@@ -1,11 +1,9 @@
-﻿@model IEnumerable<Domain.Produto.Livro>
+﻿@model IEnumerable<Domain.Negocio.Estoque>
 @{
-    ViewData["Title"] = "Produtos";
+    ViewData["Title"] = "Estoque";
 }
-@*@section Styles{
-        <link rel="stylesheet" href="css/form-validation.css">
-    }*@
-<h1>Produtos</h1>
+
+<h1>Estoque</h1>
 @if (Model.Count() > 0)
 {
     <div class="row mt-3 mb-3">
@@ -17,15 +15,16 @@
         </div>
     </div>
 }
-<div class="row mt-3 mb-3">
+@*<div class="row mt-3 mb-3">
     <div class="col-12">
         <a href="/Gerencial/Produtos/Cadastrar" class="btn btn-primary" title="">Cadastrar livro <i class="fa fa-plus"></i></a>
     </div>
-</div>
+</div>*@
 <partial id="listaProdutos">
-    @await Html.PartialAsync("_produtos", Model)
+    @await Html.PartialAsync("_estoqueProds", Model)
 </partial>
 @await Html.PartialAsync("_modalMensagem", Model)
 @section Scripts{
-    <script src="~/js/gerencial/produto/produto.js"></script>
+    <script src="~/js/gerencial/estoque/estoque.js"></script>
 }
+

@@ -16,21 +16,54 @@ namespace Core.Impl.DAO.Negocio
         {
             Estoque estoque = (Estoque)entidade;
             List<Estoque> estoqueProds = new List<Estoque>();
-            string cmdTextoEstoque = "";
+            string cmdTextoEstoque;
 
             try
             {
                 Conectar();
 
                 if (estoque.ProdutoId > 0)
-                    cmdTextoEstoque = "SELECT * FROM Estoque WHERE ProdutoId = @ProdutoId";
+                    cmdTextoEstoque = "SELECT " +
+                                          "E.EstoqueId, " +
+                                          "E.ProdutoId, " +
+                                          "E.Qtde, " +
+                                          "E.ValorCusto, " +
+                                          "E.Observacao, " +
+                                          "PR.Nome, " +
+                                          "PR.CaminhoImagem " +
+                                      "FROM Estoque E " +
+                                      "JOIN Produtos PR ON(E.ProdutoId = PR.ProdutoId) " + 
+                                      "WHERE ProdutoId = @ProdutoId";
+                else if (estoque.NomeProduto != null)
+                    cmdTextoEstoque = "SELECT " +
+                                          "E.EstoqueId, " +
+                                          "E.ProdutoId, " +
+                                          "E.Qtde, " +
+                                          "E.ValorCusto, " +
+                                          "E.Observacao, " +
+                                          "PR.Nome, " +
+                                          "PR.CaminhoImagem " +
+                                      "FROM Estoque E " +
+                                      "JOIN Produtos PR ON(E.ProdutoId = PR.ProdutoId) " +
+                                      "WHERE PR.Nome LIKE @Nome";
                 else
-                    cmdTextoEstoque = "SELECT * FROM Estoque";
+                    cmdTextoEstoque = "SELECT " +
+                                          "E.EstoqueId, " +
+                                          "E.ProdutoId, " +
+                                          "E.Qtde, " +
+                                          "E.ValorCusto, " +
+                                          "E.Observacao, " +
+                                          "PR.Nome, " +
+                                          "PR.CaminhoImagem " +
+                                      "FROM Estoque E " +
+                                      "JOIN Produtos PR ON(E.ProdutoId = PR.ProdutoId)";
 
                 SqlCommand comandoestoque = new SqlCommand(cmdTextoEstoque, conexao);
 
                 if (estoque.ProdutoId > 0)
                     comandoestoque.Parameters.AddWithValue("@ProdutoId", estoque.ProdutoId);
+                if (estoque.NomeProduto != null)
+                    comandoestoque.Parameters.AddWithValue("@Nome", "%" + estoque.NomeProduto + "%");
 
                 SqlDataReader drEstoque = comandoestoque.ExecuteReader();
                 comandoestoque.Dispose();
@@ -69,8 +102,11 @@ namespace Core.Impl.DAO.Negocio
                         ProdutoId = Convert.ToInt32(dataReader["ProdutoId"]),
                         Qtde = Convert.ToInt32(dataReader["Qtde"]),
                         ValorCusto = Convert.ToDouble(dataReader["ValorCusto"]),
+                        CaminhoImagem = dataReader["CaminhoImagem"].ToString(),
+                        NomeProduto = dataReader["Nome"].ToString(),
                     };
-
+                    if (!Convert.IsDBNull(dataReader["Observacao"]))
+                        estoque.Observacao = dataReader["CaminhoImagem"].ToString();
                     estoqueProds.Add(estoque);
                 }
                 catch (Exception e)

@@ -334,7 +334,7 @@ namespace Core.Impl.DAO.Produto
                 else if (livro.Id != 0 && string.IsNullOrEmpty(livro.Nome))
                     cmdTextolivro = "SELECT * FROM Produtos WHERE ProdutoId = @ProdutoId";
                 else if (livro.Id == 0 && !string.IsNullOrEmpty(livro.Nome))
-                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome like @Nome";
+                    cmdTextolivro = "SELECT * FROM Produtos WHERE Nome LIKE @Nome";
 
                 SqlCommand comandolivro = new SqlCommand(cmdTextolivro, conexao);
 

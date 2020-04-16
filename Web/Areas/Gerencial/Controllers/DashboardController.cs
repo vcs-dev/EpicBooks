@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Gerencial.Controllers
 {
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
         [Area("Gerencial")]
         public IActionResult Index()
