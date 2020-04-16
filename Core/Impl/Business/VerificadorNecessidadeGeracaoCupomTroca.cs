@@ -24,7 +24,7 @@ namespace Core.Impl.Business
                     if (valorTotalPedido >= 0.00)
                     {
                         pedido.CupomPromocional = new Cupom();
-                        return null;
+                        return "Cupom promocional desnecessário. Os cupons de troca selecionados cobrem a compra.";
                     }
 
                     pedido.CuponsTroca = pedido.CuponsTroca.OrderByDescending(x => x.Valor).ToList();                   

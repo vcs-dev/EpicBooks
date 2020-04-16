@@ -130,5 +130,28 @@ namespace Web.Areas.Loja.Controllers
 
             return View("minhasTrocas", trocas);
         }
+
+        [Area("Loja")]
+        public IActionResult Cupons()
+        {
+            resultado = new Facade().Consultar(new Cupom { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+            if (resultado.Msg != null)
+            {
+                ViewBag.Mensagem = resultado.Msg;
+                return View("minhasTrocas", new List<Cupom>());
+            }
+            if (resultado.Entidades.Count == 0)
+            {
+                ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
+                return View("minhasTrocas", new List<Cupom>());
+            }
+            List<Cupom> cupons = new List<Cupom>();
+            foreach (var item in resultado.Entidades)
+            {
+                cupons.Add((Cupom)item);
+            }
+
+            return View(cupons);
+        }
     }
 }
