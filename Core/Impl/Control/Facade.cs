@@ -173,6 +173,27 @@ namespace Core.Impl.Control
             rns.Add(nameof(Estoque), null);
             #endregion
 
+            #region EntradaEstoque
+            EntradaEstoqueDAO entradaEstoqueDAO = new EntradaEstoqueDAO();
+
+            daos.Add(nameof(EntradaEstoque), entradaEstoqueDAO);
+
+            //Regras de salvar
+            ValidadorDadosObrigatoriosEntradaEstoque validadorDadosObrigatoriosEntradaEstoque = new ValidadorDadosObrigatoriosEntradaEstoque();
+            ValidadorDataEntradaEstoque validadorDataEntradaEstoque = new ValidadorDataEntradaEstoque();
+
+            List<IStrategy> rnsSalvarEntradaEstoque = new List<IStrategy>();
+
+            rnsSalvarEntradaEstoque.Add(validadorDadosObrigatoriosEntradaEstoque);
+            rnsSalvarEntradaEstoque.Add(validadorDataEntradaEstoque);
+
+            Dictionary<string, List<IStrategy>> rnsEntradaEstoque = new Dictionary<string, List<IStrategy>>();
+
+            rnsEntradaEstoque.Add("SALVAR", rnsSalvarEntradaEstoque);
+
+            rns.Add(nameof(EntradaEstoque), rnsEntradaEstoque);
+            #endregion
+
         }
         public Result Alterar(EntidadeDominio entidade)
         {

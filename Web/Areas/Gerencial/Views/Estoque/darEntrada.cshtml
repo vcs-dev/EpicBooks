@@ -1,0 +1,67 @@
+﻿@model Domain.Negocio.EntradaEstoque
+@{
+    ViewData["Title"] = "Dar Entrada em Estoque";
+}
+
+
+<div class="container">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1>Dar entrada em estoque</h1>
+    </div>
+    <div class="row order-md-1 justify-content-center">
+        <form novalidate action="/Gerencial/Estoque/DarEntrada/" method="post" enctype="multipart/form-data" id="formEntradaEstoque">
+            <div class="row">
+                <div class="col-md-2 mb-3">
+                    <label for="produtoId">Código do produto</label>
+                    <input type="text" class="form-control" id="produtoId" name="ProdutoId" value="@Model.ProdutoId" readonly>
+                </div>
+                <div class="col-md-10 mb-3">
+                    <label for="nomeProduto">Nome</label>
+                    <input type="text" class="form-control" id="nomeProduto" name="NomeProduto" value="@Model.NomeProduto" readonly>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="qtde">Quantidade*</label>
+                    <input type="text" class="form-control" id="qtde" name="Qtde" value="@Model.Qtde">
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="valorCusto">Preço unitário (R$)*</label>
+                    <input type="text" class="form-control" id="valorCusto" name="ValorCusto" value="@Model.ValorCusto">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="fornecedorId">Fornecedor*</label>
+                    <select class="form-control" id="fornecedorId" name="FornecedorId">
+                        <option selected="@(Model.FornecedorId == 0)" value=""></option>
+                        <option selected="@(Model.FornecedorId == 1)" value="1">Nova Era Distribuidora de Livros S/A</option>
+                        <option selected="@(Model.FornecedorId == 2)" value="2">Horizonte Distibuidora de Livros LTDA</option>
+                        <option selected="@(Model.FornecedorId == 3)" value="3">Marcondes Distribuidora de Impressos LTDA</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="dataCadastro">Data de entrada*</label>
+                    @if (Model.DataCadastro != DateTime.MinValue)
+                    {
+                        <input type="text" class="form-control" id="dataCadastro" name="DataCadastro" value="@Model.DataCadastro">
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="dataCadastro" name="DataCadastro" value="">
+                    }
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="observacao">Observacao</label>
+                    <input type="text" class="form-control" id="observacao" name="Observacao" value="@Model.Observacao">
+                </div>
+            </div>
+            <hr class="mb-4">
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary" id="btnSalvar">Salvar</button>
+                <a href="/Gerencial/Estoque/" class="btn btn-danger">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/gerencial/estoque/entrada-estoque.js"></script>
+}

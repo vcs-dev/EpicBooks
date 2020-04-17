@@ -33,7 +33,7 @@ namespace Core.Impl.DAO.Negocio
                                           "PR.CaminhoImagem " +
                                       "FROM Estoque E " +
                                       "JOIN Produtos PR ON(E.ProdutoId = PR.ProdutoId) " + 
-                                      "WHERE ProdutoId = @ProdutoId";
+                                      "WHERE E.ProdutoId = @ProdutoId";
                 else if (estoque.NomeProduto != null)
                     cmdTextoEstoque = "SELECT " +
                                           "E.EstoqueId, " +

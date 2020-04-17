@@ -8,6 +8,10 @@
         $('#modalTroca').modal('show');
     });
 
+    $('#btnOkModal').on('click', function() {
+        location.reload(); 
+    });
+
     $('#btnConfirmarRebebimento').on('click', function () {
         var indice = $('#indiceItem').val();
         var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
@@ -33,8 +37,6 @@
                 if(text.Mensagem !== undefined && text.Mensagem !== ''){
                     $('#textoModal').text(text.Mensagem);
                     $('#modalMensagem').modal('show');
-                    //location.reload(); 
-                    $('#btnOkModal').prop('href', '/Gerencial/Trocas/');
                 }
             }
         });

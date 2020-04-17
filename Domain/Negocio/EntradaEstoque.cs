@@ -11,5 +11,6 @@ namespace Domain.Negocio
         public double ValorCusto { get; set; }
         public int FornecedorId { get; set; }
         public string Observacao { get; set; }
+        public string NomeProduto { get; set; }
     }
 }
