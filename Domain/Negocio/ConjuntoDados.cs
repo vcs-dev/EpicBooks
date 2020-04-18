@@ -6,35 +6,35 @@ namespace Domain.Negocio
     {
         public ConjuntoDados()
         {
-            Fill = false;
-            Data = new List<int>();
-            Label = "Como fazer amigos e influenciar pessoas";
-            Data.Add(1533);
-            Data.Add(2134);
-            Data.Add(1848);
-            Data.Add(2400);
-            Data.Add(3430);
-            Data.Add(4044);
-            Data.Add(2093);
-            Data.Add(4949);
-            Data.Add(3949);
-            Data.Add(3493);
-            Data.Add(7495);
-            Data.Add(6499);
-            Data.Add(5940);
-            LineTension = 0;
-            BackgroundColor = "trasparent";
-            BorderColor = "#00b9ae";
-            BorderWidth = 4;
-            PointBackgroundColor = "#00b9ae";
+            fill = false;
+            data = new List<int>();
+            label = "Como fazer amigos e influenciar pessoas";
+            data.Add(1533);
+            data.Add(2134);
+            data.Add(1848);
+            data.Add(2400);
+            data.Add(3430);
+            data.Add(4044);
+            data.Add(2093);
+            data.Add(4949);
+            data.Add(3949);
+            data.Add(3493);
+            data.Add(7495);
+            data.Add(6499);
+            data.Add(5940);
+            lineTension = 0;
+            backgroundColor = "trasparent";
+            borderColor = "#00b9ae";
+            borderWidth = 4;
+            pointBackgroundColor = "#00b9ae";
         }
-        public string Label { get; set; }
-        public bool Fill { get; set; }
-        public List<int> Data { get; set; }
-        public double LineTension { get; set; }
-        public string BackgroundColor { get; set; }
-        public string BorderColor { get; set; }
-        public int BorderWidth { get; set; }
-        public string PointBackgroundColor { get; set; }
+        public string label { get; set; }
+        public bool fill { get; set; }
+        public List<int> data { get; set; }
+        public double lineTension { get; set; }
+        public string backgroundColor { get; set; }
+        public string borderColor { get; set; }
+        public int borderWidth { get; set; }
+        public string pointBackgroundColor { get; set; }
     }
 }

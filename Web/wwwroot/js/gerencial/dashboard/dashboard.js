@@ -1,23 +1,6 @@
 $(document).ready(function () {
     var dataGraficoLinhas;
     var dataGraficoTorta;
-    var myChart;
-    
-    var dataLineChart = {
-        labels: [],
-        dataset: [],
-    };
-
-    var dsLineChart = {
-        label: '',
-        fill: false,
-        data: [],
-        lineTension: 0,
-        backgroundColor: '',
-        borderColor: '',
-        borderWidth: 0,
-        pointBackgroundColor: '',
-    };
 
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '') {
         $('#modalMensagem').modal('show');
@@ -31,9 +14,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 dataGraficoLinhas = JSON.parse(response);
-                dataLineChart['labels'] = dataGraficoLinhas['labels'];
-                dataLineChart['dataset'] = dataGraficoLinhas['DataSets'][0];
-                GerarGraficoLinhas(dataLineChart);
+                GerarGraficoLinhas(dataGraficoLinhas);
                 //AddData(myChart, dataGraficoLinhas);
             }
         });
@@ -60,37 +41,13 @@ $(document).ready(function () {
         grey: 'rgb(201, 203, 207)'
     };
 
-    // function AddData(chart){
-    //     chart.data.labels = dataLineChart['labels'];
-    //     //chart.data.datasets = data['DataSets'][0];
-    //     chart.data.datasets.push(dsLineChart);
-    //     chart.update();
-    // }
-
-    function GerarGraficoLinhas(teste) {
-       // 'use strict'
-
-        //feather.replace()
-
+    function GerarGraficoLinhas(data) {
         // Graphs
         var ctx = $('#myChart');
         // eslint-disable-next-line no-unused-vars
-        myChart = new Chart(ctx, {
+        var myChart = new Chart(ctx, {
             type: 'line',
-            data: teste,
-            // data: {
-            //     labels: dataGraficoLinhas['Labels'],
-            //     datasets: [{
-            //         label: dataGraficoLinhas['DataSets'][0]['Label'],
-            //         fill: dataGraficoLinhas['DataSets'][0]['Fill'],
-            //         data: dataGraficoLinhas['DataSets'][0]['Data'],
-            //         lineTension: dataGraficoLinhas['DataSets'][0]['LineTension'],
-            //         backgroundColor: dataGraficoLinhas['DataSets'][0]['BackgroundColor'],
-            //         borderColor: dataGraficoLinhas['DataSets'][0]['BorderColor'],
-            //         borderWidth: dataGraficoLinhas['DataSets'][0]['BorderWidth'],
-            //         pointBackgroundColor: dataGraficoLinhas['DataSets'][0]['PointBackgroundColor']
-            //     }]
-            // },
+            data: data,
             options: {
                 scales: {
                     xAxes: [{
