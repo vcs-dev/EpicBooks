@@ -9,7 +9,8 @@
     });
 
     $('#btnOkModal').on('click', function() {
-        location.reload(); 
+        $('#textoModal').text('');
+        location.href = '/Gerencial/Dashboard/'; 
     });
 
     $('#btnConfirmarRebebimento').on('click', function () {

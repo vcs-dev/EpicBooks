@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/chart.css">
+}
+<h1>Dashboard</h1>
+@*<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1>Dar entrada em estoque</h1>
+    </div>*@
+<div class="row order-md-1 justify-content-center">
+    <div class="col-md-2 mb-3">
+        <label for="dataInicial">Data inicial*</label>
+        <input type="text" class="form-control" id="dataInicial" placeholder="dd/mm/aaaa" name="DataInicial" value="">
+    </div>
+    <div class="col-md-2 mb-3">
+        <label for="dataFinal">Data final*</label>
+        <input type="text" class="form-control" id="dataFinal" placeholder="dd/mm/aaaa" name="DataFinal" value="">
+    </div>
+</div>
+<hr class="mb-4">
+<div class="text-right">
+    <button type="button" class="btn btn-success" id="btnGerarGraficos">Gerar gráficos <i class="fa fa-chart-line"></i></button>
+</div>
+<div id="partialGraficos" class="d-none">
+    @await Html.PartialAsync("_graficos")
+</div>
+
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/gerencial/dashboard/chart.js"></script>
+}
+
+
+
