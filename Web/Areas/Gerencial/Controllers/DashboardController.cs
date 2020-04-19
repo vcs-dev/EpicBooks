@@ -95,7 +95,7 @@ namespace Web.Areas.Gerencial.Controllers
             }
             if (resultado.Entidades.Count == 0)
             {
-                ViewBag.Mensagem = "Sem dados no período.";
+                return Json(JsonConvert.SerializeObject(new GraficoTorta()));
             }
             List<Venda> vendas = new List<Venda>();
             foreach (var item in resultado.Entidades)

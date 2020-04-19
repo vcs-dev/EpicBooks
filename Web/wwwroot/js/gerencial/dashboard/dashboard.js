@@ -1,6 +1,14 @@
 $(document).ready(function () {
     var dataGraficoLinhas;
     var dataGraficoTorta;
+    var divCanvas = '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
+        '<h1 class="h2" id="maisVendidosTitulo">Mais vendidos por título</h1>' +
+        '</div>' +
+        '<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>' +
+        '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
+        '<h1 class="h2" id="maisVendidosCategoria">Mais vendidos por categoria</h1>' +
+        '</div>' +
+        '<canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>';
 
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '') {
         $('#modalMensagem').modal('show');
@@ -15,6 +23,8 @@ $(document).ready(function () {
         //     success: function (response) {
         //         dataGraficoLinhas = JSON.parse(response);
         //         GerarGraficoLinhas(dataGraficoLinhas);
+        // $('#maisVendidosTitulo').text('');
+        // $('#maisVendidosTitulo').text('Mais vendidos por título ' + $('#maisVendidosTitulo').text() + ' - ' + $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
         //     }
         // });
         $.ajax({
@@ -25,6 +35,15 @@ $(document).ready(function () {
             success: function (response) {
                 dataGraficoTorta = JSON.parse(response);
                 GerarGraficoTorta(dataGraficoTorta);
+                if (dataGraficoTorta.datasets.length > 0) {
+                    $('#maisVendidosCategoria').text('');
+                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' + $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
+                }
+                else {
+                    $('#maisVendidosCategoria').text('');
+                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' +
+                        $('#dataInicial').val() + ' à ' + $('#dataFinal').val() + ' - Sem dados no período');
+                }
             }
         });
         $('#partialGraficos').removeClass('d-none');
@@ -81,6 +100,13 @@ $(document).ready(function () {
     //     return Math.round(Math.random() * 100);
     // };
 
+    function ResetCanvas() {
+        // $('#myChart').remove();
+        // $('#myChart2').remove();
+        $('#partialGraficos').empty();
+        $('#partialGraficos').html(divCanvas);
+    }
+
     function GerarGraficoTorta(data) {
         var config = {
             type: 'pie',
@@ -89,7 +115,7 @@ $(document).ready(function () {
                 responsive: true
             }
         };
-
+        ResetCanvas();
         var ctx = $('#myChart2');
         var myPieChart = new Chart(ctx, config);
     }
