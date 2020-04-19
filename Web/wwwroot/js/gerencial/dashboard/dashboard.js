@@ -7,39 +7,39 @@ $(document).ready(function () {
     }
 
     $('#btnGerarGraficos').on('click', function () {
-        $.ajax({
-            type: "get",
-            url: "/Gerencial/Dashboard/GerarGraficoLinhas/",
-            data: { dataInicial: $('#dataInicial').val(), dataFinal: $('#dataFinal').val() },
-            dataType: "json",
-            success: function (response) {
-                dataGraficoLinhas = JSON.parse(response);
-                GerarGraficoLinhas(dataGraficoLinhas);
-                //AddData(myChart, dataGraficoLinhas);
-            }
-        });
+        // $.ajax({
+        //     type: "get",
+        //     url: "/Gerencial/Dashboard/GerarGraficoLinhas/",
+        //     data: { dataInicial: $('#dataInicial').val(), dataFinal: $('#dataFinal').val() },
+        //     dataType: "json",
+        //     success: function (response) {
+        //         dataGraficoLinhas = JSON.parse(response);
+        //         GerarGraficoLinhas(dataGraficoLinhas);
+        //     }
+        // });
         $.ajax({
             type: "get",
             url: "/Gerencial/Dashboard/GerarGraficoTorta/",
             data: { dataInicial: $('#dataInicial').val(), dataFinal: $('#dataFinal').val() },
             dataType: "json",
             success: function (response) {
-                //dataGraficoTorta = JSON.parse(response);
+                dataGraficoTorta = JSON.parse(response);
+                GerarGraficoTorta(dataGraficoTorta);
             }
         });
         $('#partialGraficos').removeClass('d-none');
     });
 
     /* globals Chart:false, feather:false */
-    window.chartColors = {
-        red: 'rgb(255, 99, 132)',
-        orange: 'rgb(255, 159, 64)',
-        yellow: 'rgb(255, 205, 86)',
-        green: 'rgb(75, 192, 192)',
-        blue: 'rgb(54, 162, 235)',
-        purple: 'rgb(153, 102, 255)',
-        grey: 'rgb(201, 203, 207)'
-    };
+    // window.chartColors = {
+    //     red: 'rgb(255, 99, 132)',
+    //     orange: 'rgb(255, 159, 64)',
+    //     yellow: 'rgb(255, 205, 86)',
+    //     green: 'rgb(75, 192, 192)',
+    //     blue: 'rgb(54, 162, 235)',
+    //     purple: 'rgb(153, 102, 255)',
+    //     grey: 'rgb(201, 203, 207)'
+    // };
 
     function GerarGraficoLinhas(data) {
         // Graphs
@@ -77,44 +77,21 @@ $(document).ready(function () {
         })
     }
 
-    var randomScalingFactor = function () {
-        return Math.round(Math.random() * 100);
-    };
+    // var randomScalingFactor = function () {
+    //     return Math.round(Math.random() * 100);
+    // };
 
-    var config = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                    5467,
-                    4543,
-                    3546,
-                    8765,
-                    7654,
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.orange,
-                    window.chartColors.yellow,
-                    window.chartColors.green,
-                    window.chartColors.blue,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                'Terror',
-                'Suspense',
-                'Desenvolvimento pessoal',
-                'Romance',
-                'História'
-            ]
-        },
-        options: {
-            responsive: true
-        }
-    };
+    function GerarGraficoTorta(data) {
+        var config = {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true
+            }
+        };
 
-    var ctx = $('#myChart2');
-    window.myPie = new Chart(ctx, config);
+        var ctx = $('#myChart2');
+        var myPieChart = new Chart(ctx, config);
+    }
 
 });

@@ -194,6 +194,14 @@ namespace Core.Impl.Control
             rns.Add(nameof(EntradaEstoque), rnsEntradaEstoque);
             #endregion
 
+            #region Venda
+            VendaDAO vendaDAO = new VendaDAO();
+
+            daos.Add(nameof(Venda), vendaDAO);
+
+            rns.Add(nameof(Venda), null);
+            #endregion
+
         }
         public Result Alterar(EntidadeDominio entidade)
         {
