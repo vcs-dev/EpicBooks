@@ -62,7 +62,7 @@ namespace Core.Impl.Control
 
             //Regras de salvar
             CalculoValorTotalPedido calculoValorTotalPedido = new CalculoValorTotalPedido();
-            ValidadorDadosObrigatoriosPedido validadorDadosObrigatoriosPedido = new ValidadorDadosObrigatoriosPedido();       
+            ValidadorDadosObrigatoriosPedido validadorDadosObrigatoriosPedido = new ValidadorDadosObrigatoriosPedido();
             ValidadorCartoesDiferentes validadorCartoesDiferentes = new ValidadorCartoesDiferentes();
             ValidadorNecessidadePgtoCartao validadorNecessidadePgtoCartao = new ValidadorNecessidadePgtoCartao();
             ValidadorValorMinimoCartao validadorValorMinimoCartao = new ValidadorValorMinimoCartao();
@@ -199,7 +199,37 @@ namespace Core.Impl.Control
 
             daos.Add(nameof(Venda), vendaDAO);
 
-            rns.Add(nameof(Venda), null);
+            //Regras de consultar
+            ValidadorPeriodoVenda validadorPeriodoVenda = new ValidadorPeriodoVenda();
+
+            List<IStrategy> rnsConsultarVenda = new List<IStrategy>();
+
+            rnsConsultarVenda.Add(validadorPeriodoVenda);
+
+            Dictionary<string, List<IStrategy>> rnsVenda = new Dictionary<string, List<IStrategy>>();
+
+            rnsVenda.Add("CONSULTAR", rnsConsultarVenda);
+
+            rns.Add(nameof(Venda), rnsVenda);
+            #endregion
+
+            #region Faturamento
+            FaturamentoDAO faturamentoDAO = new FaturamentoDAO();
+
+            daos.Add(nameof(Faturamento), faturamentoDAO);
+
+            //Regras de consultar
+            ValidadorPeriodoFaturamento validadorPeriodoFaturamento = new ValidadorPeriodoFaturamento();
+
+            List<IStrategy> rnsConsultarFaturamento = new List<IStrategy>();
+
+            rnsConsultarFaturamento.Add(validadorPeriodoFaturamento);
+
+            Dictionary<string, List<IStrategy>> rnsFaturamento = new Dictionary<string, List<IStrategy>>();
+
+            rnsFaturamento.Add("CONSULTAR", rnsConsultarFaturamento);
+
+            rns.Add(nameof(Faturamento), rnsFaturamento);
             #endregion
 
         }
@@ -236,18 +266,25 @@ namespace Core.Impl.Control
         {
             resultado = new Result();
             string nmClasse = entidade.GetType().Name;
+            string msg = ExecutarRegras(entidade, "CONSULTAR");
 
-            IDAO dao;
-            daos.TryGetValue(nmClasse, out dao);
-            try
+            if (msg == null)
             {
-                resultado.Entidades = dao.Consultar(entidade);
+                IDAO dao;
+                daos.TryGetValue(nmClasse, out dao);
+                try
+                {
+                    resultado.Entidades = dao.Consultar(entidade);
+                }
+                catch (Exception e)
+                {
+                    resultado.Msg = e.Message;
+                }
             }
-            catch (Exception e)
+            else
             {
-                resultado.Msg = e.Message;
+                resultado.Msg = msg;
             }
-
             return resultado;
         }
 
@@ -308,14 +345,6 @@ namespace Core.Impl.Control
             }
             return resultado;
         }
-
-        //public Result Visualizar(EntidadeDominio entidade)
-        //{
-        //    resultado = new Result();
-        //    resultado.Entidades = new List<EntidadeDominio>(1);
-        //    resultado.Entidades.Add(entidade);
-        //    return resultado;
-        //}
 
         private string ExecutarRegras(EntidadeDominio entidade, string operacao)
         {

@@ -13,5 +13,6 @@ namespace Domain.Negocio
         }
         public List<DataSetGraficoTorta> datasets { get; set; }
         public List<string> labels { get; set; }
+        public string mensagemErro { get; set; }
     }
 }

@@ -1,32 +1,37 @@
 $(document).ready(function () {
     var dataGraficoLinhas;
     var dataGraficoTorta;
-    var divCanvas = '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
-        '<h1 class="h2" id="maisVendidosTitulo">Mais vendidos por título</h1>' +
-        '</div>' +
-        '<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>' +
-        '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
-        '<h1 class="h2" id="maisVendidosCategoria">Mais vendidos por categoria</h1>' +
-        '</div>' +
-        '<canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>';
 
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '') {
         $('#modalMensagem').modal('show');
     }
 
     $('#btnGerarGraficos').on('click', function () {
-        // $.ajax({
-        //     type: "get",
-        //     url: "/Gerencial/Dashboard/GerarGraficoLinhas/",
-        //     data: { dataInicial: $('#dataInicial').val(), dataFinal: $('#dataFinal').val() },
-        //     dataType: "json",
-        //     success: function (response) {
-        //         dataGraficoLinhas = JSON.parse(response);
-        //         GerarGraficoLinhas(dataGraficoLinhas);
-        // $('#maisVendidosTitulo').text('');
-        // $('#maisVendidosTitulo').text('Mais vendidos por título ' + $('#maisVendidosTitulo').text() + ' - ' + $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
-        //     }
-        // });
+        ResetCanvas();
+        $.ajax({
+            type: "get",
+            url: "/Gerencial/Dashboard/GerarGraficoLinhas/",
+            data: { dataInicial: $('#dataInicial').val(), dataFinal: $('#dataFinal').val() },
+            dataType: "json",
+            success: function (response) {
+                dataGraficoLinhas = JSON.parse(response);
+                GerarGraficoLinhas(dataGraficoLinhas);
+                if (dataGraficoLinhas.datasets.length > 0) {
+                    $('#faturamento').text('');
+                    $('#faturamento').text('Faturamento ' + $('#faturamento').text() + ' - ' +
+                        $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
+                    $('#partialGraficos').removeClass('d-none');
+                }
+                else {
+                    $('#faturamento').text('');
+                    $('#faturamento').text('Faturamento ' + $('#faturamento').text() + ' - ' +
+                        $('#dataInicial').val() + ' à ' + $('#dataFinal').val() + ' - Sem dados no período');
+                    $('#textoModal').text(dataGraficoLinhas.mensagemErro);
+                    $('#modalMensagem').modal('show');
+                    $('#partialGraficos').addClass('d-none');
+                }
+            }
+        });
         $.ajax({
             type: "get",
             url: "/Gerencial/Dashboard/GerarGraficoTorta/",
@@ -37,87 +42,81 @@ $(document).ready(function () {
                 GerarGraficoTorta(dataGraficoTorta);
                 if (dataGraficoTorta.datasets.length > 0) {
                     $('#maisVendidosCategoria').text('');
-                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' + $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
+                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' +
+                        $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
+                    $('#partialGraficos').removeClass('d-none');
                 }
                 else {
                     $('#maisVendidosCategoria').text('');
                     $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' +
                         $('#dataInicial').val() + ' à ' + $('#dataFinal').val() + ' - Sem dados no período');
+                    $('#textoModal').text(dataGraficoTorta.mensagemErro);
+                    $('#modalMensagem').modal('show');
+                    $('#partialGraficos').addClass('d-none');
                 }
             }
         });
-        $('#partialGraficos').removeClass('d-none');
     });
-
-    /* globals Chart:false, feather:false */
-    // window.chartColors = {
-    //     red: 'rgb(255, 99, 132)',
-    //     orange: 'rgb(255, 159, 64)',
-    //     yellow: 'rgb(255, 205, 86)',
-    //     green: 'rgb(75, 192, 192)',
-    //     blue: 'rgb(54, 162, 235)',
-    //     purple: 'rgb(153, 102, 255)',
-    //     grey: 'rgb(201, 203, 207)'
-    // };
-
-    function GerarGraficoLinhas(data) {
-        // Graphs
-        var ctx = $('#myChart');
-        // eslint-disable-next-line no-unused-vars
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: {
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Mês'
-                        },
-                        beginAtZero: false
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quantidade'
-                        }
-                    }]
-                },
-                legend: {
-                    display: true
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-            }
-        })
-    }
-
-    // var randomScalingFactor = function () {
-    //     return Math.round(Math.random() * 100);
-    // };
-
-    function ResetCanvas() {
-        // $('#myChart').remove();
-        // $('#myChart2').remove();
-        $('#partialGraficos').empty();
-        $('#partialGraficos').html(divCanvas);
-    }
-
-    function GerarGraficoTorta(data) {
-        var config = {
-            type: 'pie',
-            data: data,
-            options: {
-                responsive: true
-            }
-        };
-        ResetCanvas();
-        var ctx = $('#myChart2');
-        var myPieChart = new Chart(ctx, config);
-    }
-
 });
+
+var divCanvas = '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
+    '<h1 class="h2" id="faturamento">Faturamento</h1>' +
+    '</div>' +
+    '<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>' +
+    '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
+    '<h1 class="h2" id="maisVendidosCategoria">Mais vendidos por categoria</h1>' +
+    '</div>' +
+    '<canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>';
+
+function GerarGraficoLinhas(data) {
+    // Graphs
+    var ctx = $('#myChart');
+    // eslint-disable-next-line no-unused-vars
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Período'
+                    },
+                    beginAtZero: false
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Valor R$'
+                    }
+                }]
+            },
+            legend: {
+                display: true
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+        }
+    })
+}
+
+function ResetCanvas() {
+    $('#partialGraficos').empty();
+    $('#partialGraficos').html(divCanvas);
+}
+
+function GerarGraficoTorta(data) {
+    var config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true
+        }
+    };
+    var ctx = $('#myChart2');
+    var myPieChart = new Chart(ctx, config);
+}

@@ -22,38 +22,23 @@ namespace Core.Impl.DAO.Negocio
             try
             {
                 Conectar();
-                if(venda.TipoGrafico.Equals("LINHA"))
-                    cmdTextoGrafico = "SELECT Nome, SUM(Qtde) AS Qtde, MesAno FROM( " +
-                                      "   SELECT  PR.Nome, " +
-                                      "         PI.Qtde, " +
-                                      "         FORMAT(V.DataVenda, 'MM/yyyy') AS MesAno" +
-                                      "   FROM Produtos PR " +
-                                      "       JOIN PedidosItens PI ON(PR.ProdutoId = PI.ItemId) " +
-                                      "       JOIN Pedidos P ON(PI.PedidoId = P.PedidoId) " +
-                                      "       JOIN Vendas V ON(PI.PedidoId = V.PedidoId) " +
-                                      "   WHERE V.DataVenda BETWEEN @DataInicial AND @DataFinal " +
-                                      "   GROUP BY PR.Nome, PI.Qtde, V.DataVenda " +
-                                      "   ) AS Tb " +
-                                      "GROUP BY Nome, Qtde, MesAno " +
-                                      "ORDER BY MesAno ASC, Qtde DESC";
-                else
-                    cmdTextoGrafico = "SELECT Nome, SUM(Qtde) AS Qtde FROM(" +
-                                          "SELECT  G.Nome, " +
-                                          "      PI.Qtde " +
-                                          "FROM Produtos PR " +
-                                          "    JOIN ProdutosGeneros PG ON(PR.ProdutoId = PG.ProdutoId) " +
-                                          "    JOIN Generos G ON(PG.GeneroId = G.GeneroId) " +
-                                          "    JOIN PedidosItens PI ON(PR.ProdutoId = PI.ItemId) " +
-                                          "    JOIN Pedidos P ON(PI.PedidoId = P.PedidoId) " +
-                                          "    JOIN Vendas V ON(PI.PedidoId = V.PedidoId) " +
-                                          "WHERE V.DataVenda BETWEEN @DataInicial AND @DataFinal " +
-                                          "GROUP BY G.Nome, PI.Qtde " +
-                                          ") AS Tb " +
-                                      "GROUP BY Nome ";
+                cmdTextoGrafico = "SELECT Nome, SUM(Qtde) AS Qtde FROM(" +
+                                        "SELECT  G.Nome, " +
+                                        "      PI.Qtde " +
+                                        "FROM Produtos PR " +
+                                        "    JOIN ProdutosGeneros PG ON(PR.ProdutoId = PG.ProdutoId) " +
+                                        "    JOIN Generos G ON(PG.GeneroId = G.GeneroId) " +
+                                        "    JOIN PedidosItens PI ON(PR.ProdutoId = PI.ItemId) " +
+                                        "    JOIN Pedidos P ON(PI.PedidoId = P.PedidoId) " +
+                                        "    JOIN Vendas V ON(PI.PedidoId = V.PedidoId) " +
+                                        "WHERE V.DataVenda BETWEEN @DataInicial AND @DataFinal " +
+                                        "GROUP BY G.Nome, PI.Qtde " +
+                                        ") AS Tb " +
+                                    "GROUP BY Nome ";
                 SqlCommand comandoVenda = new SqlCommand(cmdTextoGrafico, conexao);
 
-                comandoVenda.Parameters.AddWithValue("@DataInicial", venda.DataInicial);
-                comandoVenda.Parameters.AddWithValue("@DataFinal", venda.DataFinal);
+                comandoVenda.Parameters.AddWithValue("@DataInicial", Convert.ToDateTime(venda.DataInicial));
+                comandoVenda.Parameters.AddWithValue("@DataFinal", Convert.ToDateTime(venda.DataFinal));
 
                 SqlDataReader drGrafico = comandoVenda.ExecuteReader();
                 comandoVenda.Parameters.Clear();
@@ -90,8 +75,7 @@ namespace Core.Impl.DAO.Negocio
                     Venda venda = new Venda
                     {
                         NomeProduto = dataReader["Nome"].ToString(),
-                        Qtde = Convert.ToInt32(dataReader["Qtde"])//,
-                        //Data = dataReader["MesAno"].ToString()
+                        Qtde = Convert.ToInt32(dataReader["Qtde"])
                     };
 
                     vendas.Add(venda);

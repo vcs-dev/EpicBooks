@@ -24,77 +24,57 @@ namespace Web.Areas.Gerencial.Controllers
         [Area("Gerencial")]
         public JsonResult GerarGraficoLinhas(string dataInicial, string dataFinal)
         {
-            //GraficoLinhas grafico = new GraficoLinhas();
-            //ConjuntoDados dataSet;
-            //grafico.labels = DataHelper.RetornaPeriodo(dataInicial, dataFinal);
-            //foreach (var item in grafico.labels)
-            //{
-            //    resultado = new Facade().Consultar(new Venda
-            //    {
-            //        DataInicial = Convert.ToDateTime("01/" + item),
-            //        DataFinal = Convert.ToDateTime("01/" + item).AddDays(30)
-            //    });
-            //    if (resultado.Msg != null)
-            //    {
-            //        ViewBag.Mensagem = resultado.Msg;
-            //    }
-            //    if (resultado.Entidades.Count == 0)
-            //    {
-            //        dataSet = new ConjuntoDados();
-            //        dataSet.data.Add(0);
-            //        grafico.datasets.Add(dataSet);
-            //    }
-            //    else
-            //    {
-            //        List<Venda> vendas = new List<Venda>();
-            //        foreach (var venda in resultado.Entidades)
-            //        {
-            //            vendas.Add((Venda)venda);
-            //        }
-            //        dataSet = new ConjuntoDados();
-            //        foreach (var dataset in grafico.datasets)
-            //        {
-            //            foreach (var v in vendas)
-            //            {
-            //                if (dataset.label == null || v.Data.Equals(item))
-            //                {
-            //                    dataset.label = v.NomeProduto;
-            //                    dataset.data.Add(v.Qtde);
-            //                    vendas.Remove(v);
-            //                    break;
-            //                }
+            GraficoLinhas grafico = new GraficoLinhas();
+            DataSetGraficoLinhas dataSet = new DataSetGraficoLinhas();
 
-            //            }
-            //        }
-            //    }
-            //}
-            ////resultado = new Facade().Consultar(new Venda { DataInicial = dataInicial, DataFinal = dataFinal });
-            //GraficoLinhas graficoFinal = new GraficoLinhas();
-            //foreach (var item in grafico.datasets)
-            //{
-            //    if (item.label != null)
-            //        graficoFinal.datasets.Add(item);
-            //}
-            return Json(""/*JsonConvert.SerializeObject(graficoFinal)*/);
+            resultado = new Facade().Consultar(new Faturamento { DataInicial = dataInicial, DataFinal = dataFinal });
+            if (resultado.Msg != null)
+            {
+                grafico.mensagemErro = resultado.Msg;
+                return Json(JsonConvert.SerializeObject(grafico));
+            }
+            grafico.labels = DataHelper.RetornaPeriodo(dataInicial, dataFinal);
+            if (resultado.Entidades.Count == 0)
+            {
+                grafico.mensagemErro = "Sem dados no período informado.";
+                return Json(JsonConvert.SerializeObject(grafico));
+            }
+            List<Faturamento> faturamentos = new List<Faturamento>();
+            foreach (var item in resultado.Entidades)
+            {
+                faturamentos.Add((Faturamento)item);
+            }
+            dataSet.label = "Faturamento";
+            foreach (var item in grafico.labels)
+            {
+                dataSet.data.Add(0);
+            }
+            grafico.datasets.Add(dataSet);
+            Faturamento faturamento;
+            foreach (var item in grafico.labels)
+            {
+                faturamento = faturamentos.Find(x => x.Data.Equals(item));
+                if(faturamento != null)
+                    grafico.datasets[0].data[grafico.labels.IndexOf(item)] = Convert.ToDouble(faturamento.Valor.ToString("######0.00"));
+            }
+
+            return Json(JsonConvert.SerializeObject(grafico));
         }
 
         [Area("Gerencial")]
         public JsonResult GerarGraficoTorta(string dataInicial, string dataFinal)
         {
-            resultado = new Facade().Consultar(
-                new Venda 
-                { 
-                    DataInicial = Convert.ToDateTime(dataInicial),
-                    DataFinal = Convert.ToDateTime(dataFinal),
-                    TipoGrafico = "TORTA" 
-                }
-            );
-            if(resultado.Msg != null)
+            GraficoTorta grafico = new GraficoTorta();
+
+            resultado = new Facade().Consultar(new Venda { DataInicial = dataInicial, DataFinal = dataFinal });
+            if (resultado.Msg != null)
             {
-                ViewBag.Mensagem = resultado.Msg;
+                grafico.mensagemErro = resultado.Msg;
+                return Json(JsonConvert.SerializeObject(grafico));
             }
             if (resultado.Entidades.Count == 0)
             {
+                grafico.mensagemErro = "Sem dados no período informado.";
                 return Json(JsonConvert.SerializeObject(new GraficoTorta()));
             }
             List<Venda> vendas = new List<Venda>();
@@ -102,7 +82,6 @@ namespace Web.Areas.Gerencial.Controllers
             {
                 vendas.Add((Venda)item);
             }
-            GraficoTorta grafico = new GraficoTorta();
             foreach (var item in vendas)
             {
                 grafico.labels.Add(item.NomeProduto);
