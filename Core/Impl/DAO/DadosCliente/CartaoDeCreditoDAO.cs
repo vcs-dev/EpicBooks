@@ -60,12 +60,11 @@ namespace Core.Impl.DAO.DadosCliente
             }
             return cartoes.ToList<EntidadeDominio>();
         }
+
         public List<CartaoDeCredito> DataReaderCartaoParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
-            {
-                throw new Exception("Sem Registros");
-            }
+                return new List<CartaoDeCredito>();
 
             List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
             while (dataReader.Read())
@@ -91,7 +90,7 @@ namespace Core.Impl.DAO.DadosCliente
             }
             dataReader.Close();
 
-            return cartoes.ToList();
+            return cartoes;
         }
     }
 }

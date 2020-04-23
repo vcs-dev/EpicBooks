@@ -2,6 +2,7 @@
 {
     public class Endereco : EntidadeDominio
     {
+        public int UsuarioId { get; set; }
         public int TipoEndereco { get; set; }
         public int TipoResidencia { get; set; }
         public int TipoLogradouro { get; set; }
@@ -11,6 +12,7 @@
         public string Bairro { get; set; }
         public int Cidade { get; set; }
         public int Estado { get; set; }
-        public int UsuarioId { get; set; }
+        public int Pais { get; set; }
+        public string Observacao { get; set; }
     }
 }

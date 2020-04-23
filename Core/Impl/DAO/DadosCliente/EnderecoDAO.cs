@@ -60,9 +60,7 @@ namespace Core.Impl.DAO.DadosCliente
         public List<Endereco> DataReaderenderecoParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
-            {
-                throw new Exception("Sem Registros");
-            }
+                return new List<Endereco>();
 
             List<Endereco> enderecos = new List<Endereco>();
             while (dataReader.Read())
@@ -81,7 +79,10 @@ namespace Core.Impl.DAO.DadosCliente
                         Bairro = dataReader["Bairro"].ToString(),
                         Cidade = Convert.ToInt32(dataReader["Cidade"]),
                         Estado = Convert.ToInt32(dataReader["Estado"]),
+                        Pais = Convert.ToInt32(dataReader["Pais"]),
                     };
+                    if(!Convert.IsDBNull(dataReader["Observacao"]))
+                        endereco.Observacao = dataReader["Observacao"].ToString();
 
                     enderecos.Add(endereco);
                 }
@@ -92,7 +93,7 @@ namespace Core.Impl.DAO.DadosCliente
             }
             dataReader.Close();
 
-            return enderecos.ToList();
+            return enderecos;
         }
     }
 }
