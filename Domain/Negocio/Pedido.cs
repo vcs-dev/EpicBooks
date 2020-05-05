@@ -15,7 +15,7 @@ namespace Domain.Negocio
             CupomTrocaGerado = new Cupom();
             CartaoUm = new CartaoDeCredito();
             CartaoDois = new CartaoDeCredito();
-            SessaoGuid = Guid.Empty;
+            IsAlteracaoGerencial = false;
         }
         public int UsuarioId { get; set; }
         public int EnderecoId { get; set; }
@@ -30,7 +30,7 @@ namespace Domain.Negocio
         public string DescricaoStatus { get; set; }
         public string Observacao { get; set; }
         public byte MultiplosCartoes { get; set; }
-        public Guid SessaoGuid { get; set; }
         public Cupom CupomTrocaGerado { get; set; }
+        public bool IsAlteracaoGerencial { get; set; }
     }
 }

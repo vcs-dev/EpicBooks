@@ -104,169 +104,182 @@ namespace Core.Impl.DAO.Negocio
             {
                 Conectar();
                 BeginTransaction();
-                if (pedido.Status == 'A')
-                    cmdTextoPedido = "UPDATE Pedidos SET Status = @Status, ValorFrete = @ValorFrete WHERE PedidoId = @PedidoId";
-                else
-                    cmdTextoPedido = "UPDATE Pedidos SET Status = @Status WHERE PedidoId = @PedidoId";
-
-                SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
-
-                comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
-                if (pedido.Status == 'A')
-                    comandoPedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
-                comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
-
-                comandoPedido.ExecuteNonQuery();
-                comandoPedido.Dispose();
-
-                if (pedido.Status == 'A')
+                if (!pedido.IsAlteracaoGerencial)
                 {
-                    if (pedido.CartaoUm.Id > 0)
+                    if (pedido.Status == 'A')
+                        cmdTextoPedido = "UPDATE Pedidos SET Status = @Status, ValorFrete = @ValorFrete WHERE PedidoId = @PedidoId";
+                    else
+                        cmdTextoPedido = "UPDATE Pedidos SET Status = @Status WHERE PedidoId = @PedidoId";
+
+                    SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+
+                    comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
+                    if (pedido.Status == 'A')
+                        comandoPedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+
+                    comandoPedido.ExecuteNonQuery();
+                    comandoPedido.Dispose();
+
+                    if (pedido.Status == 'A')
                     {
-                        cmdTextoPedidosCartoes = "INSERT INTO PedidosCartoes(" +
-                                                                            "PedidoId, " +
-                                                                            "CartaoId, " +
-                                                                            "Valor, " +
-                                                                            "Parcelas" +
-                                                 ") " +
-                                                 "Values(" +
-                                                        "@PedidoId, " +
-                                                        "@CartaoId, " +
-                                                        "@Valor, " +
-                                                        "@Parcelas" +
-                                                 ")";
-
-                        SqlCommand comandoPedidosCartoes = new SqlCommand(cmdTextoPedidosCartoes, conexao, transacao);
-
-                        comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                        comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoUm.Id);
-                        if (pedido.CartaoUm.Valor != null)
-                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoUm.Valor);
-                        else
-                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", DBNull.Value);
-                        comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoUm.QtdeParcelas);
-                        comandoPedidosCartoes.ExecuteNonQuery();
-                        comandoPedidosCartoes.Parameters.Clear();
-
-                        if (pedido.CartaoDois.Id > 0)
+                        if (pedido.CartaoUm.Id > 0)
                         {
+                            cmdTextoPedidosCartoes = "INSERT INTO PedidosCartoes(" +
+                                                                                "PedidoId, " +
+                                                                                "CartaoId, " +
+                                                                                "Valor, " +
+                                                                                "Parcelas" +
+                                                     ") " +
+                                                     "Values(" +
+                                                            "@PedidoId, " +
+                                                            "@CartaoId, " +
+                                                            "@Valor, " +
+                                                            "@Parcelas" +
+                                                     ")";
+
+                            SqlCommand comandoPedidosCartoes = new SqlCommand(cmdTextoPedidosCartoes, conexao, transacao);
+
                             comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                            comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoDois.Id);
-                            comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoDois.Valor);
-                            comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoDois.QtdeParcelas);
+                            comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoUm.Id);
+                            if (pedido.CartaoUm.Valor != null)
+                                comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoUm.Valor);
+                            else
+                                comandoPedidosCartoes.Parameters.AddWithValue("@Valor", DBNull.Value);
+                            comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoUm.QtdeParcelas);
                             comandoPedidosCartoes.ExecuteNonQuery();
+                            comandoPedidosCartoes.Parameters.Clear();
+
+                            if (pedido.CartaoDois.Id > 0)
+                            {
+                                comandoPedidosCartoes.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                                comandoPedidosCartoes.Parameters.AddWithValue("@CartaoId", pedido.CartaoDois.Id);
+                                comandoPedidosCartoes.Parameters.AddWithValue("@Valor", pedido.CartaoDois.Valor);
+                                comandoPedidosCartoes.Parameters.AddWithValue("@Parcelas", pedido.CartaoDois.QtdeParcelas);
+                                comandoPedidosCartoes.ExecuteNonQuery();
+                            }
+                            comandoPedidosCartoes.Dispose();
                         }
-                        comandoPedidosCartoes.Dispose();
-                    }
 
-                    if (pedido.CuponsTroca.Count > 0 || pedido.CupomPromocional.Id > 0)
-                    {
-                        cmdTextoPedidosCupons = "INSERT INTO PedidosCupons(PedidoId, " +
-                                                             "CupomId" +
-                                                ") " +
-                                                "VALUES(@PedidoId, " +
-                                                      "@CupomId" +
-                                                ")";
-
-                        SqlCommand comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
-                        if (pedido.CuponsTroca.Count > 0)
+                        if (pedido.CuponsTroca.Count > 0 || pedido.CupomPromocional.Id > 0)
                         {
-                            foreach (var item in pedido.CuponsTroca)
+                            cmdTextoPedidosCupons = "INSERT INTO PedidosCupons(PedidoId, " +
+                                                                 "CupomId" +
+                                                    ") " +
+                                                    "VALUES(@PedidoId, " +
+                                                          "@CupomId" +
+                                                    ")";
+
+                            SqlCommand comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
+                            if (pedido.CuponsTroca.Count > 0)
+                            {
+                                foreach (var item in pedido.CuponsTroca)
+                                {
+                                    comandoPedidosCupons.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                                    comandoPedidosCupons.Parameters.AddWithValue("@CupomId", item.Id);
+                                    comandoPedidosCupons.ExecuteNonQuery();
+                                    comandoPedidosCupons.Parameters.Clear();
+                                }
+                            }
+                            if (pedido.CupomPromocional.Id > 0)
                             {
                                 comandoPedidosCupons.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                                comandoPedidosCupons.Parameters.AddWithValue("@CupomId", item.Id);
+                                comandoPedidosCupons.Parameters.AddWithValue("@CupomId", pedido.CupomPromocional.Id);
                                 comandoPedidosCupons.ExecuteNonQuery();
                                 comandoPedidosCupons.Parameters.Clear();
                             }
-                        }
-                        if (pedido.CupomPromocional.Id > 0)
-                        {
-                            comandoPedidosCupons.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                            comandoPedidosCupons.Parameters.AddWithValue("@CupomId", pedido.CupomPromocional.Id);
-                            comandoPedidosCupons.ExecuteNonQuery();
-                            comandoPedidosCupons.Parameters.Clear();
-                        }
 
-                        cmdTextoPedidosCupons = "UPDATE Cupons SET Usado = 1 WHERE CupomId = @CupomId";
-
-                        comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
-                        if (pedido.CuponsTroca.Count > 0)
-                        {
-                            foreach (var item in pedido.CuponsTroca)
-                            {
-                                comandoPedidosCupons.Parameters.AddWithValue("@CupomId", item.Id);
-                                comandoPedidosCupons.ExecuteNonQuery();
-                                comandoPedidosCupons.Parameters.Clear();
-                            }
-                        }
-
-                        if (pedido.CupomTrocaGerado.Codigo != null && pedido.CupomTrocaGerado.Valor > 0)
-                        {
-                            cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
-                                                    "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
+                            cmdTextoPedidosCupons = "UPDATE Cupons SET Usado = 1 WHERE CupomId = @CupomId";
 
                             comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
-                            comandoPedidosCupons.Parameters.AddWithValue("@Codigo", pedido.CupomTrocaGerado.Codigo + pedido.Id);
-                            comandoPedidosCupons.Parameters.AddWithValue("@Tipo", pedido.CupomTrocaGerado.Tipo);
-                            comandoPedidosCupons.Parameters.AddWithValue("@Valor", pedido.CupomTrocaGerado.Valor);
-                            if (pedido.CupomTrocaGerado.DataExpiracao == null)
-                                comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
-                            else
-                                comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
-                            comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
-                            comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
-                            pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
-                            comandoPedidosCupons.Dispose();
+                            if (pedido.CuponsTroca.Count > 0)
+                            {
+                                foreach (var item in pedido.CuponsTroca)
+                                {
+                                    comandoPedidosCupons.Parameters.AddWithValue("@CupomId", item.Id);
+                                    comandoPedidosCupons.ExecuteNonQuery();
+                                    comandoPedidosCupons.Parameters.Clear();
+                                }
+                            }
+
+                            if (pedido.CupomTrocaGerado.Codigo != null && pedido.CupomTrocaGerado.Valor > 0)
+                            {
+                                cmdTextoPedidosCupons = "INSERT INTO Cupons(Codigo, Tipo, Valor, DataExpiracao, Usado, UsuarioId) " +
+                                                        "VALUES(@Codigo, @Tipo, @Valor, @DataExpiracao, @Usado, @UsuarioId) SELECT CAST(scope_identity() AS int)";
+
+                                comandoPedidosCupons = new SqlCommand(cmdTextoPedidosCupons, conexao, transacao);
+                                comandoPedidosCupons.Parameters.AddWithValue("@Codigo", pedido.CupomTrocaGerado.Codigo + pedido.Id);
+                                comandoPedidosCupons.Parameters.AddWithValue("@Tipo", pedido.CupomTrocaGerado.Tipo);
+                                comandoPedidosCupons.Parameters.AddWithValue("@Valor", pedido.CupomTrocaGerado.Valor);
+                                if (pedido.CupomTrocaGerado.DataExpiracao == null)
+                                    comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
+                                else
+                                    comandoPedidosCupons.Parameters.AddWithValue("@DataExpiracao", pedido.CupomTrocaGerado.DataExpiracao);
+                                comandoPedidosCupons.Parameters.AddWithValue("@Usado", pedido.CupomTrocaGerado.Usado);
+                                comandoPedidosCupons.Parameters.AddWithValue("@UsuarioId", pedido.CupomTrocaGerado.UsuarioId);
+                                pedido.CupomTrocaGerado.Id = Convert.ToInt32(comandoPedidosCupons.ExecuteScalar());
+                                comandoPedidosCupons.Dispose();
+                            }
                         }
+
+                        cmdTextoVenda = "INSERT INTO Vendas(PedidoId, " +
+                                                           "DataVenda" +
+                                               ") " +
+                                               "Values(@PedidoId, " +
+                                                     "@DataVenda" +
+                                               ")";
+
+                        SqlCommand comandoVenda = new SqlCommand(cmdTextoVenda, conexao, transacao);
+
+                        comandoVenda.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                        comandoVenda.Parameters.AddWithValue("@DataVenda", DateTime.Now);
+                        comandoVenda.ExecuteNonQuery();
+                        comandoVenda.Parameters.Clear();
+                        comandoVenda.Dispose();
+
+                        cmdTextoEstoque = "Update Estoque " +
+                                          "SET Qtde = ( " +
+                                                         "SELECT Qtde FROM Estoque " +
+                                                         "WHERE ProdutoId  = @ProdutoId " +
+                                                    " ) - @Qtde " +
+                                          "WHERE ProdutoId = @ProdutoId";
+                        SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao, transacao);
+                        foreach (var item in pedido.ItensPedido)
+                        {
+                            comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Produto.Id);
+                            comandoEstoque.Parameters.AddWithValue("@Qtde", item.Qtde);
+                            comandoEstoque.ExecuteNonQuery();
+                            comandoEstoque.Parameters.Clear();
+                        }
+                        comandoEstoque.Dispose();
                     }
-
-                    cmdTextoVenda = "INSERT INTO Vendas(PedidoId, " +
-                                                       "DataVenda" +
-                                           ") " +
-                                           "Values(@PedidoId, " +
-                                                 "@DataVenda" +
-                                           ")";
-
-                    SqlCommand comandoVenda = new SqlCommand(cmdTextoVenda, conexao, transacao);
-
-                    comandoVenda.Parameters.AddWithValue("@PedidoId", pedido.Id);
-                    comandoVenda.Parameters.AddWithValue("@DataVenda", DateTime.Now);
-                    comandoVenda.ExecuteNonQuery();
-                    comandoVenda.Parameters.Clear();
-                    comandoVenda.Dispose();
-
-                    cmdTextoEstoque = "Update Estoque " +
-                                      "SET Qtde = ( " +
-                                                     "SELECT Qtde FROM Estoque " +
-                                                     "WHERE ProdutoId  = @ProdutoId " +
-                                                " ) - @Qtde " +
-                                      "WHERE ProdutoId = @ProdutoId";
-                    SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao, transacao);
-                    foreach (var item in pedido.ItensPedido)
+                    if (pedido.Status == 'A' || pedido.Status == 'R')
                     {
-                        comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Produto.Id);
-                        comandoEstoque.Parameters.AddWithValue("@Qtde", item.Qtde);
-                        comandoEstoque.ExecuteNonQuery();
-                        comandoEstoque.Parameters.Clear();
+                        cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE ItemId = @ItemId";
+
+                        SqlCommand comandoBloqueados = new SqlCommand(cmdTextoBloqueados, conexao, transacao);
+                        foreach (var item in pedido.ItensPedido)
+                        {
+                            comandoBloqueados.Parameters.AddWithValue("@ItemId", item.Produto.Id);
+                            comandoBloqueados.ExecuteNonQuery();
+                            comandoBloqueados.Parameters.Clear();
+                        }
+                        comandoBloqueados.Dispose();
                     }
-                    comandoEstoque.Dispose();
+                    comandoPedido.Dispose();
                 }
-                if (pedido.Status == 'A' || pedido.Status == 'R')
+                else
                 {
-                    cmdTextoBloqueados = "DELETE FROM ItensBloqueados WHERE ItemId = @ItemId";
+                    cmdTextoPedido = "UPDATE Pedidos SET Status = @Status WHERE PedidoId = @PedidoId";
 
-                    SqlCommand comandoBloqueados = new SqlCommand(cmdTextoBloqueados, conexao, transacao);
-                    foreach (var item in pedido.ItensPedido)
-                    {
-                        comandoBloqueados.Parameters.AddWithValue("@ItemId", item.Produto.Id);
-                        comandoBloqueados.ExecuteNonQuery();
-                        comandoBloqueados.Parameters.Clear();
-                    }
-                    comandoBloqueados.Dispose();
+                    SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+                    comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
+                    comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                    comandoPedido.ExecuteNonQuery();
+                    comandoPedido.Dispose();
                 }
 
                 Commit();
-                comandoPedido.Dispose();
             }
             catch (SqlException e)
             {

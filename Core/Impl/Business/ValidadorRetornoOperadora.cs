@@ -17,7 +17,7 @@ namespace Core.Impl.Business
             {
                 Pedido pedido = (Pedido)entidade;
                 Result resultado;
-                if (pedido.CartaoUm.Id > 0)
+                if (pedido.CartaoUm.Id > 0 && !pedido.IsAlteracaoGerencial)
                 {
                     resultado = new Facade().Consultar(new CartaoDeCredito { UsuarioId = pedido.UsuarioId });
                     if (resultado.Msg != null)
@@ -67,7 +67,8 @@ namespace Core.Impl.Business
                         }
                     }
                 }
-                pedido.Status = 'A';
+                if(!pedido.IsAlteracaoGerencial)
+                    pedido.Status = 'A';
             }
             else
             {

@@ -6,6 +6,43 @@
 <div class="container">
     <h1>Cadastro de cliente</h1>
     <form action="/Loja/Conta/Cadastrar/" method="post" id="formCadastroCliente">
+        <div class="row">
+            <div class="form-group col-12">
+                <label for="nomeCompleto">Nome completo</label>
+                <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto">
+            </div>
+            <div class="form-group col-12">
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="sexoM" name="Sexo" class="custom-control-input">
+                    <label class="custom-control-label" for="sexoM" checked>Masculino</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="sexoF" name="Sexo" class="custom-control-input">
+                    <label class="custom-control-label" for="sexoF">Feminino</label>
+                </div>
+            </div>
+            <div class="form-group col-12">
+                <label for="dataNascimento">Data de nascimento</label>
+                <input type="text" class="form-control" id="dataNascimento" name="DataNascimento" placeholder="dd/mm/aaaa">
+            </div>
+            <div class="form-group col-12">
+                <label for="cpf">CPF</label>
+                <input type="text" class="form-control" id="cpf" name="Cpf">
+            </div>
+            <hr />
+            <div class="form-group col-12">
+                <label for="nomeCompleto">Tipo de telefone</label>
+                <input type="text" class="form-control" id="telefoneTipo" name="TelefoneTipo">
+            </div>
+            <div class="form-group col-12">
+                <label for="telefoneDdd">DDD</label>
+                <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd">
+            </div>
+            <div class="form-group col-12">
+                <label for="telefoneNumero">Número</label>
+                <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero">
+            </div>
+        </div>
         <div class="text-right">
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
