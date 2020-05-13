@@ -10,7 +10,7 @@ namespace Core.Impl.DAO.DadosCliente
 {
     public class UsuarioDAO : AbstractDAO
     {
-        public UsuarioDAO():base("Usuarios", "UsuarioId")
+        public UsuarioDAO() : base("Usuarios", "UsuarioId")
         {
         }
         public override void Salvar(EntidadeDominio entidade)
@@ -30,7 +30,7 @@ namespace Core.Impl.DAO.DadosCliente
                                                               "Numeracao," +
                                                               "NomeImpresso, " +
                                                               "Validade, " +
-                                                              "Apelido" + 
+                                                              "Apelido" +
                                  ") " +
                                  "VALUES(@Bandeira," +
                                         "@Numeracao," +
@@ -126,25 +126,39 @@ namespace Core.Impl.DAO.DadosCliente
                 SqlCommand comandoEndereco = new SqlCommand(cmdTextoEndereco, conexao, transacao);
 
                 idsEnderecos = new List<int>();
-                foreach (var item in usuario.Enderecos)
-                {
-                    comandoEndereco.Parameters.AddWithValue("@TipoEndereco", item.TipoEndereco);
-                    comandoEndereco.Parameters.AddWithValue("@TipoResidencia", item.TipoResidencia);
-                    comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", item.TipoLogradouro);
-                    comandoEndereco.Parameters.AddWithValue("@Logradouro", item.Logradouro);
-                    comandoEndereco.Parameters.AddWithValue("@Cep", item.Cep);
-                    comandoEndereco.Parameters.AddWithValue("@Numero", item.Numero);
-                    comandoEndereco.Parameters.AddWithValue("@Bairro", item.Bairro);
-                    comandoEndereco.Parameters.AddWithValue("@Cidade", item.Cidade);
-                    comandoEndereco.Parameters.AddWithValue("@Estado", item.Estado);
-                    comandoEndereco.Parameters.AddWithValue("@Pais", item.Pais);
-                    if(string.IsNullOrEmpty(item.Observacao))
-                        comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
-                    if (string.IsNullOrEmpty(item.Observacao))
-                        comandoEndereco.Parameters.AddWithValue("@Observacao", item.Observacao);
-                    idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
-                    comandoEndereco.Parameters.Clear();
-                }
+
+                comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoEntrega.TipoEndereco);
+                comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoEntrega.TipoResidencia);
+                comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoEntrega.TipoLogradouro);
+                comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoEntrega.Logradouro);
+                comandoEndereco.Parameters.AddWithValue("@Cep", usuario.EnderecoEntrega.Cep);
+                comandoEndereco.Parameters.AddWithValue("@Numero", usuario.EnderecoEntrega.Numero);
+                comandoEndereco.Parameters.AddWithValue("@Bairro", usuario.EnderecoEntrega.Bairro);
+                comandoEndereco.Parameters.AddWithValue("@Cidade", usuario.EnderecoEntrega.Cidade);
+                comandoEndereco.Parameters.AddWithValue("@Estado", usuario.EnderecoEntrega.Estado);
+                comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoEntrega.Pais);
+                if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                    comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
+                if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                    comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
+                idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
+                comandoEndereco.Parameters.Clear();
+
+                comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoCobranca.TipoEndereco);
+                comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoCobranca.TipoResidencia);
+                comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoCobranca.TipoLogradouro);
+                comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoCobranca.Logradouro);
+                comandoEndereco.Parameters.AddWithValue("@Cep", usuario.EnderecoCobranca.Cep);
+                comandoEndereco.Parameters.AddWithValue("@Numero", usuario.EnderecoCobranca.Numero);
+                comandoEndereco.Parameters.AddWithValue("@Bairro", usuario.EnderecoCobranca.Bairro);
+                comandoEndereco.Parameters.AddWithValue("@Cidade", usuario.EnderecoCobranca.Cidade);
+                comandoEndereco.Parameters.AddWithValue("@Estado", usuario.EnderecoCobranca.Estado);
+                comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoCobranca.Pais);
+                if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
+                    comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
+                if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
+                    comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoCobranca.Observacao);
+                idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
 
                 cmdTextoEndereco = "INSERT INTO UsuariosEnderecos(UsuarioId," +
                                                             "EnderecoId" +

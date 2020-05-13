@@ -1,51 +1,215 @@
-﻿@model Domain.DadosCliente.Usuario 
-@{
-    ViewData["Title"] = "Cadastro";
-}
+﻿@model Domain.DadosCliente.Usuario
+@{Layout = null;}
 
-<div class="container">
-    <h1>Cadastro de cliente</h1>
-    <form action="/Loja/Conta/Cadastrar/" method="post" id="formCadastroCliente">
-        <div class="row">
-            <div class="form-group col-12">
-                <label for="nomeCompleto">Nome completo</label>
-                <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto">
-            </div>
-            <div class="form-group col-12">
-                <div class="custom-control custom-radio">
-                    <input type="radio" id="sexoM" name="Sexo" class="custom-control-input">
-                    <label class="custom-control-label" for="sexoM" checked>Masculino</label>
-                </div>
-                <div class="custom-control custom-radio">
-                    <input type="radio" id="sexoF" name="Sexo" class="custom-control-input">
-                    <label class="custom-control-label" for="sexoF">Feminino</label>
-                </div>
-            </div>
-            <div class="form-group col-12">
-                <label for="dataNascimento">Data de nascimento</label>
-                <input type="text" class="form-control" id="dataNascimento" name="DataNascimento" placeholder="dd/mm/aaaa">
-            </div>
-            <div class="form-group col-12">
-                <label for="cpf">CPF</label>
-                <input type="text" class="form-control" id="cpf" name="Cpf">
-            </div>
-            <hr />
-            <div class="form-group col-12">
-                <label for="nomeCompleto">Tipo de telefone</label>
-                <input type="text" class="form-control" id="telefoneTipo" name="TelefoneTipo">
-            </div>
-            <div class="form-group col-12">
-                <label for="telefoneDdd">DDD</label>
-                <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd">
-            </div>
-            <div class="form-group col-12">
-                <label for="telefoneNumero">Número</label>
-                <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero">
-            </div>
-        </div>
-        <div class="text-right">
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
-        </div>
-    </form>
-</div>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <title>Cadastro</title>
+</head>
+
+<body class="bg-light">
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>Formulário de cadastro</h2>
+            <p class="lead">Cadastre-se para poder comprar com rapidez e tranquilidade</p>
+        </div>
+        <div class="row order-md-1 justify-content-center">
+            <form action="/Loja/Conta/Cadastrar/" method="post" id="formCadastroCliente">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName">Nome completo</label>
+                        <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="dataNascimento">Data de nascimento</label>
+                        <input type="date" class="form-control" id="dataNascimento" name="DataNascimento" value="">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="mr-3">Sexo</label>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="sexo1" name="Sexo" class="custom-control-input" value="1">
+                            <label class="custom-control-label" for="sexo1">Masculino</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="sexo2" name="Sexo" class="custom-control-input" value="2">
+                            <label class="custom-control-label" for="sexo2">Feminino</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="cpf">CPF</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="000.000.000-00">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="Email">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="">Endereço de entrega</label>
+                    </div>
+                </div>
+                <hr class="mb-2">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="enderecoEntrega.TipoLogradouro">Tipo de logradouro</label>
+                        <select class="custom-select d-block w-100" id="enderecoEntrega.TipoLogradouro" name="EnderecoEntrega.TipoLogradouro">
+                            <option value="">Selecione</option>
+                            <option>Rua</option>
+                            <option>Av.</option>
+                            <option>Rod.</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="enderecoEntrega.Logradouro">Logradouro</label>
+                        <input type="text" class="form-control" id="enderecoEntrega.Logradouro" name="EnderecoEntrega.Logradouro">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <label for="enderecoEntrega.Numero">Número</label>
+                        <input type="text" class="form-control" id="enderecoEntrega.Numero" name="EnderecoEntrega.Numero">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="enderecoEntrega.Complemento">Complemento</label>
+                        <input type="text" class="form-control" id="enderecoEntrega.Complemento" name="EnderecoEntrega.Complemento">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="enderecoEntrega.Cidade">Cidade</label>
+                        <select class="custom-select d-block w-100" id="enderecoEntrega.Cidade" name="EnderecoEntrega.Cidade">
+                            <option value="">Escolha</option>
+                            <option>Mogi das Cruzes</option>
+                            <option>Suzano</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="enderecoEntrega.Estado">Estado</label>
+                        <select class="custom-select d-block w-100" id="enderecoEntrega.Estado" name="EnderecoEntrega.Estado">
+                            <option value="">Escolha</option>
+                            <option>SP</option>
+                            <option>MG</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="enderecoEntrega.Cep">CEP</label>
+                        <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="00000-000" maxlength="9">
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="endEntregaECobranca" name="EndEntregaECobranca" value="1">
+                    <label class="custom-control-label" for="endEntregaECobranca">Endereço de cobrança é o mesmo de entrega</label>
+                </div>
+                <!--Endereco de cobranca-->
+                <div id="divEnderecoCobranca">
+                    <hr class="mb-4 mt-3">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label>Endereço de cobrança</label>
+                        </div>
+                    </div>
+                    <hr class="mb-2">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="enderecoCobranca.TipoLogradouro">Tipo de logradouro</label>
+                            <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.TipoLogradouro" name="EnderecoCobranca.TipoLogradouro">
+                                <option>Selecione</option>
+                                <option value="1">Rua</option>
+                                <option value="2">Av.</option>
+                                <option value="3">Rod.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label for="enderecoCobranca.Logradouro">Logradouro</label>
+                            <input type="text" class="form-control" id="enderecoCobranca.Logradouro" name="EnderecoCobranca.Logradouro">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="enderecoCobranca.Numero">Número</label>
+                            <input type="text" class="form-control" id="enderecoCobranca.Numero" name="EnderecoCobranca.Numero">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="enderecoCobranca.Complemento">Complemento</label>
+                            <input type="text" class="form-control" id="enderecoCobranca.Complemento" name="EnderecoCobranca.Complemento">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="enderecoCobranca.Cidade">Cidade</label>
+                            <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Cidade" name="EnderecoCobranca.Cidade">
+                                <option>Escolha</option>
+                                <option value="1">Mogi das Cruzes</option>
+                                <option value="2">Suzano</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="enderecoCobranca.Estado">Estado</label>
+                            <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Estado" name="EnderecoCobranca.Estado">
+                                <option>Escolha</option>
+                                <option value="1">SP</option>
+                                <option value="2">MG</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="enderecoCobranca.Cep">CEP</label>
+                            <input type="text" class="form-control" id="enderecoCobranca.Cep" name="EnderecoCobranca.Cep" placeholder="00000-000" maxlength="9">
+                        </div>
+                    </div>
+                </div>
+                <hr class="mb-4">
+
+                <h4 class="mb-3">Pagamento</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="cartao.NomeImpresso">Nome impresso no cartão</label>
+                        <input type="text" class="form-control" id="cartao.NomeImpresso" name="Cartao.NomeImpresso">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="cartao.Numeracao">Numeração do cartão</label>
+                        <input type="text" class="form-control" id="cartao.Numeracao" name="Cartao.Numeracao">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="cartao.Bandeira">Bandeira</label>
+                        <select class="custom-select d-block w-100" id="cartao.Bandeira" name="Cartao.Bandeira">
+                            <option>Escolha</option>
+                            <option value="1">Master</option>
+                            <option value="2">Visa</option>
+                            <option value="3">Elo</option>
+                            <option value="4">American Express</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="cartao.Validade">Validade</label>
+                        <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa">
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar-se</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; Code EZ 2020</p>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery-v3.4.1.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/loja/conta/conta.js"></script>
+</body>
+
+</html>
