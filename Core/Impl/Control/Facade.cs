@@ -232,6 +232,25 @@ namespace Core.Impl.Control
             rns.Add(nameof(Faturamento), rnsFaturamento);
             #endregion
 
+            #region Usuario 
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+            daos.Add(nameof(Usuario), usuarioDAO);
+
+            //Regras de salvar
+
+            inclusaoDataCadastro = new InclusaoDataCadastro();
+          
+            List<IStrategy> rnsSalvarUsuario = new List<IStrategy>();
+
+            rnsSalvarUsuario.Add(inclusaoDataCadastro);
+
+            Dictionary<string, List<IStrategy>> rnsUsuario = new Dictionary<string, List<IStrategy>>();
+
+            rnsUsuario.Add("SALVAR", rnsSalvarUsuario);
+
+            rns.Add(nameof(Usuario), rnsUsuario);
+            #endregion
         }
         public Result Alterar(EntidadeDominio entidade)
         {

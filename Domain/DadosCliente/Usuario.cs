@@ -4,8 +4,8 @@
     {
         public Usuario()
         {
-            EnderecoEntrega.TipoEndereco = 1;
-            EnderecoCobranca.TipoEndereco = 2;
+            EnderecoEntrega = new Endereco { TipoEndereco = 1 };
+            EnderecoCobranca = new Endereco { TipoEndereco = 2 };
         }
         public string NomeCompleto { get; set; }
         public byte Sexo { get; set; }

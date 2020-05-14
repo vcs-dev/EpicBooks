@@ -1,10 +1,14 @@
-﻿using Domain.DadosCliente;
+﻿using Core.Application;
+using Core.Impl.Control;
+using Domain.DadosCliente;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Loja.Controllers
 {
     public class ContaController : Controller
     {
+        private Result resultado;
+
         [Area("Loja")]
         public IActionResult Logar()
         {
@@ -28,6 +32,13 @@ namespace Web.Areas.Loja.Controllers
         [HttpPost]
         public IActionResult Cadastrar(Usuario usuario)
         {
+            resultado = new Facade().Salvar(usuario);
+            if(resultado.Msg != null)
+            {
+                ViewBag.Mensagem = resultado.Msg;
+                return View(usuario);
+            }
+            ViewBag.Mensagem = "Cadastro efetuado com sucesso!";
             return View();
         }
     }
