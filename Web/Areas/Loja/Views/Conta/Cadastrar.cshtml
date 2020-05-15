@@ -21,15 +21,15 @@
             <form action="/Loja/Conta/Cadastrar/" method="post" id="formCadastroCliente">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="firstName">Nome completo</label>
+                        <label for="nomeCompleto">Nome completo*</label>
                         <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="dataNascimento">Data de nascimento</label>
+                        <label for="dataNascimento">Data de nascimento*</label>
                         <input type="date" class="form-control" id="dataNascimento" name="DataNascimento" value="">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="mr-3">Sexo</label>
+                        <label class="mr-3">Sexo*</label>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="sexo1" name="Sexo" class="custom-control-input" value="1">
                             <label class="custom-control-label" for="sexo1">Masculino</label>
@@ -42,31 +42,31 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="cpf">CPF</label>
+                        <label for="cpf">CPF*</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="000.000.000-00">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="email">Email</label>
+                        <label for="email">Email*</label>
                         <input type="email" class="form-control" id="email" name="Email">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="senha">Senha</label>
+                        <label for="senha">Senha*</label>
                         <div class="input-group">
                             <input type="password" class="form-control" id="senha" name="Senha" placeholder="000.000.000-00">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="confirmacaoSenha">Confirmação de senha</label>
+                        <label for="confirmacaoSenha">Confirmação de senha*</label>
                         <input type="password" class="form-control" id="confirmacaoSenha" name="ConfirmacaoSenha">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="telefoneTipo">Tipo de telefone</label>
+                        <label for="telefoneTipo">Tipo de telefone*</label>
                         <select class="custom-select d-block w-100" id="telefoneTipo" name="telefoneTipo">
                             <option>Selecione</option>
                             <option value="1">Fixo</option>
@@ -74,11 +74,11 @@
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="telefoneDdd">DDD</label>
+                        <label for="telefoneDdd">DDD*</label>
                         <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd" maxlength="2">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="telefoneNumero">Número</label>
+                        <label for="telefoneNumero">Número*</label>
                         <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" placeholder="" maxlength="10">
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                 <hr class="mb-2">
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label for="enderecoEntrega.TipoResidencia">Tipo de Residência</label>
+                        <label for="enderecoEntrega.TipoResidencia">Tipo de Residência*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.TipoResidencia" name="EnderecoEntrega.TipoResidencia">
                             <option>Selecione</option>
                             <option value="1">Casa</option>
@@ -98,7 +98,7 @@
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="enderecoEntrega.TipoLogradouro">Tipo de logradouro</label>
+                        <label for="enderecoEntrega.TipoLogradouro">Tipo de logradouro*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.TipoLogradouro" name="EnderecoEntrega.TipoLogradouro">
                             <option>Selecione</option>
                             <option value="1">Rua</option>
@@ -107,21 +107,21 @@
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="enderecoEntrega.Logradouro">Logradouro</label>
+                        <label for="enderecoEntrega.Logradouro">Logradouro*</label>
                         <input type="text" class="form-control" id="enderecoEntrega.Logradouro" name="EnderecoEntrega.Logradouro">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2 mb-3">
-                        <label for="enderecoEntrega.Numero">Número</label>
+                        <label for="enderecoEntrega.Numero">Número*</label>
                         <input type="text" class="form-control" id="enderecoEntrega.Numero" name="EnderecoEntrega.Numero">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="enderecoEntrega.Bairro">Bairro</label>
+                        <label for="enderecoEntrega.Bairro">Bairro*</label>
                         <input type="text" class="form-control" id="enderecoEntrega.Bairro" name="EnderecoEntrega.Bairro">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="enderecoEntrega.Cidade">Cidade</label>
+                        <label for="enderecoEntrega.Cidade">Cidade*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Cidade" name="EnderecoEntrega.Cidade">
                             <option>Escolha</option>
                             <option value="1">Mogi das Cruzes</option>
@@ -129,7 +129,7 @@
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="enderecoEntrega.Estado">Estado</label>
+                        <label for="enderecoEntrega.Estado">Estado*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Estado" name="EnderecoEntrega.Estado">
                             <option value="">Escolha</option>
                             <option>SP</option>
@@ -139,14 +139,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2 mb-3">
-                        <label for="enderecoEntrega.Pais">País</label>
+                        <label for="enderecoEntrega.Pais">País*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Pais" name="EnderecoEntrega.Pais">
                             <option>Escolha</option>
                             <option value="1">Brasil</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="enderecoEntrega.Cep">CEP</label>
+                        <label for="enderecoEntrega.Cep">CEP*</label>
                         <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="00000-000" maxlength="9">
                     </div>
                     <div class="col-md-7 mb-3">
@@ -170,7 +170,7 @@
                     <hr class="mb-2">
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <label for="enderecoCobranca.TipoResidencia">Tipo de Residência</label>
+                            <label for="enderecoCobranca.TipoResidencia">Tipo de Residência*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.TipoResidencia" name="EnderecoCobranca.TipoResidencia">
                                 <option>Selecione</option>
                                 <option value="1">Casa</option>
@@ -178,7 +178,7 @@
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="enderecoCobranca.TipoLogradouro">Tipo de logradouro</label>
+                            <label for="enderecoCobranca.TipoLogradouro">Tipo de logradouro*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.TipoLogradouro" name="EnderecoCobranca.TipoLogradouro">
                                 <option>Selecione</option>
                                 <option value="1">Rua</option>
@@ -187,21 +187,21 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="enderecoCobranca.Logradouro">Logradouro</label>
+                            <label for="enderecoCobranca.Logradouro">Logradouro*</label>
                             <input type="text" class="form-control" id="enderecoCobranca.Logradouro" name="EnderecoCobranca.Logradouro">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-2 mb-3">
-                            <label for="enderecoCobranca.Numero">Número</label>
+                            <label for="enderecoCobranca.Numero">Número*</label>
                             <input type="text" class="form-control" id="enderecoCobranca.Numero" name="EnderecoCobranca.Numero">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="enderecoCobranca.Bairro">Bairro</label>
+                            <label for="enderecoCobranca.Bairro">Bairro*</label>
                             <input type="text" class="form-control" id="enderecoCobranca.Bairro" name="EnderecoCobranca.Bairro">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="enderecoCobranca.Cidade">Cidade</label>
+                            <label for="enderecoCobranca.Cidade">Cidade*</label>
                             <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Cidade" name="EnderecoCobranca.Cidade">
                                 <option>Escolha</option>
                                 <option value="1">Mogi das Cruzes</option>
@@ -209,7 +209,7 @@
                             </select>
                         </div>
                         <div class="col-md-2 mb-3">
-                            <label for="enderecoCobranca.Estado">Estado</label>
+                            <label for="enderecoCobranca.Estado">Estado*</label>
                             <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Estado" name="EnderecoCobranca.Estado">
                                 <option>Escolha</option>
                                 <option value="1">SP</option>
@@ -219,14 +219,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-2 mb-3">
-                            <label for="enderecoCobranca.Pais">País</label>
+                            <label for="enderecoCobranca.Pais">País*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.Pais" name="enderecoCobranca.Pais">
                                 <option>Escolha</option>
                                 <option value="1">Brasil</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="enderecoCobranca.Cep">CEP</label>
+                            <label for="enderecoCobranca.Cep">CEP*</label>
                             <input type="text" class="form-control" id="enderecoCobranca.Cep" name="EnderecoCobranca.Cep" placeholder="00000-000" maxlength="9">
                         </div>
                         <div class="col-md-7 mb-3">
@@ -241,15 +241,15 @@
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label for="cartao.NomeImpresso">Nome impresso no cartão</label>
+                        <label for="cartao.NomeImpresso">Nome impresso no cartão*</label>
                         <input type="text" class="form-control" id="cartao.NomeImpresso" name="Cartao.NomeImpresso">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="cartao.Numeracao">Numeração do cartão</label>
+                        <label for="cartao.Numeracao">Numeração do cartão*</label>
                         <input type="text" class="form-control" id="cartao.Numeracao" name="Cartao.Numeracao">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="cartao.Bandeira">Bandeira</label>
+                        <label for="cartao.Bandeira">Bandeira*</label>
                         <select class="custom-select d-block w-100" id="cartao.Bandeira" name="Cartao.Bandeira">
                             <option>Escolha</option>
                             <option value="1">Master</option>
@@ -259,12 +259,14 @@
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="cartao.Validade">Validade</label>
+                        <label for="cartao.Validade">Validade*</label>
                         <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa">
                     </div>
                 </div>
                 <div class="row">
-
+                    <div class="col-12">
+                        <label>* Campos de preenchimento obrigatório</label>
+                    </div>
                 </div>
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar-se</button>

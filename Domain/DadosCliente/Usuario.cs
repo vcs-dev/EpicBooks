@@ -16,9 +16,11 @@
         public string TelefoneNumero { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
+        public string ConfirmacaoSenha { get; set; }
         public CartaoDeCredito Cartao { get; set; }
         public Endereco EnderecoEntrega { get; set; }
         public Endereco EnderecoCobranca { get; set; }
         public byte EndEntregaECobranca { get; set; }
+        public int CartaoPreferencial { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace Core.Impl.DAO.DadosCliente
 {
@@ -70,7 +69,8 @@ namespace Core.Impl.DAO.DadosCliente
                                                        "TelefoneNumero," +
                                                        "Email," +
                                                        "Senha," +
-                                                       "DataCadastro" +
+                                                       "DataCadastro," +
+                                                       "CartaoPreferencial" +
                                   ") " +
                                   "VALUES(@NomeCompleto," +
                                          "@Sexo," +
@@ -81,7 +81,8 @@ namespace Core.Impl.DAO.DadosCliente
                                          "@TelefoneNumero," +
                                          "@Email," +
                                          "CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1)," +
-                                         "@DataCadastro" +
+                                         "@DataCadastro, " +
+                                         "@CartaoPreferencial" +
                                   ") SELECT CAST(scope_identity() AS int)";
 
                 SqlCommand comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
@@ -96,6 +97,7 @@ namespace Core.Impl.DAO.DadosCliente
                 comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
                 comandoUsuario.Parameters.AddWithValue("@Senha", usuario.Senha);
                 comandoUsuario.Parameters.AddWithValue("@DataCadastro", usuario.DataCadastro);
+                comandoUsuario.Parameters.AddWithValue("@CartaoPreferencial", usuario.Cartao.Id);
                 usuario.Id = Convert.ToInt32(comandoUsuario.ExecuteScalar());
                 comandoUsuario.Dispose();
 
@@ -144,21 +146,42 @@ namespace Core.Impl.DAO.DadosCliente
                 idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 comandoEndereco.Parameters.Clear();
 
-                comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoCobranca.TipoEndereco);
-                comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoCobranca.TipoResidencia);
-                comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoCobranca.TipoLogradouro);
-                comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoCobranca.Logradouro);
-                comandoEndereco.Parameters.AddWithValue("@Cep", usuario.EnderecoCobranca.Cep);
-                comandoEndereco.Parameters.AddWithValue("@Numero", usuario.EnderecoCobranca.Numero);
-                comandoEndereco.Parameters.AddWithValue("@Bairro", usuario.EnderecoCobranca.Bairro);
-                comandoEndereco.Parameters.AddWithValue("@Cidade", usuario.EnderecoCobranca.Cidade);
-                comandoEndereco.Parameters.AddWithValue("@Estado", usuario.EnderecoCobranca.Estado);
-                comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoCobranca.Pais);
-                if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
-                    comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
-                if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
-                    comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoCobranca.Observacao);
-                idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
+                if (usuario.EndEntregaECobranca == 1)
+                {
+                    comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoEntrega.TipoEndereco);
+                    comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoEntrega.TipoResidencia);
+                    comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoEntrega.TipoLogradouro);
+                    comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoEntrega.Logradouro);
+                    comandoEndereco.Parameters.AddWithValue("@Cep", usuario.EnderecoEntrega.Cep);
+                    comandoEndereco.Parameters.AddWithValue("@Numero", usuario.EnderecoEntrega.Numero);
+                    comandoEndereco.Parameters.AddWithValue("@Bairro", usuario.EnderecoEntrega.Bairro);
+                    comandoEndereco.Parameters.AddWithValue("@Cidade", usuario.EnderecoEntrega.Cidade);
+                    comandoEndereco.Parameters.AddWithValue("@Estado", usuario.EnderecoEntrega.Estado);
+                    comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoEntrega.Pais);
+                    if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                        comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
+                    if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                        comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
+                    idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
+                }
+                else
+                {
+                    comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoCobranca.TipoEndereco);
+                    comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoCobranca.TipoResidencia);
+                    comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoCobranca.TipoLogradouro);
+                    comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoCobranca.Logradouro);
+                    comandoEndereco.Parameters.AddWithValue("@Cep", usuario.EnderecoCobranca.Cep);
+                    comandoEndereco.Parameters.AddWithValue("@Numero", usuario.EnderecoCobranca.Numero);
+                    comandoEndereco.Parameters.AddWithValue("@Bairro", usuario.EnderecoCobranca.Bairro);
+                    comandoEndereco.Parameters.AddWithValue("@Cidade", usuario.EnderecoCobranca.Cidade);
+                    comandoEndereco.Parameters.AddWithValue("@Estado", usuario.EnderecoCobranca.Estado);
+                    comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoCobranca.Pais);
+                    if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
+                        comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
+                    if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
+                        comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoCobranca.Observacao);
+                    idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
+                }
 
                 cmdTextoEndereco = "INSERT INTO UsuariosEnderecos(UsuarioId," +
                                                             "EnderecoId" +
@@ -204,28 +227,42 @@ namespace Core.Impl.DAO.DadosCliente
                 Conectar();
                 BeginTransaction();
 
-                cmdTextoUsuario = "UPDATE Usuarios SET Nome = @Nome," +
-                                                      "Sexo = @Sexo," +
-                                                      "DataNascimento = @DataNascimento," +
-                                                      "Cpf = @Cpf," +
-                                                      "TelefoneTipo = @TelefoneTipo," +
-                                                      "TelefoneDdd = @TelefoneDdd," +
-                                                      "TelefoneDdi = @TelefoneDdi," +
-                                                      "TelefoneNumero = @TelefoneNumero," +
-                                                      "Email = @Email" +
-                                  "WHERE UsuarioId = @UsuarioId";
+                SqlCommand comandoUsuario;
 
-                SqlCommand comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+                if (usuario.CartaoPreferencial > 0)
+                {
+                    cmdTextoUsuario = "UPDATE Usuarios SET CartaoPreferencial = @CartaoPreferencial WHERE UsuarioId = @UsuarioId";
+                    comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+                    comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                    comandoUsuario.Parameters.AddWithValue("@CartaoPreferencial", usuario.CartaoPreferencial);
+                    comandoUsuario.ExecuteNonQuery();
+                }
+                else
+                {
+                    cmdTextoUsuario = "UPDATE Usuarios SET Nome = @Nome," +
+                                                          "Sexo = @Sexo," +
+                                                          "DataNascimento = @DataNascimento," +
+                                                          "Cpf = @Cpf," +
+                                                          "TelefoneTipo = @TelefoneTipo," +
+                                                          "TelefoneDdd = @TelefoneDdd," +
+                                                          "TelefoneDdi = @TelefoneDdi," +
+                                                          "TelefoneNumero = @TelefoneNumero," +
+                                                          "Email = @Email" +
+                                      "WHERE UsuarioId = @UsuarioId";
 
-                comandoUsuario.Parameters.AddWithValue("@Nome", usuario.NomeCompleto);
-                comandoUsuario.Parameters.AddWithValue("@Sexo", usuario.Sexo);
-                comandoUsuario.Parameters.AddWithValue("@DataNascimento", usuario.DataNascimento);
-                comandoUsuario.Parameters.AddWithValue("@Cpf", usuario.Cpf);
-                comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
-                comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
-                comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
-                comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
-                comandoUsuario.ExecuteNonQuery();
+                    comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+
+                    comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                    comandoUsuario.Parameters.AddWithValue("@Nome", usuario.NomeCompleto);
+                    comandoUsuario.Parameters.AddWithValue("@Sexo", usuario.Sexo);
+                    comandoUsuario.Parameters.AddWithValue("@DataNascimento", usuario.DataNascimento);
+                    comandoUsuario.Parameters.AddWithValue("@Cpf", usuario.Cpf);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
+                    comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
+                    comandoUsuario.ExecuteNonQuery();
+                }
 
                 Commit();
                 comandoUsuario.Dispose();

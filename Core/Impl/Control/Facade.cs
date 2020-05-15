@@ -240,10 +240,23 @@ namespace Core.Impl.Control
             //Regras de salvar
 
             inclusaoDataCadastro = new InclusaoDataCadastro();
+            ValidadorDadosObrigatoriosUsuario validadorDadosObrigatoriosUsuario = new ValidadorDadosObrigatoriosUsuario();
+            ValidadorDataNascimento validadorDataNascimento = new ValidadorDataNascimento();
+            ValidadorCpf validadorCpf = new ValidadorCpf();
+            ValidadorSenha validadorSenha = new ValidadorSenha();
+            ValidadorDadosCartao validadorDadosCartao = new ValidadorDadosCartao();
+            ValidadorEmail validadorEmail = new ValidadorEmail();
           
             List<IStrategy> rnsSalvarUsuario = new List<IStrategy>();
 
             rnsSalvarUsuario.Add(inclusaoDataCadastro);
+            rnsSalvarUsuario.Add(validadorDadosObrigatoriosUsuario);
+            rnsSalvarUsuario.Add(validadorDataNascimento);
+            rnsSalvarUsuario.Add(validadorCpf);
+            rnsSalvarUsuario.Add(validadorSenha);
+            rnsSalvarUsuario.Add(validadorDadosCartao);
+            rnsSalvarUsuario.Add(validadorEmail);
+
 
             Dictionary<string, List<IStrategy>> rnsUsuario = new Dictionary<string, List<IStrategy>>();
 
