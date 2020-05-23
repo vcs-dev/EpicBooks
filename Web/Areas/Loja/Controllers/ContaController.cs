@@ -25,7 +25,7 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Cadastrar()
         {
-            return View();
+            return View(new Usuario());
         }
 
         [Area("Loja")]

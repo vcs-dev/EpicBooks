@@ -13,7 +13,7 @@ namespace Core.Impl.Business
             {
                 Usuario usuario = (Usuario)entidade;
 
-                if(!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !Int32.TryParse(usuario.Cartao.Numeracao, out _))
+                if(!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !Int64.TryParse(usuario.Cartao.Numeracao, out _))
                     return "Numeração do cartão inválida";
                 if (usuario.Cartao.Validade.Length < 7 || !usuario.Cartao.Validade.ToCharArray()[2].Equals('/'))
                     return "Data de validade do cartão inválida";

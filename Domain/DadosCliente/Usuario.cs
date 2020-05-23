@@ -6,6 +6,7 @@
         {
             EnderecoEntrega = new Endereco { TipoEndereco = 1 };
             EnderecoCobranca = new Endereco { TipoEndereco = 2 };
+            Cartao = new CartaoDeCredito();
         }
         public string NomeCompleto { get; set; }
         public byte Sexo { get; set; }

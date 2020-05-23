@@ -22,20 +22,20 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="nomeCompleto">Nome completo*</label>
-                        <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="">
+                        <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="@Model.NomeCompleto">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="dataNascimento">Data de nascimento*</label>
-                        <input type="date" class="form-control" id="dataNascimento" name="DataNascimento" value="">
+                        <input type="date" class="form-control" id="dataNascimento" name="DataNascimento" value="@Model.DataNascimento">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="mr-3">Sexo*</label>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="sexo1" name="Sexo" class="custom-control-input" value="1">
+                            <input type="radio" id="sexo1" name="Sexo" class="custom-control-input" value="1" checked="@(Model.Sexo == 1)">
                             <label class="custom-control-label" for="sexo1">Masculino</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="sexo2" name="Sexo" class="custom-control-input" value="2">
+                            <input type="radio" id="sexo2" name="Sexo" class="custom-control-input" value="2" checked="@(Model.Sexo == 2)">
                             <label class="custom-control-label" for="sexo2">Feminino</label>
                         </div>
                     </div>
@@ -44,42 +44,42 @@
                     <div class="col-md-6 mb-3">
                         <label for="cpf">CPF*</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="000.000.000-00">
+                            <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="000.000.000-00" value="@Model.Cpf">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="email">Email*</label>
-                        <input type="email" class="form-control" id="email" name="Email">
+                        <input type="email" class="form-control" id="email" name="Email" value="@Model.Email">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="senha">Senha*</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="senha" name="Senha" placeholder="000.000.000-00">
+                            <input type="password" class="form-control" id="senha" name="Senha" value="@Model.Senha">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="confirmacaoSenha">Confirmação de senha*</label>
-                        <input type="password" class="form-control" id="confirmacaoSenha" name="ConfirmacaoSenha">
+                        <input type="password" class="form-control" id="confirmacaoSenha" name="ConfirmacaoSenha" value="@Model.ConfirmacaoSenha">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="telefoneTipo">Tipo de telefone*</label>
                         <select class="custom-select d-block w-100" id="telefoneTipo" name="telefoneTipo">
-                            <option>Selecione</option>
-                            <option value="1">Fixo</option>
-                            <option value="2">Móvel</option>
+                            <option selected="@(Model.TelefoneTipo == 0)">Selecione</option>
+                            <option value="1" selected="@(Model.TelefoneTipo == 1)">Fixo</option>
+                            <option value="2" selected="@(Model.TelefoneTipo == 2)">Móvel</option>
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="telefoneDdd">DDD*</label>
-                        <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd" maxlength="2">
+                        <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd" maxlength="2" value="@Model.TelefoneDdd">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="telefoneNumero">Número*</label>
-                        <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" placeholder="" maxlength="10">
+                        <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" placeholder="" maxlength="10" value="@Model.TelefoneNumero">
                     </div>
                 </div>
                 <div class="row">
@@ -92,48 +92,48 @@
                     <div class="col-md-3 mb-3">
                         <label for="enderecoEntrega.TipoResidencia">Tipo de Residência*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.TipoResidencia" name="EnderecoEntrega.TipoResidencia">
-                            <option>Selecione</option>
-                            <option value="1">Casa</option>
-                            <option value="2">Apto</option>
+                            <option selected="@(Model.EnderecoEntrega.TipoResidencia == 0)">Selecione</option>
+                            <option value="1" selected="@(Model.EnderecoEntrega.TipoResidencia == 1)">Casa</option>
+                            <option value="2" selected="@(Model.EnderecoEntrega.TipoResidencia == 2)">Apto</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="enderecoEntrega.TipoLogradouro">Tipo de logradouro*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.TipoLogradouro" name="EnderecoEntrega.TipoLogradouro">
-                            <option>Selecione</option>
-                            <option value="1">Rua</option>
-                            <option value="2">Av.</option>
-                            <option value="3">Rod.</option>
+                            <option selected="@(Model.EnderecoEntrega.TipoLogradouro == 0)">Selecione</option>
+                            <option value="1" selected="@(Model.EnderecoEntrega.TipoLogradouro == 1)">Rua</option>
+                            <option value="2" selected="@(Model.EnderecoEntrega.TipoLogradouro == 2)">Av.</option>
+                            <option value="3" selected="@(Model.EnderecoEntrega.TipoLogradouro == 3)">Rod.</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="enderecoEntrega.Logradouro">Logradouro*</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Logradouro" name="EnderecoEntrega.Logradouro">
+                        <input type="text" class="form-control" id="enderecoEntrega.Logradouro" name="EnderecoEntrega.Logradouro" value="@Model.EnderecoEntrega.Logradouro">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2 mb-3">
                         <label for="enderecoEntrega.Numero">Número*</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Numero" name="EnderecoEntrega.Numero">
+                        <input type="text" class="form-control" id="enderecoEntrega.Numero" name="EnderecoEntrega.Numero" value="@Model.EnderecoEntrega.Numero">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="enderecoEntrega.Bairro">Bairro*</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Bairro" name="EnderecoEntrega.Bairro">
+                        <input type="text" class="form-control" id="enderecoEntrega.Bairro" name="EnderecoEntrega.Bairro" value="@Model.EnderecoEntrega.Bairro">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="enderecoEntrega.Cidade">Cidade*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Cidade" name="EnderecoEntrega.Cidade">
-                            <option>Escolha</option>
-                            <option value="1">Mogi das Cruzes</option>
-                            <option value="2">Suzano</option>
+                            <option selected="@(Model.EnderecoEntrega.Cidade == 0)">Escolha</option>
+                            <option value="1" selected="@(Model.EnderecoEntrega.Cidade == 1)">Mogi das Cruzes</option>
+                            <option value="2" selected="@(Model.EnderecoEntrega.Cidade == 2)">Suzano</option>
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="enderecoEntrega.Estado">Estado*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Estado" name="EnderecoEntrega.Estado">
-                            <option value="">Escolha</option>
-                            <option>SP</option>
-                            <option>MG</option>
+                            <option selected="@(Model.EnderecoEntrega.Estado == 0)">Escolha</option>
+                            <option value="1" selected="@(Model.EnderecoEntrega.Estado == 1)">SP</option>
+                            <option value="2" selected="@(Model.EnderecoEntrega.Estado == 2)">MG</option>
                         </select>
                     </div>
                 </div>
@@ -141,22 +141,23 @@
                     <div class="col-md-2 mb-3">
                         <label for="enderecoEntrega.Pais">País*</label>
                         <select class="custom-select d-block w-100" id="enderecoEntrega.Pais" name="EnderecoEntrega.Pais">
-                            <option>Escolha</option>
-                            <option value="1">Brasil</option>
+                            <option selected="@(Model.EnderecoEntrega.Pais == 0)">Escolha</option>
+                            <option value="1" selected="@(Model.EnderecoEntrega.Pais == 1)">Brasil</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="enderecoEntrega.Cep">CEP*</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="00000-000" maxlength="9">
+                        <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="00000-000" maxlength="9"
+                               value="@Model.EnderecoEntrega.Cep">
                     </div>
                     <div class="col-md-7 mb-3">
                         <label for="enderecoEntrega.Observacao">Observação</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Observacao" name="EnderecoEntrega.Observacao">
+                        <input type="text" class="form-control" id="enderecoEntrega.Observacao" name="EnderecoEntrega.Observacao" value="@Model.EnderecoEntrega.Observacao">
                     </div>
                 </div>
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="endEntregaECobranca" name="EndEntregaECobranca" value="1">
+                    <input type="checkbox" class="custom-control-input" id="endEntregaECobranca" name="EndEntregaECobranca" value="1" checked="@(Model.EndEntregaECobranca == 1)">
                     <label class="custom-control-label" for="endEntregaECobranca">Endereço de cobrança é o mesmo de entrega</label>
                 </div>
                 <!--Endereco de cobranca-->
@@ -172,48 +173,48 @@
                         <div class="col-md-3 mb-3">
                             <label for="enderecoCobranca.TipoResidencia">Tipo de Residência*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.TipoResidencia" name="EnderecoCobranca.TipoResidencia">
-                                <option>Selecione</option>
-                                <option value="1">Casa</option>
-                                <option value="2">Apto</option>
+                                <option selected="@(Model.EnderecoCobranca.TipoResidencia == 0)">Selecione</option>
+                                <option value="1" selected="@(Model.EnderecoCobranca.TipoResidencia == 1)">Casa</option>
+                                <option value="2" selected="@(Model.EnderecoCobranca.TipoResidencia == 2)">Apto</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="enderecoCobranca.TipoLogradouro">Tipo de logradouro*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.TipoLogradouro" name="EnderecoCobranca.TipoLogradouro">
-                                <option>Selecione</option>
-                                <option value="1">Rua</option>
-                                <option value="2">Av.</option>
-                                <option value="3">Rod.</option>
+                                <option selected="@(Model.EnderecoCobranca.TipoLogradouro == 0)">Selecione</option>
+                                <option value="1" selected="@(Model.EnderecoCobranca.TipoLogradouro == 1)">Rua</option>
+                                <option value="2" selected="@(Model.EnderecoCobranca.TipoLogradouro == 2)">Av.</option>
+                                <option value="3" selected="@(Model.EnderecoCobranca.TipoLogradouro == 3)">Rod.</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="enderecoCobranca.Logradouro">Logradouro*</label>
-                            <input type="text" class="form-control" id="enderecoCobranca.Logradouro" name="EnderecoCobranca.Logradouro">
+                            <input type="text" class="form-control" id="enderecoCobranca.Logradouro" name="EnderecoCobranca.Logradouro" value="@Model.EnderecoCobranca.Logradouro">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-2 mb-3">
                             <label for="enderecoCobranca.Numero">Número*</label>
-                            <input type="text" class="form-control" id="enderecoCobranca.Numero" name="EnderecoCobranca.Numero">
+                            <input type="text" class="form-control" id="enderecoCobranca.Numero" name="EnderecoCobranca.Numero" value="@Model.EnderecoCobranca.Numero">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="enderecoCobranca.Bairro">Bairro*</label>
-                            <input type="text" class="form-control" id="enderecoCobranca.Bairro" name="EnderecoCobranca.Bairro">
+                            <input type="text" class="form-control" id="enderecoCobranca.Bairro" name="EnderecoCobranca.Bairro" value="@Model.EnderecoCobranca.Bairro">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="enderecoCobranca.Cidade">Cidade*</label>
                             <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Cidade" name="EnderecoCobranca.Cidade">
-                                <option>Escolha</option>
-                                <option value="1">Mogi das Cruzes</option>
-                                <option value="2">Suzano</option>
+                                <option selected="@(Model.EnderecoCobranca.Cidade == 0)">Escolha</option>
+                                <option value="1" selected="@(Model.EnderecoCobranca.Cidade == 1)">Mogi das Cruzes</option>
+                                <option value="2" selected="@(Model.EnderecoCobranca.Cidade == 2)">Suzano</option>
                             </select>
                         </div>
                         <div class="col-md-2 mb-3">
                             <label for="enderecoCobranca.Estado">Estado*</label>
                             <select class="custom-select d-block w-100 inputSelect" id="enderecoCobranca.Estado" name="EnderecoCobranca.Estado">
-                                <option>Escolha</option>
-                                <option value="1">SP</option>
-                                <option value="2">MG</option>
+                                <option selected="@(Model.EnderecoCobranca.Estado == 0)">Escolha</option>
+                                <option value="1" selected="@(Model.EnderecoCobranca.Estado == 1)">SP</option>
+                                <option value="2" selected="@(Model.EnderecoCobranca.Estado == 2)">MG</option>
                             </select>
                         </div>
                     </div>
@@ -221,17 +222,18 @@
                         <div class="col-md-2 mb-3">
                             <label for="enderecoCobranca.Pais">País*</label>
                             <select class="custom-select d-block w-100" id="enderecoCobranca.Pais" name="enderecoCobranca.Pais">
-                                <option>Escolha</option>
-                                <option value="1">Brasil</option>
+                                <option selected="@(Model.EnderecoCobranca.Pais == 0)">Escolha</option>
+                                <option value="1" selected="@(Model.EnderecoCobranca.Pais == 1)">Brasil</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="enderecoCobranca.Cep">CEP*</label>
-                            <input type="text" class="form-control" id="enderecoCobranca.Cep" name="EnderecoCobranca.Cep" placeholder="00000-000" maxlength="9">
+                            <input type="text" class="form-control" id="enderecoCobranca.Cep" name="EnderecoCobranca.Cep" placeholder="00000-000" maxlength="9"
+                                   value="@Model.EnderecoCobranca.Cep">
                         </div>
                         <div class="col-md-7 mb-3">
                             <label for="enderecoCobranca.Observacao">Observação</label>
-                            <input type="text" class="form-control" id="enderecoCobranca.Observacao" name="EnderecoCobranca.Observacao">
+                            <input type="text" class="form-control" id="enderecoCobranca.Observacao" name="EnderecoCobranca.Observacao" value="@Model.EnderecoCobranca.Observacao">
                         </div>
                     </div>
                 </div>
@@ -242,25 +244,25 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="cartao.NomeImpresso">Nome impresso no cartão*</label>
-                        <input type="text" class="form-control" id="cartao.NomeImpresso" name="Cartao.NomeImpresso">
+                        <input type="text" class="form-control" id="cartao.NomeImpresso" name="Cartao.NomeImpresso" value="@Model.Cartao.NomeImpresso">
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="cartao.Numeracao">Numeração do cartão*</label>
-                        <input type="text" class="form-control" id="cartao.Numeracao" name="Cartao.Numeracao">
+                        <input type="text" class="form-control" id="cartao.Numeracao" name="Cartao.Numeracao" value="@Model.Cartao.Numeracao">
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="cartao.Bandeira">Bandeira*</label>
                         <select class="custom-select d-block w-100" id="cartao.Bandeira" name="Cartao.Bandeira">
-                            <option>Escolha</option>
-                            <option value="1">Master</option>
-                            <option value="2">Visa</option>
-                            <option value="3">Elo</option>
-                            <option value="4">American Express</option>
+                            <option selected="@(Model.Cartao.Bandeira == 0)">Escolha</option>
+                            <option value="1" selected="@(Model.Cartao.Bandeira == 1)">Master</option>
+                            <option value="2" selected="@(Model.Cartao.Bandeira == 2)">Visa</option>
+                            <option value="3" selected="@(Model.Cartao.Bandeira == 3)">Elo</option>
+                            <option value="4" selected="@(Model.Cartao.Bandeira == 4)">American Express</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="cartao.Validade">Validade*</label>
-                        <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa">
+                        <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa" @(Model.Cartao.Validade)>
                     </div>
                 </div>
                 <div class="row">
