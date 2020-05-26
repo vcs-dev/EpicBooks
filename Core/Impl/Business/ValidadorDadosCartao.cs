@@ -12,11 +12,13 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Usuario"))
             {
                 Usuario usuario = (Usuario)entidade;
-
-                if(!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !Int64.TryParse(usuario.Cartao.Numeracao, out _))
-                    return "Numeração do cartão inválida";
-                if (usuario.Cartao.Validade.Length < 7 || !usuario.Cartao.Validade.ToCharArray()[2].Equals('/'))
-                    return "Data de validade do cartão inválida";
+                if (!string.IsNullOrEmpty(usuario.Cartao.Numeracao))
+                {
+                    if (!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !Int64.TryParse(usuario.Cartao.Numeracao, out _))
+                        return "Numeração do cartão inválida";
+                    if (usuario.Cartao.Validade.Length < 7 || !usuario.Cartao.Validade.ToCharArray()[2].Equals('/'))
+                        return "Data de validade do cartão inválida";
+                }
             }
             else
             {

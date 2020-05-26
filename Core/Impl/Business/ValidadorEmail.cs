@@ -11,11 +11,13 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Usuario"))
             {
                 Usuario usuario = (Usuario)entidade;
-
-                if(!usuario.Email.Contains('@') || !usuario.Email.Contains(".com"))
-                    return "E-Mail inválido";
-                if (usuario.Email.IndexOf(".com") < usuario.Email.IndexOf('@'))
-                    return "E-Mail inválido";
+                if (!string.IsNullOrEmpty(usuario.Email))
+                {
+                    if (!usuario.Email.Contains('@') || !usuario.Email.Contains(".com"))
+                        return "E-Mail inválido";
+                    if (usuario.Email.IndexOf(".com") < usuario.Email.IndexOf('@'))
+                        return "E-Mail inválido";
+                }
             }
             else
             {
