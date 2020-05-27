@@ -1,14 +1,21 @@
 ﻿$(document).ready(function () {
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
         $('#modalMensagem').modal('show');
-    ExibeEsconde();
+
+    $('#btnOkModal').on('click', function () {
+        if ($('#textoModal').text() === 'Cadastro efetuado com sucesso!') {
+            location.href = '/Loja/Home/';
+        }
+    });
+
+    exibirEsconder();
 
     $('#endEntregaECobranca').on('click', function () {
-        ExibeEsconde();
+        exibirEsconder();
     });
 });
 
-function ExibeEsconde() {
+function exibirEsconder() {
     if ($('#endEntregaECobranca').prop('checked') == true) {
         $('#divEnderecoCobranca input').val('');
         $('.inputSelect option').prop('selected', false);

@@ -12,11 +12,10 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Usuario"))
             {
                 Usuario usuario = (Usuario)entidade;
+
                 if (!string.IsNullOrEmpty(usuario.Cpf))
                 {
-                    char[] usuarioArray = usuario.Cpf.ToCharArray();
-
-                    if (usuario.Cpf.Length < 14 || !usuario.Cpf.Contains('-') || !usuarioArray[3].Equals('.') || !usuarioArray[7].Equals('.'))
+                    if (usuario.Cpf.Length < 11 || !Int64.TryParse(usuario.Cpf, out _))
                         return "CPF inválido";
                 }
             }

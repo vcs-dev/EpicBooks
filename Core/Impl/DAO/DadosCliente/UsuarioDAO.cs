@@ -138,14 +138,14 @@ namespace Core.Impl.DAO.DadosCliente
                 comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoEntrega.Pais);
                 if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
                     comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
-                if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                else
                     comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
                 idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 comandoEndereco.Parameters.Clear();
 
                 if (usuario.EndEntregaECobranca == 1)
                 {
-                    comandoEndereco.Parameters.AddWithValue("@TipoEndereco", usuario.EnderecoEntrega.TipoEndereco);
+                    comandoEndereco.Parameters.AddWithValue("@TipoEndereco", 2);//Tipo 2: Cobranca
                     comandoEndereco.Parameters.AddWithValue("@TipoResidencia", usuario.EnderecoEntrega.TipoResidencia);
                     comandoEndereco.Parameters.AddWithValue("@TipoLogradouro", usuario.EnderecoEntrega.TipoLogradouro);
                     comandoEndereco.Parameters.AddWithValue("@Logradouro", usuario.EnderecoEntrega.Logradouro);
@@ -157,7 +157,7 @@ namespace Core.Impl.DAO.DadosCliente
                     comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoEntrega.Pais);
                     if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
                         comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
-                    if (string.IsNullOrEmpty(usuario.EnderecoEntrega.Observacao))
+                    else
                         comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
                     idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 }
@@ -175,7 +175,7 @@ namespace Core.Impl.DAO.DadosCliente
                     comandoEndereco.Parameters.AddWithValue("@Pais", usuario.EnderecoCobranca.Pais);
                     if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
                         comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
-                    if (string.IsNullOrEmpty(usuario.EnderecoCobranca.Observacao))
+                    else
                         comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoCobranca.Observacao);
                     idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 }

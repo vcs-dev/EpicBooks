@@ -44,7 +44,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="cpf">CPF*</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="000.000.000-00" value="@Model.Cpf">
+                            <input type="text" class="form-control" id="cpf" name="Cpf" placeholder="Somente números" value="@Model.Cpf">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="telefoneNumero">Número*</label>
-                        <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" placeholder="" maxlength="10" value="@Model.TelefoneNumero">
+                        <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" maxlength="10" value="@Model.TelefoneNumero">
                     </div>
                 </div>
                 <div class="row">
@@ -147,7 +147,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="enderecoEntrega.Cep">CEP*</label>
-                        <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="00000-000" maxlength="9"
+                        <input type="text" class="form-control" id="enderecoEntrega.Cep" name="EnderecoEntrega.Cep" placeholder="Somente números" maxlength="8"
                                value="@Model.EnderecoEntrega.Cep">
                     </div>
                     <div class="col-md-7 mb-3">
@@ -262,7 +262,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="cartao.Validade">Validade*</label>
-                        <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa" @(Model.Cartao.Validade)>
+                        <input type="text" class="form-control" id="cartao.Validade" name="Cartao.Validade" placeholder="mm/aaaa" value="@Model.Cartao.Validade">
                     </div>
                 </div>
                 <div class="row">

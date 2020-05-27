@@ -39,7 +39,7 @@ namespace Web.Areas.Loja.Controllers
                 return View(usuario);
             }
             ViewBag.Mensagem = "Cadastro efetuado com sucesso!";
-            return View();
+            return View(new Usuario());
         }
     }
 }
