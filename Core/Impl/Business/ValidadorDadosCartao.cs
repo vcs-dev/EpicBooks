@@ -12,7 +12,7 @@ namespace Core.Impl.Business
             if (entidade.GetType().Name.Equals("Usuario"))
             {
                 Usuario usuario = (Usuario)entidade;
-                if (!string.IsNullOrEmpty(usuario.Cartao.Numeracao))
+                if (!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !string.IsNullOrEmpty(usuario.Cartao.Validade))
                 {
                     if (!string.IsNullOrEmpty(usuario.Cartao.Numeracao) && !Int64.TryParse(usuario.Cartao.Numeracao, out _))
                         return "Numeração do cartão inválida";

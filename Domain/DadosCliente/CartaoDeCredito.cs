@@ -5,6 +5,10 @@
         public CartaoDeCredito()
         {
             Valor = null;
+            Numeracao = "";
+            NomeImpresso = "";
+            Validade = "";
+            Apelido = "";
         }
         public int Bandeira { get; set; }
         public string Numeracao { get; set; }

@@ -28,14 +28,12 @@ namespace Core.Impl.DAO.DadosCliente
                 cmdTextoCartao = "INSERT INTO CartoesDeCredito(Bandeira," +
                                                               "Numeracao," +
                                                               "NomeImpresso, " +
-                                                              "Validade, " +
-                                                              "Apelido" +
+                                                              "Validade" +
                                  ") " +
                                  "VALUES(@Bandeira," +
                                         "@Numeracao," +
                                         "@NomeImpresso, " +
-                                        "@Validade, " +
-                                        "@Apelido" +
+                                        "@Validade" +
                                  ") SELECT CAST(scope_identity() AS int)";
 
                 SqlCommand comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);
@@ -44,21 +42,7 @@ namespace Core.Impl.DAO.DadosCliente
                 comandoCartao.Parameters.AddWithValue("@Numeracao", usuario.Cartao.Numeracao);
                 comandoCartao.Parameters.AddWithValue("@NomeImpresso", usuario.Cartao.NomeImpresso);
                 comandoCartao.Parameters.AddWithValue("@Validade", usuario.Cartao.Validade);
-                comandoCartao.Parameters.AddWithValue("@Apelido", usuario.Cartao.Apelido);
                 usuario.Cartao.Id = Convert.ToByte(comandoCartao.ExecuteScalar());
-
-                cmdTextoCartao = "INSERT INTO UsuariosCartoes(UsuarioId," +
-                                                             "CartaoId" +
-                                 ") " +
-                                 "VALUES(@UsuarioId," +
-                                        "@CartaoId" +
-                                 ")";
-                comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);
-
-                comandoCartao.Parameters.AddWithValue("@UsuarioId", usuario.Id);
-                comandoCartao.Parameters.AddWithValue("@CartaoId", usuario.Cartao.Id);
-                comandoCartao.ExecuteNonQuery();
-                comandoCartao.Dispose();
 
                 cmdTextoUsuario = "INSERT INTO Usuarios(NomeCompleto," +
                                                        "Sexo," +
@@ -100,6 +84,19 @@ namespace Core.Impl.DAO.DadosCliente
                 comandoUsuario.Parameters.AddWithValue("@CartaoPreferencial", usuario.Cartao.Id);
                 usuario.Id = Convert.ToInt32(comandoUsuario.ExecuteScalar());
                 comandoUsuario.Dispose();
+
+                cmdTextoCartao = "INSERT INTO UsuariosCartoes(UsuarioId," +
+                                             "CartaoId" +
+                 ") " +
+                 "VALUES(@UsuarioId," +
+                        "@CartaoId" +
+                 ")";
+                comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);
+
+                comandoCartao.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                comandoCartao.Parameters.AddWithValue("@CartaoId", usuario.Cartao.Id);
+                comandoCartao.ExecuteNonQuery();
+                comandoCartao.Dispose();
 
                 cmdTextoEndereco = "INSERT INTO Enderecos(TipoEndereco," +
                                                          "TipoResidencia, " +

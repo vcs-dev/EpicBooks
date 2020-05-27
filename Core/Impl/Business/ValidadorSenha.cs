@@ -13,6 +13,8 @@ namespace Core.Impl.Business
             {
                 Usuario usuario = (Usuario)entidade;
                 Regex regex;
+                MatchCollection mc;
+
                 if (!string.IsNullOrEmpty(usuario.Senha) && !string.IsNullOrEmpty(usuario.ConfirmacaoSenha))
                 {
                     if (!usuario.Senha.Equals(usuario.ConfirmacaoSenha))
@@ -26,7 +28,7 @@ namespace Core.Impl.Business
                         return "A senha deve conter pelo menos 8 caracteres";
 
                     regex = new Regex(@"[0-9]+");
-                    MatchCollection mc = regex.Matches(usuario.Senha);
+                    mc = regex.Matches(usuario.Senha);
                     if (mc.Count < 1)
                         return "A senha deve conter letras maiúsculas, minúsculas e caracteres especiais";
                     regex = new Regex(@"[a-z]+");
