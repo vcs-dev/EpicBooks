@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Produto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Util;
 
 namespace Web.Areas.Loja.Controllers
 {
@@ -22,11 +22,8 @@ namespace Web.Areas.Loja.Controllers
             livrosAtivos = new List<Livro>();
 
             resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
-            {
+            if (resultado.Msg != null)
                 TempData["MsgErro"] = resultado.Msg;
-                return View();
-            }
             else
             {
                 TempData["MsgSucesso"] = resultado.Msg;
@@ -40,13 +37,10 @@ namespace Web.Areas.Loja.Controllers
                     if (item.Status == 1)
                         livrosAtivos.Add(item);
                 }
-                var nome = "Fulano da Silva";
-                var id = "1";
-                HttpContext.Session.Set("nomeUsuario", Encoding.ASCII.GetBytes(nome));
-                HttpContext.Session.Set("idUsuario", Encoding.ASCII.GetBytes(id));
-
-                return View(livrosAtivos);
+                if (HttpContext.Session.Get<string>("nomeUsuario") != string.Empty)
+                    ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
             }
+            return View(livrosAtivos);
         }
 
         [Area("Loja")]
@@ -68,7 +62,7 @@ namespace Web.Areas.Loja.Controllers
             {
                 TempData["MsgSucesso"] = resultado.Msg;
                 livros = new List<Livro>();
-                
+
                 foreach (var item in resultado.Entidades)
                 {
                     livros.Add((Livro)item);

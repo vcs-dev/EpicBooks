@@ -17,141 +17,177 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                return View();
+            }
+            else
+                return RedirectToAction("Login", "Conta");
         }
 
         [Area("Loja")]
         public IActionResult MeusPedidos()
         {
-            resultado = new Facade().Consultar(new Pedido { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
-            if (resultado.Msg != null)
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
             {
-                ViewBag.Mensagem = resultado.Msg;
-                return View("meusPedidos", new List<Pedido>());
-            }
-            if (resultado.Entidades.Count == 0)
-            {
-                ViewBag.Mensagem = "No momento você não possui pedidos.";
-                return View("meusPedidos", new List<Pedido>());
-            }
-            List<Pedido> pedidos = new List<Pedido>();
-            foreach (var item in resultado.Entidades)
-            {
-                pedidos.Add((Pedido)item);
-            }
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                resultado = new Facade().Consultar(new Pedido { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View("meusPedidos", new List<Pedido>());
+                }
+                if (resultado.Entidades.Count == 0)
+                {
+                    ViewBag.Mensagem = "No momento você não possui pedidos.";
+                    return View("meusPedidos", new List<Pedido>());
+                }
+                List<Pedido> pedidos = new List<Pedido>();
+                foreach (var item in resultado.Entidades)
+                {
+                    pedidos.Add((Pedido)item);
+                }
 
-            return View("meusPedidos", pedidos);
+                return View("meusPedidos", pedidos);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
 
         [Area("Loja")]
         public IActionResult Detalhes(int id)
         {
-            List<Pedido> pedidos;
-            List<Livro> produtos = new List<Livro>();
-
-            resultado = new Facade().Consultar(new Pedido { Id = id });
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
             {
-                ViewBag.Mensagem = resultado.Msg;
-                return View("detalhes", new Pedido());
-            }
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                List<Pedido> pedidos;
+                List<Livro> produtos = new List<Livro>();
 
-            pedidos = new List<Pedido>();
-            foreach (var item in resultado.Entidades)
-            {
-                pedidos.Add((Pedido)item);
-            }
-
-            foreach (var item in pedidos.FirstOrDefault().ItensPedido)
-            {
-                resultado = new Facade().Consultar(new Livro { Id = item.Id });
+                resultado = new Facade().Consultar(new Pedido { Id = id });
                 if (!string.IsNullOrEmpty(resultado.Msg))
                 {
                     ViewBag.Mensagem = resultado.Msg;
                     return View("detalhes", new Pedido());
                 }
-                foreach (var livro in resultado.Entidades)
-                {
-                    produtos.Add((Livro)livro);
-                }
-            }
 
-            foreach (var item in pedidos.FirstOrDefault().ItensPedido)
-            {
-                foreach (var prod in produtos)
+                pedidos = new List<Pedido>();
+                foreach (var item in resultado.Entidades)
                 {
-                    if (prod.Id == item.Id)
-                        item.Produto.Nome = prod.Nome;
+                    pedidos.Add((Pedido)item);
                 }
-            }
 
-            return View("detalhes", pedidos.FirstOrDefault());
+                foreach (var item in pedidos.FirstOrDefault().ItensPedido)
+                {
+                    resultado = new Facade().Consultar(new Livro { Id = item.Id });
+                    if (!string.IsNullOrEmpty(resultado.Msg))
+                    {
+                        ViewBag.Mensagem = resultado.Msg;
+                        return View("detalhes", new Pedido());
+                    }
+                    foreach (var livro in resultado.Entidades)
+                    {
+                        produtos.Add((Livro)livro);
+                    }
+                }
+
+                foreach (var item in pedidos.FirstOrDefault().ItensPedido)
+                {
+                    foreach (var prod in produtos)
+                    {
+                        if (prod.Id == item.Id)
+                            item.Produto.Nome = prod.Nome;
+                    }
+                }
+
+                return View("detalhes", pedidos.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
 
         [Area("Loja")]
         public JsonResult EnviarSolicitacaoTroca(int itemId, int qtde, int pedidoId)
         {
-            string msg;
-            Troca troca = new Troca 
-            { 
-                ItemId = itemId,
-                PedidoId = pedidoId,
-                Qtde = qtde,
-                Status = 'P'
-            };
-            resultado = new Facade().Salvar(troca);
-            if (resultado.Msg != null)
-                msg = resultado.Msg;
-            else
-                msg = "Troca solicitada com sucesso!";
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                string msg;
+                Troca troca = new Troca
+                {
+                    ItemId = itemId,
+                    PedidoId = pedidoId,
+                    Qtde = qtde,
+                    Status = 'P'
+                };
+                resultado = new Facade().Salvar(troca);
+                if (resultado.Msg != null)
+                    msg = resultado.Msg;
+                else
+                    msg = "Troca solicitada com sucesso!";
 
-            return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+            }
+            else
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
         }
 
         [Area("Loja")]
         public IActionResult MinhasTrocas()
         {
-            resultado = new Facade().Consultar(new Troca { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
-            if (resultado.Msg != null)
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
             {
-                ViewBag.Mensagem = resultado.Msg;
-                return View("minhasTrocas", new List<Troca>());
-            }
-            if(resultado.Entidades.Count == 0)
-            {
-                ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
-                return View("minhasTrocas", new List<Troca>());
-            }
-            List<Troca> trocas = new List<Troca>();
-            foreach (var item in resultado.Entidades)
-            {
-                trocas.Add((Troca)item);
-            }
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                resultado = new Facade().Consultar(new Troca { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View("minhasTrocas", new List<Troca>());
+                }
+                if (resultado.Entidades.Count == 0)
+                {
+                    ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
+                    return View("minhasTrocas", new List<Troca>());
+                }
+                List<Troca> trocas = new List<Troca>();
+                foreach (var item in resultado.Entidades)
+                {
+                    trocas.Add((Troca)item);
+                }
 
-            return View("minhasTrocas", trocas);
+                return View("minhasTrocas", trocas);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
 
         [Area("Loja")]
         public IActionResult Cupons()
         {
-            resultado = new Facade().Consultar(new Cupom { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
-            if (resultado.Msg != null)
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
             {
-                ViewBag.Mensagem = resultado.Msg;
-                return View("minhasTrocas", new List<Cupom>());
-            }
-            if (resultado.Entidades.Count == 0)
-            {
-                ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
-                return View("minhasTrocas", new List<Cupom>());
-            }
-            List<Cupom> cupons = new List<Cupom>();
-            foreach (var item in resultado.Entidades)
-            {
-                cupons.Add((Cupom)item);
-            }
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                resultado = new Facade().Consultar(new Cupom { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View("minhasTrocas", new List<Cupom>());
+                }
+                if (resultado.Entidades.Count == 0)
+                {
+                    ViewBag.Mensagem = "No momento você não possui solicitações de troca.";
+                    return View("minhasTrocas", new List<Cupom>());
+                }
+                List<Cupom> cupons = new List<Cupom>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cupons.Add((Cupom)item);
+                }
 
-            return View(cupons);
+                return View(cupons);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
     }
 }

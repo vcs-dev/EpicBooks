@@ -1,0 +1,29 @@
+﻿@{Layout = null;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/signin.css">
+    <title>Epict Books - Login</title>
+</head>
+<body class="text-center">
+    <form class="form-signin" action="/Loja/Conta/Login/" method="post">
+        <h1 class="h3 mb-3 font-weight-normal">Epic Books</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+        <label for="email" class="sr-only">Email</label>
+        <input type="email" id="email" name="Email" class="form-control" placeholder="E-mail" autofocus>
+        <label for="senha" class="sr-only">Senha</label>
+        <input type="password" id="senha" name="Senha" class="form-control" placeholder="Senha">
+        <label class="mt-2 mb-3">Ainda não é cadastrado? <a href="/Loja/Conta/Cadastrar">Cadastre-se!</a></label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Logar-se</button>
+        <p class="mt-5 mb-3 text-muted">&copy; Code EZ 2020</p>
+    </form>
+    @await Html.PartialAsync("_modalMensagem")
+    <script src="~/lib/jquery/dist/jquery-v3.4.1.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/loja/conta/login.js"></script>
+</body>
+</html>

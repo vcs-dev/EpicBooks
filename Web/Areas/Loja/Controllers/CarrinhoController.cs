@@ -29,6 +29,43 @@ namespace Web.Areas.Loja.Controllers
             List<Endereco> enderecos;
             List<CartaoDeCredito> cartoes;
 
+            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+
+                cupom.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+                cupom.Tipo = 'T';
+                cupom.Usado = 0;
+
+                resultado = new Facade().Consultar(cupom);//Busca cupons
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                    ViewBag.Mensagem = resultado.Msg;
+                else
+                {
+                    cupons = new List<Cupom>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        cupons.Add((Cupom)item);
+                    }
+                    ViewBag.CuponsTroca = cupons;
+                }
+
+                endereco.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+
+                resultado = new Facade().Consultar(endereco);//Busca enderecos
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                    ViewBag.Mensagem = resultado.Msg;
+                else
+                {
+                    enderecos = new List<Endereco>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        enderecos.Add((Endereco)item);
+                    }
+                    ViewBag.Enderecos = enderecos;
+                }
+            }
+
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
             if (carrinho == null)
                 carrinho = new Carrinho();
@@ -52,38 +89,6 @@ namespace Web.Areas.Loja.Controllers
             if (string.IsNullOrEmpty(carrinho.Cep))
                 carrinho.Cep = "";
 
-            cupom.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
-            cupom.Tipo = 'T';
-            cupom.Usado = 0;
-
-            resultado = new Facade().Consultar(cupom);//Busca cupons
-            if (!string.IsNullOrEmpty(resultado.Msg))
-                ViewBag.Mensagem = resultado.Msg;
-            else
-            {
-                cupons = new List<Cupom>();
-                foreach (var item in resultado.Entidades)
-                {
-                    cupons.Add((Cupom)item);
-                }
-                ViewBag.CuponsTroca = cupons;
-            }
-
-            endereco.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
-
-            resultado = new Facade().Consultar(endereco);//Busca enderecos
-            if (!string.IsNullOrEmpty(resultado.Msg))
-                ViewBag.Mensagem = resultado.Msg;
-            else
-            {
-                enderecos = new List<Endereco>();
-                foreach (var item in resultado.Entidades)
-                {
-                    enderecos.Add((Endereco)item);
-                }
-                ViewBag.Enderecos = enderecos;
-            }
-
             cartao.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
 
             resultado = new Facade().Consultar(cartao);//Busca cartoes
@@ -106,7 +111,6 @@ namespace Web.Areas.Loja.Controllers
                 ViewBag.Mensagem = msg;
                 HttpContext.Session.Remove("mensagemCarrinho");
             }
-
             return View(carrinho);
         }
 
@@ -188,12 +192,12 @@ namespace Web.Areas.Loja.Controllers
                 {
                     //verificar se produto está na lista de itens bloqueados
                     resultado = new Facade().Consultar(new ItemBloqueado { Id = id });
-                    if(resultado.Msg != null)
+                    if (resultado.Msg != null)
                     {
                         ViewBag.Mensagem = resultado.Msg;
                         return RedirectToAction("Index", "Carrinho");
                     }
-                    else if(resultado.Entidades.Count > 0)
+                    else if (resultado.Entidades.Count > 0)
                     {
                         string retornoMsg = "Produto bloqueado temporariamente";
                         HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(retornoMsg));
@@ -224,7 +228,7 @@ namespace Web.Areas.Loja.Controllers
                             carrinho.HoraUltimaInclusao = DateTime.Now;//Grava a hora da ultima insercao no carrinho
 
                             resultado = new Facade().Salvar(new ItemBloqueado { Id = id });
-                            if(resultado.Msg != null)
+                            if (resultado.Msg != null)
                             {
                                 ViewBag.Mensagem = resultado.Msg;
                                 return RedirectToAction("index", "carrinho");

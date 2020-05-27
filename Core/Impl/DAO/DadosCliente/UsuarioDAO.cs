@@ -290,23 +290,32 @@ namespace Core.Impl.DAO.DadosCliente
             {
                 Conectar();
 
-                if (usuario.Id == 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
+                if (usuario.Id == 0 && string.IsNullOrEmpty(usuario.NomeCompleto) && 
+                    string.IsNullOrEmpty(usuario.Email) && string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * FROM Usuarios";
                 else if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
                     cmdTextoUsuario = "SELECT * FROM Usuarios WHERE UsuarioId = @UsuarioId";
+                else if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
+                    cmdTextoUsuario = "SELECT * " +
+                                      "FROM Usuarios " +
+                                      "WHERE Email = @Email " +
+                                      "AND Senha = CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha), 1)";
                 else if (usuario.Id != 0 && !string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * "
                                      + "FROM Usuarios " +
                                      "WHERE UsuarioId = @UsuarioId " +
-                                     "AND Senha = CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1)";
+                                     "AND Senha = CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha), 1)";
                 else if (usuario.Id == 0 && !string.IsNullOrEmpty(usuario.NomeCompleto))
                     cmdTextoUsuario = "SELECT * FROM Usuarios WHERE NomeCompleto like %@NomeCompleto%";
 
                 SqlCommand comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao);
 
                 if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
-                {
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                else if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
+                {
+                    comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
+                    comandoUsuario.Parameters.AddWithValue("@Senha", usuario.Senha);
                 }
                 else if (usuario.Id != 0 && !string.IsNullOrEmpty(usuario.Senha))
                 {
