@@ -46,10 +46,11 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        [HttpPost]
         public IActionResult Logout()
         {
-            return View(new Usuario());
+            HttpContext.Session.Remove("nomeUsuario");
+            HttpContext.Session.Remove("idUsuario");
+            return RedirectToAction("Index", "Home");
         }
 
         [Area("Loja")]
