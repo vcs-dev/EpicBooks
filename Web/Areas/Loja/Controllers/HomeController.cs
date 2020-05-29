@@ -37,8 +37,8 @@ namespace Web.Areas.Loja.Controllers
                     if (item.Status == 1)
                         livrosAtivos.Add(item);
                 }
-                if (HttpContext.Session.Get<string>("nomeUsuario") != string.Empty)
-                    ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                if (HttpContext.Session.GetString("nomeUsuario") != string.Empty)
+                    ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
             }
             return View(livrosAtivos);
         }

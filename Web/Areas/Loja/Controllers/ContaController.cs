@@ -37,8 +37,8 @@ namespace Web.Areas.Loja.Controllers
                     {
                         usuarios.Add((Usuario)entidade);
                     }
-                    HttpContext.Session.Set<string>("nomeUsuario", usuarios.FirstOrDefault().NomeCompleto);
-                    HttpContext.Session.Set("idUsuario", Encoding.ASCII.GetBytes(usuarios.FirstOrDefault().Id.ToString()));
+                    HttpContext.Session.Set("nomeUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().NomeCompleto));
+                    HttpContext.Session.Set("idUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().Id.ToString()));
                     return RedirectToAction("Index", "MinhaConta");
                 }
             }

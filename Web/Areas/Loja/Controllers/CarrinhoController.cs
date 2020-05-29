@@ -29,9 +29,9 @@ namespace Web.Areas.Loja.Controllers
             List<Endereco> enderecos;
             List<CartaoDeCredito> cartoes;
 
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
 
                 cupom.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
                 cupom.Tipo = 'T';
@@ -64,6 +64,21 @@ namespace Web.Areas.Loja.Controllers
                     }
                     ViewBag.Enderecos = enderecos;
                 }
+
+                cartao.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+
+                resultado = new Facade().Consultar(cartao);//Busca cartoes
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                    ViewBag.Mensagem = resultado.Msg;
+                else
+                {
+                    cartoes = new List<CartaoDeCredito>();
+                    foreach (var item in resultado.Entidades)
+                    {
+                        cartoes.Add((CartaoDeCredito)item);
+                    }
+                    ViewBag.Cartoes = cartoes;
+                }
             }
 
             carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
@@ -89,20 +104,6 @@ namespace Web.Areas.Loja.Controllers
             if (string.IsNullOrEmpty(carrinho.Cep))
                 carrinho.Cep = "";
 
-            cartao.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
-
-            resultado = new Facade().Consultar(cartao);//Busca cartoes
-            if (!string.IsNullOrEmpty(resultado.Msg))
-                ViewBag.Mensagem = resultado.Msg;
-            else
-            {
-                cartoes = new List<CartaoDeCredito>();
-                foreach (var item in resultado.Entidades)
-                {
-                    cartoes.Add((CartaoDeCredito)item);
-                }
-                ViewBag.Cartoes = cartoes;
-            }
             SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
             string msg = HttpContext.Session.GetString("mensagemCarrinho");
 
@@ -485,78 +486,85 @@ namespace Web.Areas.Loja.Controllers
         [HttpPost]
         public IActionResult EnviarPedido(CartaoDeCredito cartaoUm, CartaoDeCredito cartaoDois, byte multiplosCartoes)
         {
-            Carrinho carrinho;
-            Pedido pedido;
-
-            carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
-
-            pedido = new Pedido
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                MultiplosCartoes = carrinho.MultiplosCartoes = multiplosCartoes,
-                ItensPedido = carrinho.ItensPedido,
-                CuponsTroca = carrinho.CuponsTroca,
-                CupomPromocional = carrinho.CupomPromocional,
-                ValorFrete = carrinho.ValorFrete,
-                CartaoUm = carrinho.CartaoUm = cartaoUm,
-                CartaoDois = carrinho.CartaoDois = cartaoDois,
-                EnderecoId = carrinho.EnderecoId,
-                CupomTrocaGerado = new Cupom(),
-                UsuarioId = HttpContext.Session.Get<int>("idUsuario")
-            };
-            //Verificacao de itens do carrinho
-            VerificacaoItensTempoLimiteAtingido verificacaoItens = new VerificacaoItensTempoLimiteAtingido();
-            string retornoMsg = verificacaoItens.VerificarItensCarrinho(carrinho);
-            if (retornoMsg != null)
-            {
-                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());
-                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(retornoMsg));
-                return RedirectToAction("index", "carrinho");
-            }
+                Carrinho carrinho;
+                Pedido pedido;
 
-            SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
+                carrinho = SessionHelper.Get<Carrinho>(HttpContext.Session, "carrinho");
+
+                pedido = new Pedido
+                {
+                    MultiplosCartoes = carrinho.MultiplosCartoes = multiplosCartoes,
+                    ItensPedido = carrinho.ItensPedido,
+                    CuponsTroca = carrinho.CuponsTroca,
+                    CupomPromocional = carrinho.CupomPromocional,
+                    ValorFrete = carrinho.ValorFrete,
+                    CartaoUm = carrinho.CartaoUm = cartaoUm,
+                    CartaoDois = carrinho.CartaoDois = cartaoDois,
+                    EnderecoId = carrinho.EnderecoId,
+                    CupomTrocaGerado = new Cupom(),
+                    UsuarioId = HttpContext.Session.Get<int>("idUsuario")
+                };
+                //Verificacao de itens do carrinho
+                VerificacaoItensTempoLimiteAtingido verificacaoItens = new VerificacaoItensTempoLimiteAtingido();
+                string retornoMsg = verificacaoItens.VerificarItensCarrinho(carrinho);
+                if (retornoMsg != null)
+                {
+                    SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", new Carrinho());
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(retornoMsg));
+                    return RedirectToAction("index", "carrinho");
+                }
+
+                SessionHelper.Set<Carrinho>(HttpContext.Session, "carrinho", carrinho);
 
 
-            resultado = new Facade().Salvar(pedido);//Salva o pedido
-            if (!string.IsNullOrEmpty(resultado.Msg))
-            {
-                string msg = resultado.Msg;
-                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
-                return RedirectToAction("Index", "Carrinho");
-            }
+                resultado = new Facade().Salvar(pedido);//Salva o pedido
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                {
+                    string msg = resultado.Msg;
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    return RedirectToAction("Index", "Carrinho");
+                }
 
-            resultado = new Facade().Alterar(pedido);//Alterar o pedido
-            if (!string.IsNullOrEmpty(resultado.Msg))
-            {
-                string msg = resultado.Msg;
-                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
-                return RedirectToAction("Index", "Carrinho");
-            }
-            if (pedido.Status == 'A')
-            {
-                string msg;
-                if (pedido.CupomTrocaGerado.Id > 0)
-                    msg = "Pedido " + pedido.Id + " realizado com sucesso.\nCupom de troca gerado no valor de R$ " + pedido.CupomTrocaGerado.Valor + ".";
+                resultado = new Facade().Alterar(pedido);//Alterar o pedido
+                if (!string.IsNullOrEmpty(resultado.Msg))
+                {
+                    string msg = resultado.Msg;
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    return RedirectToAction("Index", "Carrinho");
+                }
+                if (pedido.Status == 'A')
+                {
+                    string msg;
+                    if (pedido.CupomTrocaGerado.Id > 0)
+                        msg = "Pedido " + pedido.Id + " realizado com sucesso.\nCupom de troca gerado no valor de R$ " + pedido.CupomTrocaGerado.Valor + ".";
+                    else
+                        msg = "Pedido " + pedido.Id + " realizado com sucesso";
+                    char statusPedido = 'A';
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    HttpContext.Session.Set("statusPedido", statusPedido);
+                }
+                else if (pedido.Status == 'R')
+                {
+                    string msg = "Pedido " + pedido.Id + " Recusado.\n Contate a operadora de cartão de crédito";
+                    char statusPedido = 'R';
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    HttpContext.Session.Set("statusPedido", statusPedido);
+                }
                 else
-                    msg = "Pedido " + pedido.Id + " realizado com sucesso";
-                char statusPedido = 'A';
-                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
-                HttpContext.Session.Set("statusPedido", statusPedido);
-            }
-            else if (pedido.Status == 'R')
-            {
-                string msg = "Pedido " + pedido.Id + " Recusado.\n Contate a operadora de cartão de crédito";
-                char statusPedido = 'R';
-                HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
-                HttpContext.Session.Set("statusPedido", statusPedido);
+                {
+                    string msg = "Pedido efetuado com sucesso";
+                    char statusPedido = 'P';
+                    HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
+                    HttpContext.Session.Set("statusPedido", statusPedido);
+                }
             }
             else
             {
-                string msg = "Pedido efetuado com sucesso";
-                char statusPedido = 'P';
+                string msg = "Faça login para continuar";
                 HttpContext.Session.Set("mensagemCarrinho", Encoding.UTF8.GetBytes(msg));
-                HttpContext.Session.Set("statusPedido", statusPedido);
             }
-
             return RedirectToAction("Index", "Carrinho");
         }
     }

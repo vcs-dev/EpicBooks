@@ -12,22 +12,25 @@
                 @await Html.PartialAsync("_itensPedido", Model.ItensPedido)
             </partial>
             <!--endereco -->
-            <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-                <div class="col-md-3 mt-2 align-self-center">
-                    <label for="">Endereço de entrega:</label>
+            @if (ViewBag.Enderecos != null)
+            {
+                <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+                    <div class="col-md-3 mt-2 align-self-center">
+                        <label for="">Endereço de entrega:</label>
+                    </div>
+                    <div class="col-md-4 mt-2 mb-2 align-self-center">
+                        <select class="custom-select" name="EnderecoId" id="selectEndereco">
+                            <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
+                            @foreach (var item in ViewBag.Enderecos)
+                            {
+                                <option selected=@(Model.EnderecoId == item.Id) value="@item.Id">
+                                    @(item.Logradouro + " ," + item.Numero + ", CEP " + item.Cep)
+                                </option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-4 mt-2 mb-2 align-self-center">
-                    <select class="custom-select" name="EnderecoId" id="selectEndereco">
-                        <option selected=@(Model.Cep.Contains("")) value="">Escolha</option>
-                        @foreach (var item in ViewBag.Enderecos)
-                        {
-                            <option selected=@(Model.EnderecoId == item.Id) value="@item.Id">
-                                @(item.Logradouro + " ," + item.Numero + ", CEP " + item.Cep)
-                            </option>
-                        }
-                    </select>
-                </div>
-            </div>
+            }
             <!--cupom promocional -->
             <div class="row mr-0 ml-0 mb-2 border rounded-sm">
                 <div class="col-md-2 align-self-center mt-2">
@@ -44,123 +47,129 @@
                 </div>
             </div>
             <!--cupom de troca -->
-            <div class="row mr-0 ml-0 mb-2 border rounded-sm">
-                <div class="col-md-2 mt-2 align-self-center">
-                    <label for="">Cupom de troca</label>
-                </div>
-                <div class="col-md-2 mt-2 mb-2 align-self-center">
-                    <select class="custom-select" id="selectCupomTroca">
-                        @if (ViewBag.CuponsTroca != null)
-                        {
-                            <option selected value="">Escolha</option>
-                            foreach (var item in ViewBag.CuponsTroca)
+            @if (ViewBag.CuponsTroca != null)
+            {
+                <div class="row mr-0 ml-0 mb-2 border rounded-sm">
+                    <div class="col-md-2 mt-2 align-self-center">
+                        <label for="">Cupom de troca</label>
+                    </div>
+                    <div class="col-md-2 mt-2 mb-2 align-self-center">
+                        <select class="custom-select" id="selectCupomTroca">
+                            @if (ViewBag.CuponsTroca != null)
                             {
-                                <option value="@item.Codigo">
-                                    @(item.Codigo + " - R$ " + item.Valor.ToString("##0.00"))
-                                </option>
+                                <option selected value="">Escolha</option>
+                                foreach (var item in ViewBag.CuponsTroca)
+                                {
+                                    <option value="@item.Codigo">
+                                        @(item.Codigo + " - R$ " + item.Valor.ToString("##0.00"))
+                                    </option>
+                                }
                             }
-                        }
-                    </select>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mt-2">
+                        <button type="button" class="btn btn-warning mb-2" id="btnAddCupomTroca">Adicionar</button>
+                    </div>
                 </div>
-                <div class="col-md-2 mt-2">
-                    <button type="button" class="btn btn-warning mb-2" id="btnAddCupomTroca">Adicionar</button>
-                </div>
-            </div>
+            }
             <!--pagamento -->
-            <div class="row mr-0 ml-0 mt-3 mb-2">
-                <div class="col-12 custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="chkDoisCartoes" name="MultiplosCartoes" value="1" checked="@(Model.MultiplosCartoes == 1)">
-                    <label class="custom-control-label" for="chkDoisCartoes">Pagar com mais de um cartão de crédito</label>
-                </div>
-            </div>
-            <div class="row mr-0 ml-0 mt-3 mb-2 border rounded-sm">
-                <!--cartao 1 -->
-                <div class="col-6 mb-2">
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="">Cartão</label>
-                    </div>
-                    <div class="col-md-6 mt-2 mb-2">
-                        <select class="custom-select" name="CartaoUm.Id">
-                            <option selected value="">Escolha</option>
-                            @foreach (var item in ViewBag.Cartoes)
-                            {
-                                <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Apelido</option>
-                            }
-                        </select>
-                    </div>
-                    @*<div class="col-md-2 mt-2 mb-2">
-                            <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-                        </div>*@
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="cupomPromocional">Parcelas</label>
-                    </div>
-                    <div class="col-md-6 mt-2 mb-2">
-                        <select class="custom-select" name="CartaoUm.QtdeParcelas">
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 1)" value="1">1x sem juros</option>
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 2)" value="2">2x sem juros</option>
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 3)" value="3">3x sem juros</option>
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 4)" value="4">4x sem juros</option>
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 5)" value="5">5x sem juros</option>
-                            <option selected="@(Model.CartaoUm.QtdeParcelas == 6)" value="6">6x sem juros</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="cupomPromocional">Cód. segurança</label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                        <input type="text" class="form-control" name="CartaoUm.CodigoSeguranca" value="@Model.CartaoUm.CodigoSeguranca">
-                    </div>
-                    <div class="col-md-6 mt-2 align-self-center valorCartao d-none">
-                        <label for="cupomPromocional">Valor R$</label>
-                    </div>
-                    <div class="col-md-6 mb-2 valorCartao d-none">
-                        <input type="text" class="form-control" id="valorCartao1" name="CartaoUm.Valor" value="@Model.CartaoUm.Valor">
+            @if (ViewBag.Cartoes != null)
+            {
+                <div class="row mr-0 ml-0 mt-3 mb-2">
+                    <div class="col-12 custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="chkDoisCartoes" name="MultiplosCartoes" value="1" checked="@(Model.MultiplosCartoes == 1)">
+                        <label class="custom-control-label" for="chkDoisCartoes">Pagar com mais de um cartão de crédito</label>
                     </div>
                 </div>
-                <!--cartao 2 -->
-                <div class="col-6 mb-2 d-none" id="pagarDoisCartoes">
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="">Cartão</label>
+                <div class="row mr-0 ml-0 mt-3 mb-2 border rounded-sm">
+                    <!--cartao 1 -->
+                    <div class="col-6 mb-2">
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="">Cartão</label>
+                        </div>
+                        <div class="col-md-6 mt-2 mb-2">
+                            <select class="custom-select" name="CartaoUm.Id">
+                                <option selected value="">Escolha</option>
+                                @foreach (var item in ViewBag.Cartoes)
+                                {
+                                    <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                                }
+                            </select>
+                        </div>
+                        @*<div class="col-md-2 mt-2 mb-2">
+                                <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+                            </div>*@
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="cupomPromocional">Parcelas</label>
+                        </div>
+                        <div class="col-md-6 mt-2 mb-2">
+                            <select class="custom-select" name="CartaoUm.QtdeParcelas">
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 1)" value="1">1x sem juros</option>
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 2)" value="2">2x sem juros</option>
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 3)" value="3">3x sem juros</option>
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 4)" value="4">4x sem juros</option>
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 5)" value="5">5x sem juros</option>
+                                <option selected="@(Model.CartaoUm.QtdeParcelas == 6)" value="6">6x sem juros</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="cupomPromocional">Cód. segurança</label>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" class="form-control" name="CartaoUm.CodigoSeguranca" value="@Model.CartaoUm.CodigoSeguranca">
+                        </div>
+                        <div class="col-md-6 mt-2 align-self-center valorCartao d-none">
+                            <label for="cupomPromocional">Valor R$</label>
+                        </div>
+                        <div class="col-md-6 mb-2 valorCartao d-none">
+                            <input type="text" class="form-control" id="valorCartao1" name="CartaoUm.Valor" value="@Model.CartaoUm.Valor">
+                        </div>
                     </div>
-                    <div class="col-md-6 mt-2 mb-2">
-                        <select class="custom-select" name="CartaoDois.Id">
-                            <option selected value="">Escolha</option>
-                            @foreach (var item in ViewBag.Cartoes)
-                            {
-                                <option selected="@(Model.CartaoDois.Id == item.Id)" value="@item.Id">@item.Apelido</option>
-                            }
-                        </select>
-                    </div>
-                    @*<div class="col-md-2 mt-2 mb-2">
-                            <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
-                        </div>*@
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="cupomPromocional">Parcelas</label>
-                    </div>
-                    <div class="col-md-6 mt-2 mb-2">
-                        <select class="custom-select" name="CartaoDois.QtdeParcelas">
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 1)" value="1">1x sem juros</option>
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 2)" value="2">2x sem juros</option>
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 3)" value="3">3x sem juros</option>
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 4)" value="4">4x sem juros</option>
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 5)" value="5">5x sem juros</option>
-                            <option selected="@(Model.CartaoDois.QtdeParcelas == 6)" value="6">6x sem juros</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mt-2 align-self-center">
-                        <label for="cupomPromocional">Cód. segurança</label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                        <input type="text" class="form-control" name="CartaoDois.CodigoSeguranca" value="@Model.CartaoDois.CodigoSeguranca">
-                    </div>
-                    <div class="col-md-6 mt-2 align-self-center valorCartao d-none">
-                        <label for="cupomPromocional">Valor R$</label>
-                    </div>
-                    <div class="col-md-6 mb-2 valorCartao d-none">
-                        <input type="text" class="form-control" id="valorCartao2" name="CartaoDois.Valor" value="@Model.CartaoDois.Valor">
+                    <!--cartao 2 -->
+                    <div class="col-6 mb-2 d-none" id="pagarDoisCartoes">
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="">Cartão</label>
+                        </div>
+                        <div class="col-md-6 mt-2 mb-2">
+                            <select class="custom-select" name="CartaoDois.Id">
+                                <option selected value="">Escolha</option>
+                                @foreach (var item in ViewBag.Cartoes)
+                                {
+                                    <option selected="@(Model.CartaoDois.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                                }
+                            </select>
+                        </div>
+                        @*<div class="col-md-2 mt-2 mb-2">
+                                <button class="btn btn-primary" title="Adicionar cartão"><i class="fa fa-credit-card"></i><i class="fa fa-plus ml-2"></i></button>
+                            </div>*@
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="cupomPromocional">Parcelas</label>
+                        </div>
+                        <div class="col-md-6 mt-2 mb-2">
+                            <select class="custom-select" name="CartaoDois.QtdeParcelas">
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 1)" value="1">1x sem juros</option>
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 2)" value="2">2x sem juros</option>
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 3)" value="3">3x sem juros</option>
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 4)" value="4">4x sem juros</option>
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 5)" value="5">5x sem juros</option>
+                                <option selected="@(Model.CartaoDois.QtdeParcelas == 6)" value="6">6x sem juros</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2 align-self-center">
+                            <label for="cupomPromocional">Cód. segurança</label>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" class="form-control" name="CartaoDois.CodigoSeguranca" value="@Model.CartaoDois.CodigoSeguranca">
+                        </div>
+                        <div class="col-md-6 mt-2 align-self-center valorCartao d-none">
+                            <label for="cupomPromocional">Valor R$</label>
+                        </div>
+                        <div class="col-md-6 mb-2 valorCartao d-none">
+                            <input type="text" class="form-control" id="valorCartao2" name="CartaoDois.Valor" value="@Model.CartaoDois.Valor">
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
             <!--frete -->
             @*<div class="row mr-0 ml-0 mb-2 border rounded-sm">
                     <div class="col-md-2 align-self-center mt-2">

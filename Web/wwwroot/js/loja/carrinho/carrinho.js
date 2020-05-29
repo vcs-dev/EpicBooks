@@ -18,6 +18,12 @@
 
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
         $('#modalMensagem').modal('show');
+    if($('#textoModal').text() === 'Faça login para continuar')
+        $('#btnOkModal').after('<button type="button" class="btn btn-success" id="btnLogin">Login</button>')
+
+    $('#btnLogin').on('click', function () {
+        location.href = '/Loja/Conta/Login';
+    });
 
     $('#chkDoisCartoes').on('change', function () {
         if ($('#chkDoisCartoes').prop('checked')) {
@@ -42,7 +48,6 @@
             success: function (response) {
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                //AtualizarResumo();
             }
         });
     });
@@ -56,7 +61,6 @@
             success: function (response) {
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                //AtualizarResumo();
             }
         });
     });
@@ -71,7 +75,6 @@
                 alert(response);
                 $("#itensPedido").html(response);
                 CalcularFrete($('#selectEndereco').val());
-                //AtualizarResumo();
             },
             error: function () {
                 location.href = "/Loja/Carrinho/Index/";

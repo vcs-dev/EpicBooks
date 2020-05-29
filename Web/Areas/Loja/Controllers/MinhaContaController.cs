@@ -17,9 +17,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Index()
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 return View();
             }
             else
@@ -29,9 +29,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult MeusPedidos()
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Pedido { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
@@ -58,9 +58,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Detalhes(int id)
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 List<Pedido> pedidos;
                 List<Livro> produtos = new List<Livro>();
 
@@ -109,9 +109,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public JsonResult EnviarSolicitacaoTroca(int itemId, int qtde, int pedidoId)
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 string msg;
 
                 resultado = new Facade().Consultar(new Troca { ItemId = itemId, PedidoId = pedidoId });
@@ -148,9 +148,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult MinhasTrocas()
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Troca { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
@@ -177,9 +177,9 @@ namespace Web.Areas.Loja.Controllers
         [Area("Loja")]
         public IActionResult Cupons()
         {
-            if (HttpContext.Session.Get<int>("idUsuario") != 0)
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
-                ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Cupom { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
