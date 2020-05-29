@@ -113,6 +113,19 @@ namespace Web.Areas.Loja.Controllers
             {
                 ViewBag.NomeUsuario = HttpContext.Session.Get<string>("nomeUsuario");
                 string msg;
+
+                resultado = new Facade().Consultar(new Troca { ItemId = itemId, PedidoId = pedidoId });
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                else if (resultado.Entidades.Count > 0)
+                {
+                    msg = "Já existe uma solicitação de troca em andamento para este item.";
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+
                 Troca troca = new Troca
                 {
                     ItemId = itemId,
