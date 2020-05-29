@@ -13,6 +13,46 @@
         location.href = '/Gerencial/Dashboard/'; 
     });
 
+    $('.btnAutorizarTroca').on('click', function () {
+        var indice = $('.linha').index(this);
+        var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
+        var itemId = $('#tbodyItemTroca').find('.itemId').eq(indice).text();
+
+        $.ajax({
+            type: "get",
+            url: "/Gerencial/Trocas/AutorizarTroca/",
+            data: {pedidoId: pedidoId, itemId: itemId},
+            dataType: "json",
+            success: function (response) {
+                var text = JSON.parse(response);
+                if(text.Mensagem !== undefined && text.Mensagem !== ''){
+                    $('#textoModal').text(text.Mensagem);
+                    $('#modalMensagem').modal('show');
+                }
+            }
+        });
+    });
+
+    $('.btnNegarTroca').on('click', function () {
+        var indice = $('.linha').index(this);
+        var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
+        var itemId = $('#tbodyItemTroca').find('.itemId').eq(indice).text();
+
+        $.ajax({
+            type: "get",
+            url: "/Gerencial/Trocas/NegarTroca/",
+            data: {pedidoId: pedidoId, itemId: itemId},
+            dataType: "json",
+            success: function (response) {
+                var text = JSON.parse(response);
+                if(text.Mensagem !== undefined && text.Mensagem !== ''){
+                    $('#textoModal').text(text.Mensagem);
+                    $('#modalMensagem').modal('show');
+                }
+            }
+        });
+    });
+
     $('#btnConfirmarRebebimento').on('click', function () {
         var indice = $('#indiceItem').val();
         var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();

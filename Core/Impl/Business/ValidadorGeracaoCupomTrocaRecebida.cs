@@ -17,7 +17,7 @@ namespace Core.Impl.Business
             {
                 Troca troca = (Troca)entidade;
 
-                if(troca.Status == 'A')
+                if(troca.Status == 'C')
                 {
                     Result resultado = new Facade().Consultar(new ItemPedido { Id = troca.PedidoId });
                     if (resultado.Msg != null)
@@ -32,21 +32,11 @@ namespace Core.Impl.Business
                     if (itensPed.Count == 0)
                         return "Erro. Item de pedido não encontrado.";
 
-                    //resultado = new Facade().Consultar(new Pedido { Id = troca.PedidoId });
-                    //if (resultado.Msg != null)
-                    //    return "Não foi possível confirmar o recebimento.\n" + resultado.Msg;
-
-                    //List<Pedido> pedidos = new List<Pedido>();
-                    //foreach (var item in resultado.Entidades)
-                    //{
-                    //    pedidos.Add((Pedido)item);
-                    //}
-
                     Cupom cupomTroca = new Cupom
                     {
                         UsuarioId = troca.UsuarioId,
                         Tipo = 'T',
-                        Valor = /*(*/itensPed.FirstOrDefault().Produto.PrecoVenda * itensPed.FirstOrDefault().Qtde/*) + pedidos.FirstOrDefault().ValorFrete*/,
+                        Valor = itensPed.FirstOrDefault().Produto.PrecoVenda * itensPed.FirstOrDefault().Qtde,
                         Usado = 0,
                         DataCadastro = DateTime.Now,
                         DataExpiracao = null

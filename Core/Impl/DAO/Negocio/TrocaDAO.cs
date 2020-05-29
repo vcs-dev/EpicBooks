@@ -96,40 +96,42 @@ namespace Core.Impl.DAO.Negocio
                 comandoTroca.Parameters.AddWithValue("@Status", troca.Status);
                 comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
                 comandoTroca.Parameters.AddWithValue("@ItemId", troca.ItemId);
-
                 comandoTroca.ExecuteNonQuery();
-
-                cmdTextoTroca = "INSERT INTO Cupons" +
-                                    "(Codigo," +
-                                    "Tipo," +
-                                    "Valor," +
-                                    "DataExpiracao," +
-                                    "Usado," +
-                                    "UsuarioId" +
-                                 ") " +
-                                 "VALUES" +
-                                    "(@Codigo," +
-                                    "@Tipo," +
-                                    "@Valor," +
-                                    "@DataExpiracao," +
-                                    "@Usado," +
-                                    "@UsuarioId" +
-                                 ")";
-
-                comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
-
-                comandoTroca.Parameters.AddWithValue("@Codigo", troca.CupomTroca.Codigo);
-                comandoTroca.Parameters.AddWithValue("@Tipo", troca.CupomTroca.Tipo);
-                comandoTroca.Parameters.AddWithValue("@Valor", troca.CupomTroca.Valor);
-                if(troca.CupomTroca.DataExpiracao == null)
-                    comandoTroca.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
-                else
-                    comandoTroca.Parameters.AddWithValue("@DataExpiracao", troca.CupomTroca.DataExpiracao);
-                comandoTroca.Parameters.AddWithValue("@Usado", troca.CupomTroca.Usado);
-                comandoTroca.Parameters.AddWithValue("@UsuarioId", troca.CupomTroca.UsuarioId);
-                comandoTroca.ExecuteNonQuery();
-
                 comandoTroca.Dispose();
+
+                if (!troca.Status.Equals('A') && !troca.Status.Equals('N'))
+                {
+                    cmdTextoTroca = "INSERT INTO Cupons" +
+                                        "(Codigo," +
+                                        "Tipo," +
+                                        "Valor," +
+                                        "DataExpiracao," +
+                                        "Usado," +
+                                        "UsuarioId" +
+                                     ") " +
+                                     "VALUES" +
+                                        "(@Codigo," +
+                                        "@Tipo," +
+                                        "@Valor," +
+                                        "@DataExpiracao," +
+                                        "@Usado," +
+                                        "@UsuarioId" +
+                                     ")";
+
+                    comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
+
+                    comandoTroca.Parameters.AddWithValue("@Codigo", troca.CupomTroca.Codigo);
+                    comandoTroca.Parameters.AddWithValue("@Tipo", troca.CupomTroca.Tipo);
+                    comandoTroca.Parameters.AddWithValue("@Valor", troca.CupomTroca.Valor);
+                    if (troca.CupomTroca.DataExpiracao == null)
+                        comandoTroca.Parameters.AddWithValue("@DataExpiracao", DBNull.Value);
+                    else
+                        comandoTroca.Parameters.AddWithValue("@DataExpiracao", troca.CupomTroca.DataExpiracao);
+                    comandoTroca.Parameters.AddWithValue("@Usado", troca.CupomTroca.Usado);
+                    comandoTroca.Parameters.AddWithValue("@UsuarioId", troca.CupomTroca.UsuarioId);
+                    comandoTroca.ExecuteNonQuery();
+                    comandoTroca.Dispose();
+                }
 
                 if (troca.VoltaParEstoque)
                 {
@@ -164,14 +166,60 @@ namespace Core.Impl.DAO.Negocio
                     comandoEstoque.Parameters.AddWithValue("@ProdutoId", troca.ItemId);
                     comandoEstoque.ExecuteNonQuery();
                     comandoEstoque.Dispose();
+                }
 
-                    cmdTextoPedido = "UPDATE Pedidos SET Status = 'T' WHERE PedidoId = @PedidoId";
+                int qtdeRegistros = 0;
+                if (troca.Status.Equals('C'))
+                {
+                    cmdTextoTroca = "SELECT COUNT(TrocaId) FROM Trocas WHERE PedidoId = @PedidoId AND Status <> 'C'";
+                    comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
+                    comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                    SqlDataReader drTroca = comandoTroca.ExecuteReader();
+                    comandoTroca.Dispose();
 
-                    SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+                    if (drTroca.HasRows)
+                    {
+                        drTroca.Read();
+                        qtdeRegistros = drTroca.GetInt32(0);
+                        drTroca.Close();
+                    }
 
-                    comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
-                    comandoPedido.ExecuteNonQuery();
-                    comandoPedido.Dispose();
+                    if (qtdeRegistros == 0)
+                    {
+                        cmdTextoPedido = "UPDATE Pedidos SET Status = 'T' WHERE PedidoId = @PedidoId";
+
+                        SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+
+                        comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                        comandoPedido.ExecuteNonQuery();
+                        comandoPedido.Dispose();
+                    }
+                }
+                else if (troca.Status.Equals('N'))
+                {
+                    cmdTextoTroca = "SELECT COUNT(TrocaId) FROM Trocas WHERE PedidoId = @PedidoId AND Status <> 'N'";
+                    comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
+                    comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                    SqlDataReader drTroca = comandoTroca.ExecuteReader();
+                    comandoTroca.Dispose();
+
+                    if (drTroca.HasRows)
+                    {
+                        drTroca.Read();
+                        qtdeRegistros = drTroca.GetInt32(0);
+                        drTroca.Close();
+                    }
+
+                    if (qtdeRegistros == 0)
+                    {
+                        cmdTextoPedido = "UPDATE Pedidos SET Status = 'D' WHERE PedidoId = @PedidoId";
+
+                        SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
+
+                        comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
+                        comandoPedido.ExecuteNonQuery();
+                        comandoPedido.Dispose();
+                    }
                 }
                 Commit();
             }
@@ -245,22 +293,22 @@ namespace Core.Impl.DAO.Negocio
                                      "FROM Trocas T " +
                                          "JOIN Produtos PR ON(T.ItemId = PR.ProdutoId) " +
                                          "JOIN Pedidos P ON(T.PedidoId = P.PedidoId) " +
-                                     "WHERE T.Status = @Status " +
+                                     "WHERE T.Status <> @Status " +
                                      "ORDER BY DataSolicitacao ASC";
 
-                SqlCommand comandotroca = new SqlCommand(cmdTextoTroca, conexao);
+                SqlCommand comandoTroca = new SqlCommand(cmdTextoTroca, conexao);
 
                 if (troca.UsuarioId > 0)
-                    comandotroca.Parameters.AddWithValue("@UsuarioId", troca.UsuarioId);
+                    comandoTroca.Parameters.AddWithValue("@UsuarioId", troca.UsuarioId);
                 else if (troca.Status > 0)
-                    comandotroca.Parameters.AddWithValue("@Status", troca.Status);
+                    comandoTroca.Parameters.AddWithValue("@Status", troca.Status);
 
-                SqlDataReader drTroca = comandotroca.ExecuteReader();
-                comandotroca.Parameters.Clear();
+                SqlDataReader drTroca = comandoTroca.ExecuteReader();
+                comandoTroca.Parameters.Clear();
 
                 trocas = DataReaderTrocaParaList(drTroca);
 
-                comandotroca.Dispose();
+                comandoTroca.Dispose();
             }
             catch (SqlException e)
             {

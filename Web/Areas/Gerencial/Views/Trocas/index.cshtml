@@ -19,12 +19,13 @@
                 <th class="align-middle">Situação</th>
                 <th class="align-middle">Data da Solicitação</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody id="tbodyItemTroca">
             @foreach (var item in Model)
             {
-            <tr>
+            <tr class="linha">
                 <td class="align-middle">@item.Id</td>
                 <td class="align-middle pedidoId">@item.PedidoId</td>
                 <td class="align-middle usuarioId">@item.UsuarioId</td>
@@ -34,9 +35,18 @@
                 @{switch (item.Status)
                     {
                         case 'P':
+                            <td class="align-middle">AGUARDANDO AUTORIZAÇÃO</td>
+                            break;
+                        case 'T':
                             <td class="align-middle">AGUARDANDO CHEGADA DO PRODUTO</td>
                             break;
                         case 'A':
+                            <td class="align-middle">AUTORIZADA</td>
+                            break;
+                        case 'N':
+                            <td class="align-middle">NEGADA</td>
+                            break;
+                        case 'C':
                             <td class="align-middle">CONCLUÍDA</td>
                             break;
                         default:
@@ -45,7 +55,16 @@
                     }
                 }
                 <td class="align-middle">@item.DataCadastro</td>
-                <td><button type="button" class="btn btn-primary btnAbreModalTroca" title="Confirmar recebimento"><i class="fa fa-clipboard-check"></i></button></td>
+                @if (item.Status.Equals('P'))
+                {
+                    <td><button type="button" class="btn btn-success btnAutorizarTroca" title="Autorizar troca"><i class="fa fa-check-circle"></i></button></td>
+                    <td><button type="button" class="btn btn-danger btnNegarTroca" title="Negar troca"><i class="fa fa-window-close"></i></button></td>
+                }
+                else if (item.Status.Equals('A'))
+                {
+                    <td><button type="button" class="btn btn-success btnAbreModalTroca" title="Confirmar recebimento"><i class="fa fa-clipboard-check"></i></button></td>
+                    <td></td>
+                }
             </tr>
             }
         </tbody>
