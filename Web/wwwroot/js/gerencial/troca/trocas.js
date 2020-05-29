@@ -9,12 +9,13 @@
     });
 
     $('#btnOkModal').on('click', function() {
+        if( $('#textoModal').text() !== 'Não existem solicitações de troca pendentes.')
+            location.href = '/Gerencial/Trocas/'; 
         $('#textoModal').text('');
-        location.href = '/Gerencial/Dashboard/'; 
     });
 
     $('.btnAutorizarTroca').on('click', function () {
-        var indice = $('.linha').index(this);
+        var indice = $(this).parents('tr').index();
         var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
         var itemId = $('#tbodyItemTroca').find('.itemId').eq(indice).text();
 
@@ -34,7 +35,7 @@
     });
 
     $('.btnNegarTroca').on('click', function () {
-        var indice = $('.linha').index(this);
+        var indice = $(this).parents('tr').index();
         var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
         var itemId = $('#tbodyItemTroca').find('.itemId').eq(indice).text();
 

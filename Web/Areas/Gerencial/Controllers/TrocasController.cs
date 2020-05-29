@@ -14,7 +14,7 @@ namespace Web.Areas.Gerencial.Controllers
         [Area("Gerencial")]
         public IActionResult Index()
         {
-            resultado = new Facade().Consultar(new Troca { Status = 'C' });
+            resultado = new Facade().Consultar(new Troca());
             if (resultado.Msg != null)
             {
                 ViewBag.Mensagem = resultado.Msg;

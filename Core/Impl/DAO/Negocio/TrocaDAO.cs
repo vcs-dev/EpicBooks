@@ -168,24 +168,8 @@ namespace Core.Impl.DAO.Negocio
                     comandoEstoque.Dispose();
                 }
 
-                //int qtdeRegistros = 0;
                 if (troca.Status.Equals('C'))
                 {
-                    //cmdTextoTroca = "SELECT COUNT(TrocaId) FROM Trocas WHERE PedidoId = @PedidoId AND Status <> 'C'";
-                    //comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
-                    //comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
-                    //SqlDataReader drTroca = comandoTroca.ExecuteReader();
-                    //comandoTroca.Dispose();
-
-                    //if (drTroca.HasRows)
-                    //{
-                    //    drTroca.Read();
-                    //    qtdeRegistros = drTroca.GetInt32(0);
-                    //    drTroca.Close();
-                    //}
-
-                    //if (qtdeRegistros == 0)
-                    //{
                     cmdTextoPedido = "UPDATE Pedidos SET Status = 'T' WHERE PedidoId = @PedidoId";
 
                     SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
@@ -193,25 +177,9 @@ namespace Core.Impl.DAO.Negocio
                     comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
                     comandoPedido.ExecuteNonQuery();
                     comandoPedido.Dispose();
-                    //}
                 }
                 else if (troca.Status.Equals('N'))
                 {
-                    //cmdTextoTroca = "SELECT COUNT(TrocaId) FROM Trocas WHERE PedidoId = @PedidoId AND Status <> 'N'";
-                    //comandoTroca = new SqlCommand(cmdTextoTroca, conexao, transacao);
-                    //comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
-                    //SqlDataReader drTroca = comandoTroca.ExecuteReader();
-                    //comandoTroca.Dispose();
-
-                    //if (drTroca.HasRows)
-                    //{
-                    //    drTroca.Read();
-                    //    qtdeRegistros = drTroca.GetInt32(0);
-                    //    drTroca.Close();
-                    //}
-
-                    //if (qtdeRegistros == 0)
-                    //{
                     cmdTextoPedido = "UPDATE Pedidos SET Status = 'D' WHERE PedidoId = @PedidoId";
 
                     SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
@@ -219,7 +187,6 @@ namespace Core.Impl.DAO.Negocio
                     comandoPedido.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
                     comandoPedido.ExecuteNonQuery();
                     comandoPedido.Dispose();
-                    //}
                 }
                 Commit();
             }
@@ -296,7 +263,7 @@ namespace Core.Impl.DAO.Negocio
                                          "JOIN Usuarios U ON(P.UsuarioId = U.UsuarioId) " +
                                      "WHERE T.PedidoId = @PedidoId " +
                                      "AND T.ItemId = @ItemId";
-                else
+                else if(troca.Status != '\0')
                     cmdTextoTroca = "SELECT " +
                                          "T.TrocaId, " +
                                          "P.UsuarioId," +
@@ -311,6 +278,21 @@ namespace Core.Impl.DAO.Negocio
                                          "JOIN Pedidos P ON(T.PedidoId = P.PedidoId) " +
                                      "WHERE T.Status <> @Status " +
                                      "ORDER BY DataSolicitacao ASC";
+                else
+                    cmdTextoTroca = "SELECT " +
+                                         "T.TrocaId, " +
+                                         "P.UsuarioId," +
+                                         "T.PedidoId, " +
+                                         "T.ItemId, " +
+                                         "PR.Nome, " +
+                                         "T.Qtde, " +
+                                         "T.Status, " +
+                                         "T.DataSolicitacao " +
+                                     "FROM Trocas T " +
+                                         "JOIN Produtos PR ON(T.ItemId = PR.ProdutoId) " +
+                                         "JOIN Pedidos P ON(T.PedidoId = P.PedidoId) " +
+                                     "WHERE T.Status <> 'C' AND T.Status <> 'N' " +
+                                     "ORDER BY DataSolicitacao ASC";
 
                 SqlCommand comandoTroca = new SqlCommand(cmdTextoTroca, conexao);
 
@@ -321,7 +303,7 @@ namespace Core.Impl.DAO.Negocio
                     comandoTroca.Parameters.AddWithValue("@PedidoId", troca.PedidoId);
                     comandoTroca.Parameters.AddWithValue("@ItemId", troca.ItemId);
                 }
-                else
+                else if (troca.Status != '\0')
                     comandoTroca.Parameters.AddWithValue("@Status", troca.Status);
 
                 SqlDataReader drTroca = comandoTroca.ExecuteReader();
