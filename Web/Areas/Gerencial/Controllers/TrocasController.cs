@@ -56,13 +56,14 @@ namespace Web.Areas.Gerencial.Controllers
         }
 
         [Area("Gerencial")]
-        public JsonResult AutorizarTroca(int pedidoId, int itemId)
+        public JsonResult AutorizarTroca(int pedidoId, int itemId, int usuarioId)
         {
             string msg;
             resultado = new Facade().Alterar(new Troca
             {
                 PedidoId = pedidoId,
                 ItemId = itemId,
+                UsuarioId = usuarioId,
                 Status = 'A'
             });
             if (resultado.Msg != null)

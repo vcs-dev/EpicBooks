@@ -18,11 +18,12 @@
         var indice = $(this).parents('tr').index();
         var pedidoId = $('#tbodyItemTroca').find('.pedidoId').eq(indice).text();
         var itemId = $('#tbodyItemTroca').find('.itemId').eq(indice).text();
+        var usuarioId = $('#tbodyItemTroca').find('.usuarioId').eq(indice).text();
 
         $.ajax({
             type: "get",
             url: "/Gerencial/Trocas/AutorizarTroca/",
-            data: {pedidoId: pedidoId, itemId: itemId},
+            data: {pedidoId: pedidoId, itemId: itemId, usuarioId: usuarioId},
             dataType: "json",
             success: function (response) {
                 var text = JSON.parse(response);

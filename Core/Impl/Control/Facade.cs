@@ -264,6 +264,17 @@ namespace Core.Impl.Control
 
             rns.Add(nameof(Usuario), rnsUsuario);
             #endregion
+
+            #region Notificacao
+            NotificacaoDAO notificacaoDAO = new NotificacaoDAO();
+
+            daos.Add(nameof(Notificacao), notificacaoDAO);
+            Dictionary<string, List<IStrategy>> rnsNotificacao = new Dictionary<string, List<IStrategy>>();
+
+            rnsNotificacao.Add("CONSULTAR", null);
+
+            rns.Add(nameof(Notificacao), rnsNotificacao);
+            #endregion
         }
         public Result Alterar(EntidadeDominio entidade)
         {

@@ -20,7 +20,22 @@ namespace Web.Areas.Loja.Controllers
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
-                return View();
+                List<Notificacao> notificacoes = new List<Notificacao>();
+
+                resultado = new Facade().Consultar(new Notificacao { UsuarioId = HttpContext.Session.Get<int>("idUsuario"), Visualizada = 0 });
+                if(resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View(notificacoes);
+                }
+                if (resultado.Entidades.Count > 0)
+                {
+                    foreach (var item in resultado.Entidades)
+                    {
+                        notificacoes.Add((Notificacao)item);
+                    }
+                }
+                return View(notificacoes);
             }
             else
                 return RedirectToAction("Login", "Conta");

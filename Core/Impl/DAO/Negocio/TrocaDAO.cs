@@ -82,6 +82,7 @@ namespace Core.Impl.DAO.Negocio
             string cmdTextoTroca;
             string cmdTextoEstoque;
             string cmdTextoPedido;
+            string cmdTextoNotificacao;
 
             try
             {
@@ -98,6 +99,29 @@ namespace Core.Impl.DAO.Negocio
                 comandoTroca.Parameters.AddWithValue("@ItemId", troca.ItemId);
                 comandoTroca.ExecuteNonQuery();
                 comandoTroca.Dispose();
+
+                if (troca.Status.Equals('A'))
+                {
+                    Notificacao notificacao = new Notificacao
+                    {
+                        UsuarioId = troca.UsuarioId,
+                        Titulo = "Troca autorizada",
+                        Descricao = "A troca do item " + troca.ItemId + " referente ao pedido " + troca.PedidoId + " foi autorizada.",
+                        DataCadastro = DateTime.Now,
+                        Visualizada = 0
+                    };
+                    cmdTextoNotificacao = "INSERT INTO NotificacoesUsuarios(UsuarioId, Titulo, Descricao, Visualizada, Data) " +
+                                          "Values(@UsuarioId, @Titulo, @Descricao, @Visualizada, @Data)";
+
+                    SqlCommand comandoNotificacao = new SqlCommand(cmdTextoNotificacao, conexao, transacao);
+                    comandoNotificacao.Parameters.AddWithValue("@UsuarioId", notificacao.UsuarioId);
+                    comandoNotificacao.Parameters.AddWithValue("@Titulo", notificacao.Titulo);
+                    comandoNotificacao.Parameters.AddWithValue("@Descricao", notificacao.Descricao);
+                    comandoNotificacao.Parameters.AddWithValue("@Visualizada", notificacao.Visualizada);
+                    comandoNotificacao.Parameters.AddWithValue("@Data", notificacao.DataCadastro);
+                    comandoNotificacao.ExecuteNonQuery();
+                    comandoNotificacao.Dispose();
+                }
 
                 if (!troca.Status.Equals('A') && !troca.Status.Equals('N'))
                 {
