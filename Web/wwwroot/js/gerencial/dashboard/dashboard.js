@@ -2,6 +2,8 @@ $(document).ready(function () {
     var dataGraficoLinhas;
     var dataGraficoTorta;
 
+    feather.replace();
+
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '') {
         $('#modalMensagem').modal('show');
     }
