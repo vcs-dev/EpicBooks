@@ -217,5 +217,20 @@ namespace Web.Areas.Loja.Controllers
             else
                 return RedirectToAction("Logar", "Conta");
         }
+
+        [Area("Loja")]
+        public IActionResult OcultarNotificacao(int notificacaoId)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Alterar(new Notificacao { Id = notificacaoId, Visualizada = 1 });
+                if (resultado.Msg != null)
+                    ViewBag.Mensagem = resultado.Msg;
+                return RedirectToAction("Index", "MinhaConta");
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
     }
 }

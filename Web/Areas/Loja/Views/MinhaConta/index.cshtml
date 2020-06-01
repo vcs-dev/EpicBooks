@@ -14,12 +14,12 @@
             {
                 foreach (var item in Model)
                 {
-                    <a href="">
-                        <div class="row bg-light border border-success align-middle mb-2">
-                            <div class="col-md-6"><label class="float-left mb-0">@item.Titulo</label></div>
-                            <div class="col-md-6"><label class="float-right mb-0">@item.DataCadastro</label></div>
-                        </div>
-                    </a>
+                    <div class="row bg-light border border-success align-middle mb-2 mensagem">
+                        <div class="col-md-6"><label class="float-left mb-0 tituloNotf">@item.Titulo</label></div>
+                        <div class="col-md-6"><label class="float-right mb-0 dataNotf">@item.DataCadastro</label></div>
+                        <input type="hidden" class="inputDescricao" value="@item.Descricao" />
+                        <input type="hidden" class="inputId" value="@item.Id" />
+                    </div>
                 }
             }
             else
@@ -29,3 +29,7 @@
         </div>
     </div>
 </div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+@section Scripts{
+    <script src="~/js/loja/minhaconta/index.js"></script>
+}
