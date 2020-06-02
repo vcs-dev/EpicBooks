@@ -232,5 +232,22 @@ namespace Web.Areas.Loja.Controllers
             else
                 return RedirectToAction("Logar", "Conta");
         }
+
+        [Area("Loja")]
+        public IActionResult CancelarPedido(int pedidoId)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Alterar(new Pedido { Id = pedidoId, Status = 'C'});
+                if (resultado.Msg != null)
+                    ViewBag.Mensagem = resultado.Msg;
+                else
+                    ViewBag.Mensagem = "Pedido " + pedidoId + " cancelado com sucesso.";
+                return RedirectToAction("Detalhes", "MinhaConta", new { id = pedidoId });
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
     }
 }
