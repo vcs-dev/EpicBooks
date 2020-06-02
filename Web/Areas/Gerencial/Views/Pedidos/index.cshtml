@@ -24,37 +24,7 @@
                     <td class="align-middle pedidoId">@item.Id</td>
                     <td class="align-middle">@item.UsuarioId</td>
                     <td class="align-middle">@item.DataCadastro</td>
-                    @{switch (item.Status)
-                        {
-                            case 'A':
-                                <td class="align-middle">APROVADO</td>
-                                break;
-                            case 'R':
-                                <td class="align-middle">REPROVADO</td>
-                                break;
-                            case 'P':
-                                <td class="align-middle">EM PROCESSAMENTO</td>
-                                break;
-                            case 'O':
-                                <td class="align-middle">EM TRASPORTE</td>
-                                break;
-                            case 'E':
-                                <td class="align-middle">ENTREGUE</td>
-                                break;
-                            case 'X':
-                                <td class="align-middle">TROCA EM ANÁLISE</td>
-                                break;
-                            case 'T':
-                                <td class="align-middle">TROCADO</td>
-                                break;
-                            case 'D':
-                                <td class="align-middle">TROCA RECUSADA</td>
-                                break;
-                            default:
-                                <td class="align-middle">DESCONHECIDA</td>
-                                break;
-                        }
-                    }
+                    <td class="align-middle">@item.DescricaoStatus</td>
                     <td><button type="button" class="btn btn-primary btnAbreModalPedido" title="Alterar situação"><i class="fa fa-clipboard-check"></i></button></td>
                 </tr>
             }

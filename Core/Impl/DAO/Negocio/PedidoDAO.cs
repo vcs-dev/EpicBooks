@@ -114,7 +114,7 @@ namespace Core.Impl.DAO.Negocio
                     SqlCommand comandoPedido = new SqlCommand(cmdTextoPedido, conexao, transacao);
 
                     comandoPedido.Parameters.AddWithValue("@Status", pedido.Status);
-                    if (pedido.Status == 'A')
+                    if (pedido.Status == 'A' || pedido.Status == 'C')
                         comandoPedido.Parameters.AddWithValue("@ValorFrete", pedido.ValorFrete);
                     comandoPedido.Parameters.AddWithValue("@PedidoId", pedido.Id);
 
@@ -265,6 +265,54 @@ namespace Core.Impl.DAO.Negocio
                             comandoBloqueados.Parameters.Clear();
                         }
                         comandoBloqueados.Dispose();
+                    }
+                    else if (pedido.Status.Equals('C'))//cancelamento pelo usuario
+                    {
+                        cmdTextoEstoque = "INSERT INTO EntradaEstoque" +
+                                             "(ProdutoId," +
+                                             "Qtde," +
+                                             "ValorCusto," +
+                                             "DataEntrada," +
+                                             "Observacao" +
+                                          ") " +
+                                          "VALUES" +
+                                             "(@ProdutoId," +
+                                             "@Qtde," +
+                                             "(SELECT ValorCusto FROM Estoque WHERE ProdutoId = @ProdutoId)," +
+                                             "@DataEntrada," +
+                                             "@Observacao" +
+                                          ")";
+
+                        SqlCommand comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao, transacao);
+                        foreach (var item in pedido.ItensPedido)
+                        {
+                            comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
+                            comandoEstoque.Parameters.AddWithValue("@Qtde", item.Qtde);
+                            comandoEstoque.Parameters.AddWithValue("@DataEntrada", DateTime.Now);
+                            comandoEstoque.Parameters.AddWithValue("@Observacao", "REENTRADA - CANCELAMENTO");
+                            comandoEstoque.ExecuteNonQuery();
+                            comandoEstoque.Parameters.Clear();
+                        }
+
+                        cmdTextoEstoque = "UPDATE Estoque SET Qtde = Qtde + @Qtde WHERE ProdutoId = @ProdutoId";
+
+                        foreach (var item in pedido.ItensPedido)
+                        {
+                            comandoEstoque = new SqlCommand(cmdTextoEstoque, conexao, transacao);
+
+                            comandoEstoque.Parameters.AddWithValue("@Qtde", item.Qtde);
+                            comandoEstoque.Parameters.AddWithValue("@ProdutoId", item.Id);
+                            comandoEstoque.ExecuteNonQuery();
+                            comandoEstoque.Parameters.Clear();
+                        }
+                        comandoEstoque.Dispose();
+
+                        cmdTextoVenda = "DELETE FROM Vendas WHERE PedidoId = @PedidoId";
+
+                        SqlCommand comandoVenda = new SqlCommand(cmdTextoVenda, conexao, transacao);
+                        comandoVenda.Parameters.AddWithValue("@PedidoId", pedido.Id);
+                        comandoVenda.ExecuteNonQuery();
+                        comandoVenda.Dispose();
                     }
                     comandoPedido.Dispose();
                 }

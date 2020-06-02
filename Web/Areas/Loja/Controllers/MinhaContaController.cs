@@ -234,20 +234,36 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public IActionResult CancelarPedido(int pedidoId)
+        public JsonResult CancelarPedido(int pedidoId)
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
-                resultado = new Facade().Alterar(new Pedido { Id = pedidoId, Status = 'C'});
+                resultado = new Facade().Consultar(new Pedido { Id = pedidoId });
+                List<Pedido> pedidos = new List<Pedido>();
+                string msg;
+
                 if (resultado.Msg != null)
-                    ViewBag.Mensagem = resultado.Msg;
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
                 else
-                    ViewBag.Mensagem = "Pedido " + pedidoId + " cancelado com sucesso.";
-                return RedirectToAction("Detalhes", "MinhaConta", new { id = pedidoId });
+                {
+                    foreach (var item in resultado.Entidades)
+                    {
+                        pedidos.Add((Pedido)item);
+                    }
+                }
+                resultado = new Facade().Alterar(new Pedido { Id = pedidoId, Status = 'C', ItensPedido = pedidos.FirstOrDefault().ItensPedido});
+                if (resultado.Msg != null)
+                    msg = resultado.Msg;
+                else
+                    msg = "Pedido " + pedidoId + " cancelado com sucesso!";
+                return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
             }
             else
-                return RedirectToAction("Logar", "Conta");
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
         }
     }
 }

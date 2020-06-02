@@ -7,11 +7,25 @@
     });
 
     $('#btnCancelarPedido').on('click', function () {
-        $('#textoModal').text('Tem certeza que deseja cancelar o pedido ' + $('#idPedido').val() + '?');
+        $('#textoModalConfirmacao').text('Tem certeza que deseja cancelar o pedido ' + $('#idPedido').val() + '?');
         $('#modalConfirmacao').modal('show');
     });
 
     $('#btnSimModal').on('click', function () {
-        location.href = '/Loja/MinhaConta/CancelarPedido?pedidoId=' + $('#idPedido').val();
+        if ($('#textoModalConfirmacao').text() === 'Tem certeza que deseja cancelar o pedido ' + $('#idPedido').val() + '?') {
+            $.ajax({
+                type: "get",
+                url: "/Loja/MinhaConta/CancelarPedido/",
+                data: { pedidoId: $('#idPedido').val() },
+                dataType: "json",
+                success: function (response) {
+                    var text = JSON.parse(response);
+                    if (text.Mensagem !== undefined && text.Mensagem !== '') {
+                        $('#textoModal').text(text.Mensagem);
+                        $('#modalMensagem').modal('show');
+                    }
+                }
+            });
+        }
     });
 });
