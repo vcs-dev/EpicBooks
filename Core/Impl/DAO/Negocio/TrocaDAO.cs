@@ -123,7 +123,7 @@ namespace Core.Impl.DAO.Negocio
                     comandoNotificacao.Dispose();
                 }
 
-                if (!troca.Status.Equals('A') && !troca.Status.Equals('N'))
+                if (troca.Status.Equals('C'))
                 {
                     cmdTextoTroca = "INSERT INTO Cupons" +
                                         "(Codigo," +
