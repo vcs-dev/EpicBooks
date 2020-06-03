@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    CalcularFrete($('#selectEndereco option:selected').val());
     if ($('#cupomPromo').length > 0) {
         $('#codCupomPromo').prop('readonly', true);
     }

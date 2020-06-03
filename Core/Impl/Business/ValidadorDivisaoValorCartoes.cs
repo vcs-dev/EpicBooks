@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Domain;
 using Domain.Negocio;
+using System;
 
 namespace Core.Impl.Business
 {
@@ -14,7 +15,7 @@ namespace Core.Impl.Business
 
                 if (pedido.MultiplosCartoes == 1)
                 {
-                    if (pedido.ValorTotalPedido > 0 && ((pedido.CartaoUm.Valor + pedido.CartaoDois.Valor) > pedido.ValorTotalPedido))
+                    if (pedido.ValorTotalPedido > 0 && ((pedido.CartaoUm.Valor + pedido.CartaoDois.Valor) > Math.Round(pedido.ValorTotalPedido, 2)))
                         return "A soma dos valores a serem pagos com cada cartão\nnão correspondem ao valor total do pedido";
                 }
                 else if (pedido.ValorTotalPedido > 0.00)

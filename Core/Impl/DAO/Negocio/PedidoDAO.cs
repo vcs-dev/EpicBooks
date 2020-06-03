@@ -438,8 +438,6 @@ namespace Core.Impl.DAO.Negocio
 
                 pedidos = DataReaderPedidoParaList(drPedido);
 
-                //if (pedido.Status != 'P' && pedido.Status != 'R')
-                //{
                 foreach (var item in pedidos)
                 {
                     cmdTextoPedido = "SELECT ItemId, Qtde, PrecoUnitario " +
@@ -500,7 +498,6 @@ namespace Core.Impl.DAO.Negocio
                     }
                     drPedido.Close();
                 }
-                //}
                 comandoPedido.Dispose();
             }
             catch (SqlException e)
@@ -535,8 +532,6 @@ namespace Core.Impl.DAO.Negocio
                         DataCadastro = Convert.ToDateTime(dataReader["DataPedido"]),
                         Status = Convert.ToChar(dataReader["Status"]),
                     };
-                    //if (!dataReader.IsDBNull(6))
-                    //    pedido.Observacao = dataReader["Observacao"].ToString();
                     if (!Convert.IsDBNull(dataReader["ValorFrete"]))
                         pedido.ValorFrete = Convert.ToDouble(dataReader["ValorFrete"]);
                     if (!Convert.IsDBNull(dataReader["Observacao"]))
