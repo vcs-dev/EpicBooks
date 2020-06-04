@@ -232,6 +232,25 @@ namespace Core.Impl.Control
             rns.Add(nameof(Faturamento), rnsFaturamento);
             #endregion
 
+            #region Lucro
+            LucroDAO lucroDAO = new LucroDAO();
+
+            daos.Add(nameof(Lucro), lucroDAO);
+
+            //Regras de consultar
+            ValidadorPeriodoLucro validadorPeriodoLucro = new ValidadorPeriodoLucro();
+
+            List<IStrategy> rnsConsultarLucro = new List<IStrategy>();
+
+            rnsConsultarLucro.Add(validadorPeriodoLucro);
+
+            Dictionary<string, List<IStrategy>> rnsLucro = new Dictionary<string, List<IStrategy>>();
+
+            rnsLucro.Add("CONSULTAR", rnsConsultarLucro);
+
+            rns.Add(nameof(Lucro), rnsLucro);
+            #endregion
+
             #region Usuario 
             UsuarioDAO usuarioDAO = new UsuarioDAO();
 

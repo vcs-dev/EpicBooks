@@ -20,13 +20,13 @@ $(document).ready(function () {
                 GerarGraficoLinhas(dataGraficoLinhas);
                 if (dataGraficoLinhas.datasets.length > 0) {
                     $('#faturamento').text('');
-                    $('#faturamento').text('Faturamento ' + $('#faturamento').text() + ' - ' +
+                    $('#faturamento').text('Faturamento X Lucro ' + $('#faturamento').text() + ' - ' +
                         $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
                     $('#partialGraficos').removeClass('d-none');
                 }
                 else {
                     $('#faturamento').text('');
-                    $('#faturamento').text('Faturamento ' + $('#faturamento').text() + ' - ' +
+                    $('#faturamento').text('Faturamento X Lucro ' + $('#faturamento').text() + ' - ' +
                         $('#dataInicial').val() + ' à ' + $('#dataFinal').val() + ' - Sem dados no período');
                     $('#textoModal').text(dataGraficoLinhas.mensagemErro);
                     $('#modalMensagem').modal('show');
@@ -43,14 +43,14 @@ $(document).ready(function () {
                 dataGraficoTorta = JSON.parse(response);
                 GerarGraficoTorta(dataGraficoTorta);
                 if (dataGraficoTorta.datasets.length > 0) {
-                    $('#maisVendidosCategoria').text('');
-                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' +
+                    $('#vendasCategoria').text('');
+                    $('#vendasCategoria').text('Vendas por categoria' + $('#vendasCategoria').text() + ' - ' +
                         $('#dataInicial').val() + ' à ' + $('#dataFinal').val());
                     $('#partialGraficos').removeClass('d-none');
                 }
                 else {
-                    $('#maisVendidosCategoria').text('');
-                    $('#maisVendidosCategoria').text('Mais vendidos por categoria ' + $('#maisVendidosCategoria').text() + ' - ' +
+                    $('#vendasCategoria').text('');
+                    $('#vendasCategoria').text('Vendas por categoria' + $('#vendasCategoria').text() + ' - ' +
                         $('#dataInicial').val() + ' à ' + $('#dataFinal').val() + ' - Sem dados no período');
                     $('#textoModal').text(dataGraficoTorta.mensagemErro);
                     $('#modalMensagem').modal('show');
@@ -62,11 +62,11 @@ $(document).ready(function () {
 });
 
 var divCanvas = '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
-    '<h1 class="h2" id="faturamento">Faturamento</h1>' +
+    '<h1 class="h2" id="faturamento">Faturamento X Lucro</h1>' +
     '</div>' +
     '<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>' +
     '<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">' +
-    '<h1 class="h2" id="maisVendidosCategoria">Mais vendidos por categoria</h1>' +
+    '<h1 class="h2" id="vendasCategoria">Quantidade vendida por categoria</h1>' +
     '</div>' +
     '<canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>';
 

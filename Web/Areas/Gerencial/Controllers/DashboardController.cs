@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Core.Application;
 using Core.Impl.Control;
 using Domain.Negocio;
@@ -57,7 +55,38 @@ namespace Web.Areas.Gerencial.Controllers
                 if(faturamento != null)
                     grafico.datasets[0].data[grafico.labels.IndexOf(item)] = Convert.ToDouble(faturamento.Valor.ToString("######0.00"));
             }
-
+            //lucro
+            dataSet = new DataSetGraficoLinhas();
+            resultado = new Facade().Consultar(new Lucro { DataInicial = dataInicial, DataFinal = dataFinal });
+            if (resultado.Msg != null)
+            {
+                grafico.mensagemErro = resultado.Msg;
+                return Json(JsonConvert.SerializeObject(grafico));
+            }
+            //grafico.labels = DataHelper.RetornaPeriodo(dataInicial, dataFinal);
+            if (resultado.Entidades.Count == 0)
+            {
+                grafico.mensagemErro = "Sem dados no período informado.";
+                return Json(JsonConvert.SerializeObject(grafico));
+            }
+            List<Lucro> lucros = new List<Lucro>();
+            foreach (var item in resultado.Entidades)
+            {
+                lucros.Add((Lucro)item);
+            }
+            dataSet.label = "Lucro";
+            foreach (var item in grafico.labels)
+            {
+                dataSet.data.Add(0);
+            }
+            grafico.datasets.Add(dataSet);
+            Lucro lucro;
+            foreach (var item in grafico.labels)
+            {
+                lucro = lucros.Find(x => x.Data.Equals(item));
+                if (lucro != null)
+                    grafico.datasets[1].data[grafico.labels.IndexOf(item)] = Convert.ToDouble(lucro.Valor.ToString("######0.00"));
+            }
             return Json(JsonConvert.SerializeObject(grafico));
         }
 
