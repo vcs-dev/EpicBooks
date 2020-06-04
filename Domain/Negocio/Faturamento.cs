@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Negocio
+﻿namespace Domain.Negocio
 {
     public class Faturamento : EntidadeDominio
     {

@@ -20,6 +20,8 @@ namespace Web.Util
                     if (mes > 12)
                     {
                         data = "0" + (mes - 12) + "/" + (Convert.ToInt32(arrayDataInicial[2]) + 1);
+                        mes -= 12;
+                        arrayDataInicial[2] = Convert.ToString(Convert.ToInt32(arrayDataInicial[2]) + 1);
                     }
                     else if (mes > 9)
                         data = mes + "/" + arrayDataInicial[2];

@@ -18,12 +18,12 @@ namespace Core.Impl.DAO.Negocio
         {
             Faturamento faturamento = (Faturamento)entidade;
             List<Faturamento> faturamentos = new List<Faturamento>();
-            string cmdTextoGrafico;
+            string cmdTextoFaturamento;
 
             try
             {
                 Conectar();
-                cmdTextoGrafico = "SELECT PedidoId, SUM(ValorItem) AS ValorItem, ValorFrete " +
+                cmdTextoFaturamento = "SELECT PedidoId, SUM(ValorItem) AS ValorItem, ValorFrete " +
                                     "INTO #tmpValoresItensEFrete " +
                                     "FROM " +
                                     "(" +
@@ -69,7 +69,7 @@ namespace Core.Impl.DAO.Negocio
                                                 "LEFT JOIN #tmpValoresCupons TMP2 ON(TMP1.PedidoId = TMP2.PedidoId) " +
                                                 "JOIN StatusDePedidos SDP ON(P.Status = SDP.Status) " +
                                                 "JOIN Vendas V ON(P.PedidoId = V.PedidoId) " +
-                                            "WHERE P.Status <> 'P' AND P.Status <> 'R' AND " +
+                                            "WHERE P.Status <> 'P' AND P.Status <> 'R' AND P.Status <> 'C' AND " +
                                             "V.DataVenda BETWEEN @DataInicial AND @DataFinal " +
                                         ")AS Tb " +
                                     ")AS Tb2 " +
@@ -77,15 +77,15 @@ namespace Core.Impl.DAO.Negocio
                                     "DROP TABLE #tmpValoresItensEFrete " +
                                     "DROP TABLE #tmpValoresCupons ";
 
-                SqlCommand comandoFaturamento = new SqlCommand(cmdTextoGrafico, conexao);
+                SqlCommand comandoFaturamento = new SqlCommand(cmdTextoFaturamento, conexao);
 
                 comandoFaturamento.Parameters.AddWithValue("@DataInicial", Convert.ToDateTime(faturamento.DataInicial));
                 comandoFaturamento.Parameters.AddWithValue("@DataFinal", Convert.ToDateTime(faturamento.DataFinal));
 
-                SqlDataReader drGrafico = comandoFaturamento.ExecuteReader();
+                SqlDataReader drFaturamento = comandoFaturamento.ExecuteReader();
                 comandoFaturamento.Parameters.Clear();
 
-                faturamentos = DataReaderGraficoParaList(drGrafico);
+                faturamentos = DataReaderFaturamentoParaList(drFaturamento);
 
                 comandoFaturamento.Dispose();
             }
@@ -104,7 +104,7 @@ namespace Core.Impl.DAO.Negocio
             return faturamentos.ToList<EntidadeDominio>();
         }
 
-        public List<Faturamento> DataReaderGraficoParaList(SqlDataReader dataReader)
+        public List<Faturamento> DataReaderFaturamentoParaList(SqlDataReader dataReader)
         {
             if (!dataReader.HasRows)
                 return new List<Faturamento>();
