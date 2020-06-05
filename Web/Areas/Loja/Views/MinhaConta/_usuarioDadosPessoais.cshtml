@@ -1,0 +1,37 @@
+﻿@model Domain.DadosCliente.Usuario
+
+<div class="row">
+    <div class="col-md-4 form-group">
+        <label for="nomeCompleto">Nome completo</label>
+        <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="@Model.NomeCompleto" readonly>
+    </div>
+    <div class="col-md-4 form-group">
+        <label for="dataNascimento">Data de nascimento</label>
+        <input type="text" class="form-control" id="dataNascimento" name="DataNascimento" value="@Model.DataNascimento.Substring(0, 10)" readonly>
+    </div>
+    <div class="col-md-4 form-group">
+        <label for="cpf">CPF</label>
+        <input type="text" class="form-control" id="cpf" name="Cpf" value="@Model.Cpf" readonly>
+    </div>
+    <div class="col-md-3 form-group">
+        <label for="telefoneTipo">Tipo de telefone*</label>
+        <select class="custom-select d-block w-100" id="telefoneTipo" name="telefoneTipo" disabled="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <option selected="@(Model.TelefoneTipo == 0)">Selecione</option>
+            <option value="1" selected="@(Model.TelefoneTipo == 1)">Fixo</option>
+            <option value="2" selected="@(Model.TelefoneTipo == 2)">Móvel</option>
+        </select>
+    </div>
+    <div class="col-md-2 form-group">
+        <label for="telefoneDdd">DDD</label>
+        <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd" value="@Model.TelefoneDdd" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+    </div>
+    <div class="col-md-3 form-group">
+        <label for="telefoneNumero">Numero</label>
+        <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" value="@Model.TelefoneNumero" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+    </div>
+    <div class="col-md-4 form-group">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" name="Email" value="@Model.Email"
+               readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+    </div>
+</div>

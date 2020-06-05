@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Dados pessoais - Edição";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <form action="/Loja/MinhaConta/EditarDadosPessoais/" method="post">
+                <h4>Edição de dados pessoais</h4>
+                @await Html.PartialAsync("_usuarioDadosPessoais")
+                <button type="submit" class="btn btn-success mb-2">Salvar <i class="fa fa-edit"></i></button>
+            </form>
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+@section Scripts{
+    <script src="~/js/loja/minhaconta/dadosPessoais.js"></script>
+}

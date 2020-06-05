@@ -2,6 +2,7 @@
 using System.Linq;
 using Core.Application;
 using Core.Impl.Control;
+using Domain.DadosCliente;
 using Domain.Negocio;
 using Domain.Produto;
 using Microsoft.AspNetCore.Http;
@@ -264,6 +265,74 @@ namespace Web.Areas.Loja.Controllers
             }
             else
                 return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
+        }
+
+        [Area("Loja")]
+        public IActionResult DadosPessoais()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                return View(usuarios.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+        [Area("Loja")]
+        public IActionResult EditarDadosPessoais()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                return View(usuarios.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult EditarDadosPessoais(Usuario usuario)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                usuario.Id = HttpContext.Session.Get<int>("idUsuario");
+                usuario.DadosAlterados = "PESSOAIS";
+                resultado = new Facade().Alterar(usuario);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                ViewBag.Mensagem = "Dados pessoais alterados com sucesso!";
+                return View(usuario);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
     }
 }

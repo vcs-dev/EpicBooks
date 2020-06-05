@@ -23,5 +23,6 @@
         public Endereco EnderecoCobranca { get; set; }
         public byte EndEntregaECobranca { get; set; }
         public int CartaoPreferencial { get; set; }
+        public string DadosAlterados { get; set; }
     }
 }

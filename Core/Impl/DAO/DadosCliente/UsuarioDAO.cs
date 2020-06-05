@@ -226,7 +226,26 @@ namespace Core.Impl.DAO.DadosCliente
 
                 SqlCommand comandoUsuario;
 
-                if (usuario.CartaoPreferencial > 0)
+                if (usuario.DadosAlterados.Equals("PESSOAIS"))
+                {
+                    cmdTextoUsuario = "UPDATE Usuarios SET TelefoneTipo = @TelefoneTipo, TelefoneDdd = @TelefoneDdd, TelefoneNumero = @TelefoneNumero, Email = @Email WHERE UsuarioId = @UsuarioId";
+                    comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
+                    comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
+                    comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                    comandoUsuario.ExecuteNonQuery();
+                }
+                else if (usuario.DadosAlterados.Equals("SENHA"))
+                {
+                    cmdTextoUsuario = "UPDATE Usuarios SET Senha = CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1) WHERE UsuarioId = @UsuarioId";
+                    comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+                    comandoUsuario.Parameters.AddWithValue("@Senha", usuario.Senha);
+                    comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
+                    comandoUsuario.ExecuteNonQuery();
+                }
+                else if (usuario.CartaoPreferencial > 0)
                 {
                     cmdTextoUsuario = "UPDATE Usuarios SET CartaoPreferencial = @CartaoPreferencial WHERE UsuarioId = @UsuarioId";
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
@@ -260,7 +279,6 @@ namespace Core.Impl.DAO.DadosCliente
                     comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
                     comandoUsuario.ExecuteNonQuery();
                 }
-
                 Commit();
                 comandoUsuario.Dispose();
             }
@@ -290,7 +308,7 @@ namespace Core.Impl.DAO.DadosCliente
             {
                 Conectar();
 
-                if (usuario.Id == 0 && string.IsNullOrEmpty(usuario.NomeCompleto) && 
+                if (usuario.Id == 0 && string.IsNullOrEmpty(usuario.NomeCompleto) &&
                     string.IsNullOrEmpty(usuario.Email) && string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * FROM Usuarios";
                 else if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
