@@ -17,6 +17,7 @@
         public string TelefoneNumero { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
+        public string NovaSenha { get; set; }
         public string ConfirmacaoSenha { get; set; }
         public CartaoDeCredito Cartao { get; set; }
         public Endereco EnderecoEntrega { get; set; }

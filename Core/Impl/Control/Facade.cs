@@ -276,10 +276,22 @@ namespace Core.Impl.Control
             rnsSalvarUsuario.Add(validadorDadosCartao);
             rnsSalvarUsuario.Add(validadorEmail);
 
+            //Regras de alterar
+
+            ValidadorDadosObrigatoriosTrocaSenha validadorDadosObrigatoriosTrocaSenha = new ValidadorDadosObrigatoriosTrocaSenha();
+            ValidadorSenhaAntiga validadorSenhaAntiga = new ValidadorSenhaAntiga();
+            ValidadorTrocaSenha validadorTrocaSenha = new ValidadorTrocaSenha();
+
+            List<IStrategy> rnsAlterarUsuario = new List<IStrategy>();
+
+            rnsAlterarUsuario.Add(validadorDadosObrigatoriosTrocaSenha);
+            rnsAlterarUsuario.Add(validadorSenhaAntiga);
+            rnsAlterarUsuario.Add(validadorTrocaSenha);
 
             Dictionary<string, List<IStrategy>> rnsUsuario = new Dictionary<string, List<IStrategy>>();
 
             rnsUsuario.Add("SALVAR", rnsSalvarUsuario);
+            rnsUsuario.Add("ALTERAR", rnsAlterarUsuario);
 
             rns.Add(nameof(Usuario), rnsUsuario);
             #endregion

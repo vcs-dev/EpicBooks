@@ -334,5 +334,53 @@ namespace Web.Areas.Loja.Controllers
             else
                 return RedirectToAction("Logar", "Conta");
         }
+
+        [Area("Loja")]
+        public IActionResult AlterarSenha()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                return View(usuarios.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult AlterarSenha(Usuario usuario)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                usuario.Id = HttpContext.Session.Get<int>("idUsuario");
+                usuario.DadosAlterados = "SENHA";
+                resultado = new Facade().Alterar(usuario);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                ViewBag.Mensagem = "Senha alterada com sucesso!";
+                return View(usuario);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
     }
 }

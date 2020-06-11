@@ -1,0 +1,42 @@
+﻿@model Domain.DadosCliente.Usuario
+
+@{
+    ViewData["Title"] = "Alteração de senha";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <form action="/Loja/MinhaConta/AlterarSenha/" method="post">
+                <h4>Alteração de senha</h4>
+                <input type="hidden" name="Id" value="@Model.Id">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="senha">Senha antiga</label>
+                        <input type="password" class="form-control" id="senha" name="Senha">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="novaSenha">Nova senha</label>
+                        <input type="password" class="form-control" id="novaSenha" name="NovaSenha">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="confirmacaoSenha">Confirme a nova senha</label>
+                        <input type="password" class="form-control" id="confirmacaoSenha" name="ConfirmacaoSenha">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Alterar senha</button>
+            </form>
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+@section Scripts{
+    <script src="~/js/loja/minhaconta/dadosPessoais.js"></script>
+}
