@@ -385,7 +385,8 @@ namespace Core.Impl.DAO.DadosCliente
                         TelefoneNumero = dataReader["TelefoneNumero"].ToString(),
                         Cpf = (dataReader["Cpf"]).ToString(),
                         Email = dataReader["Email"].ToString(),
-                        Senha = dataReader["Senha"].ToString()
+                        Senha = dataReader["Senha"].ToString(),
+                        CartaoPreferencial = Convert.ToInt32(dataReader["CartaoPreferencial"])
                     };
 
                     usuarios.Add(usuario);

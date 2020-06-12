@@ -395,6 +395,20 @@ namespace Web.Areas.Loja.Controllers
                 {
                     cartoes.Add((CartaoDeCredito)item);
                 }
+
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+
+                ViewBag.CartaoPreferencial = usuarios.FirstOrDefault().CartaoPreferencial;
                 return View(cartoes);
             }
             else

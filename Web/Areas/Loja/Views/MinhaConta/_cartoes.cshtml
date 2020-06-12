@@ -15,14 +15,30 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>@item.Bandeira</td>
-                <td>@item.Apelido</td>
-                <td>@item.NomeImpresso</td>
-                <td><a href="/Loja/MinhaConta/DetalhesCartao/@item.Id" class="btn btn-primary" title="Detalhes"><i class="fa fa-info-circle"></i></a></td>
-                <td><a href="/Loja/MinhaConta/ExcluirCartao/@item.Id" class="btn btn-danger" title="Excluir"><i class="fa fa-trash"></i></a></td>
-            </tr>
+                <tr>
+                    <td>@item.Bandeira</td>
+                    <td>@item.Apelido</td>
+                    <td>@item.NomeImpresso</td>
+                    <td><a href="/Loja/MinhaConta/DetalhesCartao/@item.Id" class="btn btn-primary" title="Detalhes"><i class="fa fa-info-circle"></i></a></td>
+                </tr>
             }
         </tbody>
     </table>
+    <h4>Cartão preferencial</h4>
+    <select class="form-control col-md-3" id="selectCartao">
+        @if (ViewBag.CartaoPreferencial != null && ViewBag.CartaoPreferencial > 0)
+        {
+            foreach (var item in Model)
+            {
+                <option selected="@(ViewBag.CartaoPreferencial == item.Id)" disabled="@(ViewBag.CartaoPreferencial == item.Id)">@item.Apelido</option>
+            }
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <option>@item.Apelido</option>
+            }
+        }
+    </select>
 }
