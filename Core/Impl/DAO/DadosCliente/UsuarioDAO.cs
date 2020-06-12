@@ -28,7 +28,8 @@ namespace Core.Impl.DAO.DadosCliente
                 cmdTextoCartao = "INSERT INTO CartoesDeCredito(Bandeira," +
                                                               "Numeracao," +
                                                               "NomeImpresso, " +
-                                                              "Validade" +
+                                                              "Validade, " +
+                                                              "Ativo" +
                                  ") " +
                                  "VALUES(@Bandeira," +
                                         "@Numeracao," +
@@ -42,6 +43,7 @@ namespace Core.Impl.DAO.DadosCliente
                 comandoCartao.Parameters.AddWithValue("@Numeracao", usuario.Cartao.Numeracao);
                 comandoCartao.Parameters.AddWithValue("@NomeImpresso", usuario.Cartao.NomeImpresso);
                 comandoCartao.Parameters.AddWithValue("@Validade", usuario.Cartao.Validade);
+                comandoCartao.Parameters.AddWithValue("@Ativo", usuario.Cartao.Ativo);
                 usuario.Cartao.Id = Convert.ToByte(comandoCartao.ExecuteScalar());
 
                 cmdTextoUsuario = "INSERT INTO Usuarios(NomeCompleto," +

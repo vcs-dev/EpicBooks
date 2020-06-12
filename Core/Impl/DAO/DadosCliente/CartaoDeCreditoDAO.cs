@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace Core.Impl.DAO.DadosCliente
 {
@@ -18,19 +17,19 @@ namespace Core.Impl.DAO.DadosCliente
         {
             CartaoDeCredito cartao = (CartaoDeCredito)entidade;
             List<CartaoDeCredito> cartoes;
-            string cmdTextoCartao = "";
+            string cmdTextoCartao;
 
             try
             {
                 Conectar();
 
                 if (cartao.Id > 0)
-                    cmdTextoCartao = "SELECT * FROM CartoesDeCredito WHERE CartaoId = @CartaoId";
+                    cmdTextoCartao = "SELECT * FROM CartoesDeCredito WHERE CartaoId = @CartaoId AND Ativo = 1";
                 else if (cartao.UsuarioId > 0)
                     cmdTextoCartao = "SELECT * " +
                                      "FROM CartoesDeCredito CC " +
                                         "JOIN UsuariosCartoes UC ON(CC.CartaoId = UC.CartaoId) " +
-                                     "WHERE UsuarioId = @UsuarioId";
+                                     "WHERE UsuarioId = @UsuarioId AND Ativo = 1";
                 else
                     cmdTextoCartao = "SELECT * FROM CartoesDeCredito";
 

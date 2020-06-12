@@ -326,11 +326,6 @@ namespace Web.Areas.Loja.Controllers
                     ViewBag.Mensagem = resultado.Msg;
                     return View();
                 }
-                List<Usuario> usuarios = new List<Usuario>();
-                foreach (var item in resultado.Entidades)
-                {
-                    usuarios.Add((Usuario)item);
-                }
                 ViewBag.Mensagem = "Dados pessoais alterados com sucesso!";
                 return View(usuario);
             }
@@ -376,16 +371,121 @@ namespace Web.Areas.Loja.Controllers
                     ViewBag.Mensagem = resultado.Msg;
                     return View(usuario);
                 }
-                List<Usuario> usuarios = new List<Usuario>();
-                foreach (var item in resultado.Entidades)
-                {
-                    usuarios.Add((Usuario)item);
-                }
                 ViewBag.Mensagem = "Senha alterada com sucesso!";
                 return View(usuario);
             }
             else
                 return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult DadosPagamento()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new CartaoDeCredito { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                return View(cartoes);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult DetalhesCartao(int id)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new CartaoDeCredito { Id = id });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                return View(cartoes.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult EditarCartao(int id)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new CartaoDeCredito { Id = id });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                return View(cartoes.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult EditarCartao(CartaoDeCredito cartao)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Salvar(cartao);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View(cartao);
+                }
+                ViewBag.Mensagem = "Alterações salvas com sucesso!";
+                return View(cartao);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult ExcluirCartao(int id)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                string msg;
+
+                resultado = new Facade().Alterar(new CartaoDeCredito { Id = id, Ativo = 0 });
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                msg = "Cartão excluído com sucesso!";
+                return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+            }
+            else
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
         }
     }
 }

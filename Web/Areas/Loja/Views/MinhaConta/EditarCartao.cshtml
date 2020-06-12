@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Domain.DadosCliente.CartaoDeCredito>
+@{
+    ViewData["Title"] = "Dados de pagamento";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <h4>Meus cartões de crédito</h4>
+            @await Html.PartialAsync("_cartoes", Model)
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/loja/minhaconta/meus-pedidos.js"></script>
+}

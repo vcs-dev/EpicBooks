@@ -9,6 +9,7 @@
             NomeImpresso = "";
             Validade = "";
             Apelido = "";
+            Ativo = 1;
         }
         public int Bandeira { get; set; }
         public string Numeracao { get; set; }
@@ -19,5 +20,6 @@
         public int UsuarioId { get; set; }
         public int QtdeParcelas { get; set; }
         public double? Valor { get; set; }
+        public byte Ativo { get; set; }
     }
 }
