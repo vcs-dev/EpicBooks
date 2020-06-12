@@ -279,13 +279,13 @@ namespace Core.Impl.Control
             //Regras de alterar
 
             ValidadorDadosObrigatoriosTrocaSenha validadorDadosObrigatoriosTrocaSenha = new ValidadorDadosObrigatoriosTrocaSenha();
-            ValidadorSenhaAntiga validadorSenhaAntiga = new ValidadorSenhaAntiga();
+            ValidadorSenhaAtual validadorSenhaAtual = new ValidadorSenhaAtual();
             ValidadorTrocaSenha validadorTrocaSenha = new ValidadorTrocaSenha();
 
             List<IStrategy> rnsAlterarUsuario = new List<IStrategy>();
 
             rnsAlterarUsuario.Add(validadorDadosObrigatoriosTrocaSenha);
-            rnsAlterarUsuario.Add(validadorSenhaAntiga);
+            rnsAlterarUsuario.Add(validadorSenhaAtual);
             rnsAlterarUsuario.Add(validadorTrocaSenha);
 
             Dictionary<string, List<IStrategy>> rnsUsuario = new Dictionary<string, List<IStrategy>>();

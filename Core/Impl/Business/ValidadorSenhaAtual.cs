@@ -5,10 +5,12 @@ using Domain;
 using Domain.DadosCliente;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Core.Impl.Business
 {
-    public class ValidadorSenhaAntiga : IStrategy
+    public class ValidadorSenhaAtual : IStrategy
     {
         public string Processar(EntidadeDominio entidade)
         {
@@ -19,7 +21,7 @@ namespace Core.Impl.Business
 
                 if (!string.IsNullOrEmpty(usuario.Senha) && usuario.DadosAlterados.Equals("SENHA"))
                 {
-                    resultado = new Facade().Consultar(new Usuario { Id = usuario.Id });
+                    resultado = new Facade().Consultar(new Usuario { Id = usuario.Id, Senha = usuario.Senha });
                     if (resultado.Msg != null)
                         return "Erro ao consultar usuário";
                     if(resultado.Entidades.Count > 0)
@@ -29,11 +31,9 @@ namespace Core.Impl.Business
                         {
                             usuarios.Add((Usuario)item); 
                         }
-                        if (!usuario.Senha.Equals(usuarios.FirstOrDefault().Senha))
-                            return "Senha antiga incorreta";
                     }
                     else
-                        return "Usuário não encontrado";
+                        return "Senha atual incorreta";
                 }
             }
             else

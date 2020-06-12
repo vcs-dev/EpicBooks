@@ -272,6 +272,7 @@ namespace Web.Areas.Loja.Controllers
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
@@ -293,6 +294,7 @@ namespace Web.Areas.Loja.Controllers
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
@@ -315,6 +317,7 @@ namespace Web.Areas.Loja.Controllers
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 usuario.Id = HttpContext.Session.Get<int>("idUsuario");
                 usuario.DadosAlterados = "PESSOAIS";
                 resultado = new Facade().Alterar(usuario);
@@ -340,6 +343,7 @@ namespace Web.Areas.Loja.Controllers
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
                 if (resultado.Msg != null)
                 {
@@ -363,13 +367,14 @@ namespace Web.Areas.Loja.Controllers
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 usuario.Id = HttpContext.Session.Get<int>("idUsuario");
                 usuario.DadosAlterados = "SENHA";
                 resultado = new Facade().Alterar(usuario);
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
-                    return View();
+                    return View(usuario);
                 }
                 List<Usuario> usuarios = new List<Usuario>();
                 foreach (var item in resultado.Entidades)

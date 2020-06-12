@@ -241,7 +241,7 @@ namespace Core.Impl.DAO.DadosCliente
                 {
                     cmdTextoUsuario = "UPDATE Usuarios SET Senha = CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1) WHERE UsuarioId = @UsuarioId";
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
-                    comandoUsuario.Parameters.AddWithValue("@Senha", usuario.Senha);
+                    comandoUsuario.Parameters.AddWithValue("@Senha", usuario.NovaSenha);
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
                     comandoUsuario.ExecuteNonQuery();
                 }
@@ -311,7 +311,7 @@ namespace Core.Impl.DAO.DadosCliente
                 if (usuario.Id == 0 && string.IsNullOrEmpty(usuario.NomeCompleto) &&
                     string.IsNullOrEmpty(usuario.Email) && string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * FROM Usuarios";
-                else if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
+                else if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto) && string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * FROM Usuarios WHERE UsuarioId = @UsuarioId";
                 else if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
                     cmdTextoUsuario = "SELECT * " +
@@ -328,7 +328,7 @@ namespace Core.Impl.DAO.DadosCliente
 
                 SqlCommand comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao);
 
-                if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto))
+                if (usuario.Id != 0 && string.IsNullOrEmpty(usuario.NomeCompleto) && string.IsNullOrEmpty(usuario.Senha))
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
                 else if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
                 {
