@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Domain.DadosCliente.CartaoDeCredito>
+﻿@model Domain.DadosCliente.CartaoDeCredito
 @{
-    ViewData["Title"] = "Dados de pagamento";
+    ViewData["Title"] = "Cartão - Editar";
 }
 
 <div class="container">
@@ -10,12 +10,15 @@
         </div>
         <div class="col-md-9">
             <h4>Meus cartões de crédito</h4>
-            @await Html.PartialAsync("_cartoes", Model)
+            <form action="/Loja/MinhaConta/EditarCartao/" method="post">
+                @await Html.PartialAsync("_cartao", Model)
+                <button type="submit" class="btn btn-success mb-2">Salvar</button>
+            </form>
         </div>
     </div>
 </div> <!-- /container -->
 @await Html.PartialAsync("_modalMensagem")
 
 @section Scripts{
-    <script src="~/js/loja/minhaconta/meus-pedidos.js"></script>
+    <script src="~/js/loja/minhaconta/detalhes-cartao.js"></script>
 }

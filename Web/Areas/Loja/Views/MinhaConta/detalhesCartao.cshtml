@@ -1,0 +1,23 @@
+﻿@model Domain.DadosCliente.CartaoDeCredito
+@{
+    ViewData["Title"] = "Cartão - Detalhes";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <h4>Meu cartão de crédito</h4>
+            @await Html.PartialAsync("_cartao", Model)
+            <a href="/loja/Minhaconta/EditarCartao/@Model.Id" class="btn btn-secondary mb-2">Editar <i class="fa fa-edit"></i></a>
+            <button type="button" class="btn btn-danger mb-2" id="btnExcluirCartao" value="@Model.Id">Excluir <i class="fa fa-trash-alt"></i></button>
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/loja/minhaconta/detalhes-cartao.js"></script>
+}

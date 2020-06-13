@@ -10,8 +10,8 @@
             @await Html.PartialAsync("_menu")
         </div>
         <div class="col-md-9">
+            <h4>Dados pessoais</h4>
             <form action="/Loja/MinhaConta/EditarDadosPessoais/" method="get">
-                <h4>Dados pessoais</h4>
                 @await Html.PartialAsync("_usuarioDadosPessoais")
                 <button type="submit" class="btn btn-primary mb-2">Editar <i class="fa fa-edit"></i></button>
             </form>

@@ -1,5 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Domain.DadosCliente.CartaoDeCredito
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="bandeira">Bandeira</label>
+            <select class="custom-select" id="bandeira" name="Bandeira" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+                <option value="1" selected="@(Model.Bandeira == 1)">Mastercard</option>
+                <option value="2" selected="@(Model.Bandeira == 2)">Visa</option>
+                <option value="3" selected="@(Model.Bandeira == 3)">Elo</option>
+                <option value="4" selected="@(Model.Bandeira == 4)">American Express</option>
+            </select>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="numeracao">Numeração</label>
+            <input type="text" class="form-control" id="numeracao" name="Numeracao" value="@Model.Numeracao" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="apelido">Numeração</label>
+            <input type="text" class="form-control" id="apelido" name="Apelido" value="@Model.Apelido" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="nomeImpresso">Nome impresso no cartão</label>
+            <input type="text" class="form-control" id="nomeImpresso" name="NomeImpresso" value="@Model.NomeImpresso" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+        </div>
+        <div class="col-md-2 form-group">
+            <label for="validade">Validade</label>
+            <input type="text" class="form-control" id="validade" name="Validade" value="@Model.Validade" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+        </div>
+    </div>

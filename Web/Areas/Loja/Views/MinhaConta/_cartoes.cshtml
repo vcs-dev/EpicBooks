@@ -9,7 +9,6 @@
                 <th class="align-middle">Apelido</th>
                 <th class="align-middle">Nome Impresso</th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,14 +29,14 @@
         {
             foreach (var item in Model)
             {
-                <option selected="@(ViewBag.CartaoPreferencial == item.Id)" disabled="@(ViewBag.CartaoPreferencial == item.Id)">@item.Apelido</option>
+                <option value="@item.Id" selected="@(ViewBag.CartaoPreferencial == item.Id)" disabled="@(ViewBag.CartaoPreferencial == item.Id)">@item.Apelido</option>
             }
         }
         else
         {
             foreach (var item in Model)
             {
-                <option>@item.Apelido</option>
+                <option value="@item.Id">@item.Apelido</option>
             }
         }
     </select>

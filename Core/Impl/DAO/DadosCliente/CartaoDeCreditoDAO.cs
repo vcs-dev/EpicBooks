@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Core.Impl.DAO.DadosCliente
 {
-    public class CartaoDeCreditoDAO :AbstractDAO
+    public class CartaoDeCreditoDAO : AbstractDAO
     {
-        public CartaoDeCreditoDAO():base("CartoesDeCredito", "CartaoId")
+        public CartaoDeCreditoDAO() : base("CartoesDeCredito", "CartaoId")
         {
         }
 
@@ -58,6 +58,56 @@ namespace Core.Impl.DAO.DadosCliente
                 Desconectar();
             }
             return cartoes.ToList<EntidadeDominio>();
+        }
+
+        public override void Alterar(EntidadeDominio entidade)
+        {
+            CartaoDeCredito cartao = (CartaoDeCredito)entidade;
+            string cmdTextoCartaoDeCredito;
+
+            try
+            {
+                Conectar();
+                BeginTransaction();
+
+                SqlCommand comandoCartaoDeCredito;
+
+                cmdTextoCartaoDeCredito = "UPDATE CartoesDeCredito SET Bandeira = @Bandeira," +
+                                                      "Numeracao = @Numeracao," +
+                                                      "NomeImpresso = @NomeImpresso," +
+                                                      "Validade = @Validade," +
+                                                      "Apelido = @Apelido," +
+                                                      "Ativo = @Ativo " +
+                                          "WHERE CartaoId = @CartaoId";
+
+                comandoCartaoDeCredito = new SqlCommand(cmdTextoCartaoDeCredito, conexao, transacao);
+
+                comandoCartaoDeCredito.Parameters.AddWithValue("@Bandeira", cartao.Bandeira);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@Numeracao", cartao.Numeracao);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@NomeImpresso", cartao.NomeImpresso);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@Validade", cartao.Validade);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@Apelido", cartao.Apelido);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@Ativo", cartao.Ativo);
+                comandoCartaoDeCredito.Parameters.AddWithValue("@CartaoId", cartao.Id);
+                comandoCartaoDeCredito.ExecuteNonQuery();
+
+                Commit();
+                comandoCartaoDeCredito.Dispose();
+            }
+            catch (SqlException e)
+            {
+                Rollback();
+                throw e;
+            }
+            catch (InvalidOperationException e)
+            {
+                Rollback();
+                throw e;
+            }
+            finally
+            {
+                Desconectar();
+            }
         }
 
         public List<CartaoDeCredito> DataReaderCartaoParaList(SqlDataReader dataReader)

@@ -7,6 +7,7 @@ using Domain.Negocio;
 using Domain.Produto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Web.Util;
 
 namespace Web.Areas.Loja.Controllers
@@ -468,7 +469,7 @@ namespace Web.Areas.Loja.Controllers
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
-                resultado = new Facade().Salvar(cartao);
+                resultado = new Facade().Alterar(cartao);
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
@@ -482,20 +483,53 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public IActionResult ExcluirCartao(int id)
+        public IActionResult ExcluirCartao(int CartaoId)
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 string msg;
 
-                resultado = new Facade().Alterar(new CartaoDeCredito { Id = id, Ativo = 0 });
+                resultado = new Facade().Alterar(new CartaoDeCredito { Id = CartaoId, Ativo = 0 });
                 if (resultado.Msg != null)
                 {
                     msg = resultado.Msg;
                     return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
                 }
                 msg = "Cartão excluído com sucesso!";
+                return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+            }
+            else
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
+        }
+
+        [Area("Loja")]
+        public IActionResult AlterarCartaoPreferencial(int CartaoId)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                string msg;
+
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                usuarios.FirstOrDefault().CartaoPreferencial = CartaoId;
+                resultado = new Facade().Alterar(usuarios.FirstOrDefault());
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                msg = "Cartão preferencial alterado com sucesso!";
                 return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
             }
             else
