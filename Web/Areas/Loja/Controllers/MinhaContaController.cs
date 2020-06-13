@@ -440,12 +440,12 @@ namespace Web.Areas.Loja.Controllers
         }
 
         [Area("Loja")]
-        public IActionResult EditarCartao(int id)
+        public IActionResult EditarCartao(int CartaoId)
         {
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
-                resultado = new Facade().Consultar(new CartaoDeCredito { Id = id });
+                resultado = new Facade().Consultar(new CartaoDeCredito { Id = CartaoId });
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
@@ -489,8 +489,20 @@ namespace Web.Areas.Loja.Controllers
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 string msg;
+                resultado = new Facade().Consultar(new CartaoDeCredito { Id = CartaoId });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                cartoes.FirstOrDefault().Ativo = 0;
 
-                resultado = new Facade().Alterar(new CartaoDeCredito { Id = CartaoId, Ativo = 0 });
+                resultado = new Facade().Alterar(cartoes.FirstOrDefault());
                 if (resultado.Msg != null)
                 {
                     msg = resultado.Msg;

@@ -2,6 +2,11 @@
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
         $('#modalMensagem').modal('show');
 
+    $('#btnOkModal').on('click', function () {
+        if($('#textoModal').text() === 'Cartão excluído com sucesso!')
+            location.href = '/Loja/MinhaConta/DadosPagamento/';
+    });
+     
     $('#btnExcluirCartao').on('click', function () {
         $.ajax({
             type: "get",
