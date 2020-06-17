@@ -3,11 +3,16 @@
         $('#modalMensagem').modal('show');
 
     $('#btnOkModal').on('click', function () {
-        if($('#textoModal').text() === 'Cartão excluído com sucesso!')
+        if($('#textoModal').text() === 'Cartão excluído com sucesso!' || $('#textoModal').text() === 'Cartão cadastrado com sucesso!')
             location.href = '/Loja/MinhaConta/DadosPagamento/';
     });
      
     $('#btnExcluirCartao').on('click', function () {
+        $('#textoModalConfirmacao').text('Deseja realmente excluir esse cartão?');
+        $('#modalConfirmacao').modal('show');
+    });
+
+    $('#btnSimModal').on('click', function () {
         $.ajax({
             type: "get",
             url: "/Loja/MinhaConta/ExcluirCartao/",

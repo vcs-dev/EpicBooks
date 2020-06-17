@@ -157,14 +157,6 @@ namespace Core.Impl.Control
             rns.Add(nameof(Endereco), null);
             #endregion
 
-            #region CartaoDeCredito
-            CartaoDeCreditoDAO cartaoDeCreditoDAO = new CartaoDeCreditoDAO();
-
-            daos.Add(nameof(CartaoDeCredito), cartaoDeCreditoDAO);
-
-            rns.Add(nameof(CartaoDeCredito), null);
-            #endregion
-
             #region Estoque
             EstoqueDAO estoqueDAO = new EstoqueDAO();
 
@@ -294,6 +286,38 @@ namespace Core.Impl.Control
             rnsUsuario.Add("ALTERAR", rnsAlterarUsuario);
 
             rns.Add(nameof(Usuario), rnsUsuario);
+            #endregion
+
+            #region Cartao 
+            CartaoDeCreditoDAO cartaoDeCreditoDAO = new CartaoDeCreditoDAO();
+
+            daos.Add(nameof(CartaoDeCredito), cartaoDeCreditoDAO);
+
+            //Regras de salvar
+
+            inclusaoDataCadastro = new InclusaoDataCadastro();
+            ValidadorDadosObrigatoriosCartao validadorDadosObrigatoriosCartao = new ValidadorDadosObrigatoriosCartao();
+            validadorDadosCartao = new ValidadorDadosCartao();
+
+            List<IStrategy> rnsSalvarCartaoDeCredito = new List<IStrategy>();
+
+            rnsSalvarCartaoDeCredito.Add(inclusaoDataCadastro);
+            rnsSalvarCartaoDeCredito.Add(validadorDadosObrigatoriosCartao);
+            rnsSalvarCartaoDeCredito.Add(validadorDadosCartao);
+
+            //Regras de alterar
+
+            List<IStrategy> rnsAlterarCartaoDeCredito = new List<IStrategy>();
+
+            rnsAlterarCartaoDeCredito.Add(validadorDadosObrigatoriosCartao);
+            rnsAlterarCartaoDeCredito.Add(validadorDadosCartao);
+
+            Dictionary<string, List<IStrategy>> rnsCartaoDeCredito = new Dictionary<string, List<IStrategy>>();
+
+            rnsCartaoDeCredito.Add("SALVAR", rnsSalvarCartaoDeCredito);
+            rnsCartaoDeCredito.Add("ALTERAR", rnsAlterarCartaoDeCredito);
+
+            rns.Add(nameof(CartaoDeCredito), rnsCartaoDeCredito);
             #endregion
 
             #region Notificacao

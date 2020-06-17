@@ -92,7 +92,14 @@
                                 <option selected value="">Escolha</option>
                                 @foreach (var item in ViewBag.Cartoes)
                                 {
-                                    <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                                    if (string.IsNullOrEmpty(item.Apelido))
+                                    {
+                                        <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Numeracao</option>
+                                    }
+                                    else
+                                    {
+                                        <option selected="@(Model.CartaoUm.Id == item.Id)" value="@item.Id">@item.Apelido</option>
+                                    }
                                 }
                             </select>
                         </div>

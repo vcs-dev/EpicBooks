@@ -1,6 +1,6 @@
 ﻿@model Domain.DadosCliente.CartaoDeCredito
 @{
-    ViewData["Title"] = "Cartão - Edição";
+    ViewData["Title"] = "Cartão - Cadastro";
 }
 
 <div class="container">
@@ -9,10 +9,10 @@
             @await Html.PartialAsync("_menu")
         </div>
         <div class="col-md-9">
-            <h4>Meu cartão de crédito</h4>
-            <form action="/Loja/MinhaConta/EditarCartao/" method="post">
+            <h4>Meus cartões de crédito</h4>
+            <form action="/Loja/MinhaConta/SalvarCartao/" method="post">
                 @await Html.PartialAsync("_cartao", Model)
-                <button type="submit" class="btn btn-success mb-2">Salvar alterações</button>
+                <button type="submit" class="btn btn-success mb-2">Salvar</button>
             </form>
         </div>
     </div>

@@ -13,6 +13,75 @@ namespace Core.Impl.DAO.DadosCliente
         {
         }
 
+        public override void Salvar(EntidadeDominio entidade)
+        {
+            CartaoDeCredito cartao = (CartaoDeCredito)entidade;
+            string cmdTextoCartao;
+
+            try
+            {
+                Conectar();
+                BeginTransaction();
+
+                cmdTextoCartao = "INSERT INTO CartoesDeCredito(Bandeira," +
+                                                              "Numeracao," +
+                                                              "NomeImpresso, " +
+                                                              "Apelido, " +
+                                                              "Validade, " +
+                                                              "Ativo" +
+                                 ") " +
+                                 "VALUES(@Bandeira," +
+                                        "@Numeracao," +
+                                        "@NomeImpresso, " +
+                                        "@Apelido, " +
+                                        "@Validade," +
+                                        "@Ativo" +
+                                 ") SELECT CAST(scope_identity() AS int)";
+
+                SqlCommand comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);
+
+                comandoCartao.Parameters.AddWithValue("@Bandeira", cartao.Bandeira);
+                comandoCartao.Parameters.AddWithValue("@Numeracao", cartao.Numeracao);
+                comandoCartao.Parameters.AddWithValue("@NomeImpresso", cartao.NomeImpresso);
+                if(string.IsNullOrEmpty(cartao.Apelido))
+                    comandoCartao.Parameters.AddWithValue("@Apelido", DBNull.Value);
+                else
+                    comandoCartao.Parameters.AddWithValue("@Apelido", cartao.Apelido);
+                comandoCartao.Parameters.AddWithValue("@Validade", cartao.Validade);
+                comandoCartao.Parameters.AddWithValue("@Ativo", cartao.Ativo);
+                cartao.Id = Convert.ToByte(comandoCartao.ExecuteScalar());
+
+                cmdTextoCartao = "INSERT INTO UsuariosCartoes(UsuarioId," +
+                                             "CartaoId" +
+                 ") " +
+                 "VALUES(@UsuarioId," +
+                        "@CartaoId" +
+                 ")";
+                comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);
+
+                comandoCartao.Parameters.AddWithValue("@UsuarioId", cartao.UsuarioId);
+                comandoCartao.Parameters.AddWithValue("@CartaoId", cartao.Id);
+                comandoCartao.ExecuteNonQuery();
+                comandoCartao.Dispose();
+
+                Commit();
+            }
+            catch (SqlException e)
+            {
+                Rollback();
+                throw e;
+            }
+            catch (InvalidOperationException e)
+            {
+                Rollback();
+                throw e;
+            }
+            finally
+            {
+                Desconectar();
+            }
+        }
+
         public override List<EntidadeDominio> Consultar(EntidadeDominio entidade)
         {
             CartaoDeCredito cartao = (CartaoDeCredito)entidade;
@@ -24,14 +93,39 @@ namespace Core.Impl.DAO.DadosCliente
                 Conectar();
 
                 if (cartao.Id > 0)
-                    cmdTextoCartao = "SELECT * FROM CartoesDeCredito WHERE CartaoId = @CartaoId AND Ativo = 1";
+                    cmdTextoCartao = "SELECT CartaoId, " +
+                                            "Bandeira, " +
+                                            "Numeracao, " +
+                                            "NomeImpresso, " +
+                                            "Validade, " +
+                                            "Apelido, " +
+                                            "Ativo, " +
+                                            "Descricao AS BandeiraDescricao " +
+                                     "FROM CartoesDeCredito CC JOIN BandeirasCartoes BC ON(CC.Bandeira = BC.BandeiraId) " +
+                                     "WHERE CartaoId = @CartaoId AND Ativo = 1";
                 else if (cartao.UsuarioId > 0)
-                    cmdTextoCartao = "SELECT * " +
+                    cmdTextoCartao = "SELECT CC.CartaoId, " +
+                                            "Bandeira, " +
+                                            "Numeracao, " +
+                                            "NomeImpresso, " +
+                                            "Validade, " +
+                                            "Apelido, " +
+                                            "Ativo, " +
+                                            "Descricao AS BandeiraDescricao " +
                                      "FROM CartoesDeCredito CC " +
                                         "JOIN UsuariosCartoes UC ON(CC.CartaoId = UC.CartaoId) " +
+                                        "JOIN BandeirasCartoes BC ON(CC.Bandeira = BC.BandeiraId) " +
                                      "WHERE UsuarioId = @UsuarioId AND Ativo = 1";
                 else
-                    cmdTextoCartao = "SELECT * FROM CartoesDeCredito";
+                    cmdTextoCartao = "SELECT CartaoId, " +
+                                            "Bandeira, " +
+                                            "Numeracao, " +
+                                            "NomeImpresso, " +
+                                            "Validade, " +
+                                            "Apelido, " +
+                                            "Ativo, " +
+                                            "Descricao AS BandeiraDescricao " +
+                                     "FROM CartoesDeCredito CC JOIN BandeirasCartoes BC ON(CC.Bandeira = BC.BandeiraId)";
 
                 SqlCommand comandoCartao = new SqlCommand(cmdTextoCartao, conexao);
 
@@ -127,8 +221,15 @@ namespace Core.Impl.DAO.DadosCliente
                         Numeracao = dataReader["Numeracao"].ToString(),
                         NomeImpresso = dataReader["NomeImpresso"].ToString(),
                         Validade = dataReader["Validade"].ToString(),
-                        Apelido = dataReader["Apelido"].ToString()
                     };
+                    if (Convert.IsDBNull(dataReader["Apelido"]))
+                        cartao.Apelido = "";
+                    else
+                        cartao.Apelido = dataReader["Apelido"].ToString();
+                    if (Convert.IsDBNull(dataReader["BandeiraDescricao"]))
+                        cartao.BandeiraDescricao = "";
+                    else
+                        cartao.BandeiraDescricao = dataReader["BandeiraDescricao"].ToString();
 
                     cartoes.Add(cartao);
                 }

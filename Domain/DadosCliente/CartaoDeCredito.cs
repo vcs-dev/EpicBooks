@@ -12,6 +12,7 @@
             Ativo = 1;
         }
         public int Bandeira { get; set; }
+        public string BandeiraDescricao { get; set; }
         public string Numeracao { get; set; }
         public string NomeImpresso { get; set; }
         public string Validade { get; set; }

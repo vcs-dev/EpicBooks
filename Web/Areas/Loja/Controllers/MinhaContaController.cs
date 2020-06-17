@@ -7,7 +7,6 @@ using Domain.Negocio;
 using Domain.Produto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Web.Util;
 
 namespace Web.Areas.Loja.Controllers
@@ -546,6 +545,39 @@ namespace Web.Areas.Loja.Controllers
             }
             else
                 return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
+        }
+
+        [Area("Loja")]
+        public IActionResult SalvarCartao()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                return View(new CartaoDeCredito());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult SalvarCartao(CartaoDeCredito cartao)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                cartao.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+                resultado = new Facade().Salvar(cartao);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View(cartao);
+                }
+                ViewBag.Mensagem = "Cartão cadastrado com sucesso!";
+                return View(cartao);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
         }
     }
 }

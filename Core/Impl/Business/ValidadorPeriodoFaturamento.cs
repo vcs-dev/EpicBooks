@@ -22,10 +22,10 @@ namespace Core.Impl.Business
                     return "Data final em formato incorreto.";
                 if (faturamento.DataInicial.Equals(faturamento.DataFinal))
                     return "A data inicial não pode ser igual à data final.";
-                if (Convert.ToDateTime(faturamento.DataInicial).AddDays(30) > Convert.ToDateTime(faturamento.DataFinal))
-                    return "Informe um período igual ou superior a 30 dias";
                 if (Convert.ToDateTime(faturamento.DataInicial) > Convert.ToDateTime(faturamento.DataFinal))
                     return "A data inicial não pode ser maior que a data final.";
+                if (Convert.ToDateTime(faturamento.DataInicial).AddDays(30) > Convert.ToDateTime(faturamento.DataFinal))
+                    return "Informe um período igual ou superior a 30 dias";
             }
             else
             {

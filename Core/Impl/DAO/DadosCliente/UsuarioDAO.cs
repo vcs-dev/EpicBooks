@@ -34,7 +34,8 @@ namespace Core.Impl.DAO.DadosCliente
                                  "VALUES(@Bandeira," +
                                         "@Numeracao," +
                                         "@NomeImpresso, " +
-                                        "@Validade" +
+                                        "@Validade, " +
+                                        "@Ativo" +
                                  ") SELECT CAST(scope_identity() AS int)";
 
                 SqlCommand comandoCartao = new SqlCommand(cmdTextoCartao, conexao, transacao);

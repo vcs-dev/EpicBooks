@@ -2,7 +2,7 @@
     <input type="hidden" name="Id" value="@Model.Id" />
     <div class="row">
         <div class="col-md-3 form-group">
-            <label for="bandeira">Bandeira</label>
+            <label for="bandeira">Bandeira*</label>
             <select class="custom-select" id="bandeira" name="Bandeira" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
                 <option value="1" selected="@(Model.Bandeira == 1)">Mastercard</option>
                 <option value="2" selected="@(Model.Bandeira == 2)">Visa</option>
@@ -11,19 +11,19 @@
             </select>
         </div>
         <div class="col-md-3 form-group">
-            <label for="numeracao">Numeração</label>
+            <label for="numeracao">Numeração*</label>
             <input type="text" class="form-control" id="numeracao" name="Numeracao" value="@Model.Numeracao" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
         </div>
         <div class="col-md-4 form-group">
-            <label for="apelido">Numeração</label>
+            <label for="apelido">Apelido</label>
             <input type="text" class="form-control" id="apelido" name="Apelido" value="@Model.Apelido" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
         </div>
         <div class="col-md-4 form-group">
-            <label for="nomeImpresso">Nome impresso no cartão</label>
+            <label for="nomeImpresso">Nome impresso no cartão*</label>
             <input type="text" class="form-control" id="nomeImpresso" name="NomeImpresso" value="@Model.NomeImpresso" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
         </div>
         <div class="col-md-2 form-group">
-            <label for="validade">Validade</label>
+            <label for="validade">Validade*</label>
             <input type="text" class="form-control" id="validade" name="Validade" value="@Model.Validade" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
         </div>
     </div>

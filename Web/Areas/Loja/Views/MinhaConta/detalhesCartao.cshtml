@@ -11,7 +11,7 @@
         <div class="col-md-9">
             <h4>Meu cartão de crédito</h4>
             @await Html.PartialAsync("_cartao", Model)
-            <a href="/loja/Minhaconta/EditarCartao/@Model.Id" class="btn btn-secondary mb-2">Editar <i class="fa fa-edit"></i></a>
+            <a href="/loja/Minhaconta/EditarCartao?CartaoId=@Model.Id" class="btn btn-secondary mb-2">Editar <i class="fa fa-edit"></i></a>
             <button type="button" class="btn btn-danger mb-2" id="btnExcluirCartao" value="@Model.Id">Excluir <i class="fa fa-trash-alt"></i></button>
         </div>
     </div>
