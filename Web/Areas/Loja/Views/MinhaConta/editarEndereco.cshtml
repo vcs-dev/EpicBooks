@@ -11,6 +11,7 @@
         <div class="col-md-9">
             <h4>Meu endereço</h4>
             <form action="/Loja/MinhaConta/EditarEndereco/" method="post">
+                <input type="hidden" name="TipoEndereco" value="@Model.TipoEndereco" />
                 @await Html.PartialAsync("_endereco", Model)
                 <button type="submit" class="btn btn-success mb-2">Salvar alterações</button>
             </form>

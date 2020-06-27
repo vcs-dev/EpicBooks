@@ -1,20 +1,23 @@
 ﻿@model Domain.DadosCliente.Endereco
 <input type="hidden" name="Id" value="@Model.Id" />
 <div class="row">
-    <div class="col-md-3 form-group">
+    <div class="col-md-4 form-group">
         <label for="tipoEndereco">Tipo de endereço*</label>
-        <select class="custom-select" id="tipoEndereco" name="TipoEndereco" disabled="@(!ViewData["Title"].ToString().Contains("Cadastro"))">
-            @if (Model.TipoEndereco == 1)
-            {
+        @if (ViewData["Title"].ToString().Contains("Cadastro"))
+        {
+            <select class="custom-select" id="tipoEndereco" name="TipoEndereco">
                 <option value="1" selected>Entrega</option>
-            }
-            else if (Model.TipoEndereco == 2)
-            {
-                <option value="2" selected>Cobrança</option>
-            }
-        </select>
+            </select>
+        }
+        else
+        {
+            <select class="custom-select" id="tipoEndereco" name="TipoEndereco" disabled>
+                <option value="1" selected="@(Model.TipoEndereco == 1)">Entrega</option>
+                <option value="2" selected="@(Model.TipoEndereco == 2)">Cobrança</option>
+            </select>
+        }
     </div>
-    <div class="col-md-3 form-group">
+    <div class="col-md-4 form-group">
         <label for="tipoEndereco">Tipo de logradouro*</label>
         <select class="custom-select" id="tipoLogradouro" name="TipoLogradouro" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
             <option value="" selected="@(Model.TipoLogradouro == 0)"></option>
@@ -31,11 +34,11 @@
             <option value="2" selected="@(Model.TipoResidencia == 2)">Apartamento</option>
         </select>
     </div>
-    <div class="col-md-5 form-group">
+    <div class="col-md-6 form-group">
         <label for="logradouro">Logradouro*</label>
         <input type="text" class="form-control" id="logradouro" name="Logradouro" value="@Model.Logradouro" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
     </div>
-    <div class="col-md-2 form-group">
+    <div class="col-md-3 form-group">
         <label for="numero">Número*</label>
         <input type="text" class="form-control" id="numero" name="Numero" value="@Model.Numero" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
     </div>
@@ -43,7 +46,11 @@
         <label for="cep">Cep*</label>
         <input type="text" class="form-control" id="cep" name="Cep" value="@Model.Cep" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
     </div>
-    <div class="col-md-5 form-group">
+    <div class="col-md-6 form-group">
+        <label for="bairro">Bairro*</label>
+        <input type="text" class="form-control" id="bairro" name="Bairro" value="@Model.Bairro" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+    </div>
+    <div class="col-md-6 form-group">
         <label for="cidade">Cidade*</label>
         <select class="custom-select" id="cidade" name="Cidade" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
             <option value="" selected="@(Model.Cidade == 0)"></option>
@@ -59,7 +66,7 @@
             <option value="2" selected="@(Model.Estado == 2)">MG</option>
         </select>
     </div>
-    <div class="col-md-2 form-group">
+    <div class="col-md-3 form-group">
         <label for="pais">País*</label>
         <select class="custom-select" id="pais" name="Pais" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
             <option value="1" selected>Brasil</option>

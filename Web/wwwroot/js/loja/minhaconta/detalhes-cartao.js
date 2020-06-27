@@ -3,7 +3,8 @@
         $('#modalMensagem').modal('show');
 
     $('#btnOkModal').on('click', function () {
-        if($('#textoModal').text() === 'Cartão excluído com sucesso!' || $('#textoModal').text() === 'Cartão cadastrado com sucesso!')
+        if ($('#textoModal').text() === 'Cartão excluído com sucesso!' || $('#textoModal').text() === 'Cartão cadastrado com sucesso!' ||
+            $('#textoModal').text() === 'Alterações salvas com sucesso!')
             location.href = '/Loja/MinhaConta/DadosPagamento/';
     });
      
@@ -16,7 +17,7 @@
         $.ajax({
             type: "get",
             url: "/Loja/MinhaConta/ExcluirCartao/",
-            data: { CartaoId: $(this).val() },
+            data: { CartaoId: $('#btnExcluirCartao').val() },
             dataType: "json",
             success: function (response) {
                 var text = JSON.parse(response);

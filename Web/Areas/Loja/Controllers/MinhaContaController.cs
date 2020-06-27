@@ -586,7 +586,7 @@ namespace Web.Areas.Loja.Controllers
             if (HttpContext.Session.Get<int>("idUsuario") > 0)
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
-                resultado = new Facade().Consultar(new Endereco { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                resultado = new Facade().Consultar(new Endereco { UsuarioId = HttpContext.Session.Get<int>("idUsuario"), Ativo = 1 });
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
@@ -676,20 +676,20 @@ namespace Web.Areas.Loja.Controllers
             {
                 ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
                 string msg;
-                resultado = new Facade().Consultar(new CartaoDeCredito { Id = EnderecoId });
+                resultado = new Facade().Consultar(new Endereco { Id = EnderecoId });
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
                     return View();
                 }
-                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                List<Endereco> enderecos = new List<Endereco>();
                 foreach (var item in resultado.Entidades)
                 {
-                    cartoes.Add((CartaoDeCredito)item);
+                    enderecos.Add((Endereco)item);
                 }
-                cartoes.FirstOrDefault().Ativo = 0;
+                enderecos.FirstOrDefault().Ativo = 0;
 
-                resultado = new Facade().Alterar(cartoes.FirstOrDefault());
+                resultado = new Facade().Alterar(enderecos.FirstOrDefault());
                 if (resultado.Msg != null)
                 {
                     msg = resultado.Msg;

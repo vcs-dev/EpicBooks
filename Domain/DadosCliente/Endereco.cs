@@ -2,6 +2,10 @@
 {
     public class Endereco : EntidadeDominio
     {
+        public Endereco()
+        {
+            Ativo = 1;
+        }
         public int UsuarioId { get; set; }
         public int TipoEndereco { get; set; }
         public int TipoResidencia { get; set; }
@@ -14,5 +18,6 @@
         public int Estado { get; set; }
         public int Pais { get; set; }
         public string Observacao { get; set; }
+        public int Ativo { get; set; }
     }
 }

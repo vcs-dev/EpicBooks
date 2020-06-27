@@ -51,7 +51,8 @@ namespace Web.Areas.Loja.Controllers
                 }
 
                 endereco.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
-
+                endereco.TipoEndereco = 1;
+                endereco.Ativo = 1;
                 resultado = new Facade().Consultar(endereco);//Busca enderecos
                 if (!string.IsNullOrEmpty(resultado.Msg))
                     ViewBag.Mensagem = resultado.Msg;

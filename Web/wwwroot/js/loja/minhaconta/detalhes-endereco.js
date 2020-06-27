@@ -3,8 +3,9 @@
         $('#modalMensagem').modal('show');
 
     $('#btnOkModal').on('click', function () {
-        if ($('#textoModal').text() === 'Endereço excluído com sucesso!' || $('#textoModal').text() === 'Endereço cadastrado com sucesso!')
-            location.href = '/Loja/MinhaConta/DadosPagamento/';
+        if ($('#textoModal').text() === 'Endereço excluído com sucesso!' || $('#textoModal').text() === 'Endereço cadastrado com sucesso!' ||
+            $('#textoModal').text() === 'Alterações salvas com sucesso!')
+            location.href = '/Loja/MinhaConta/Enderecos/';
     });
      
     $('#btnExcluirEndereco').on('click', function () {
@@ -16,7 +17,7 @@
         $.ajax({
             type: "get",
             url: "/Loja/MinhaConta/ExcluirEndereco/",
-            data: { CartaoId: $(this).val() },
+            data: { EnderecoId: $('#btnExcluirEndereco').val() },
             dataType: "json",
             success: function (response) {
                 var text = JSON.parse(response);
