@@ -43,7 +43,7 @@
         <label for="cep">Cep*</label>
         <input type="text" class="form-control" id="cep" name="Cep" value="@Model.Cep" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
     </div>
-    <div class="col-md-4 form-group">
+    <div class="col-md-5 form-group">
         <label for="cidade">Cidade*</label>
         <select class="custom-select" id="cidade" name="Cidade" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
             <option value="" selected="@(Model.Cidade == 0)"></option>
@@ -51,12 +51,12 @@
             <option value="2" selected="@(Model.Cidade == 2)">Suzano</option>
         </select>
     </div>
-    <div class="col-md-4 form-group">
+    <div class="col-md-3 form-group">
         <label for="estado">Estado*</label>
         <select class="custom-select" id="estado" name="Estado" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
             <option value="" selected="@(Model.Estado == 0)"></option>
-            <option value="1" selected="@(Model.Estado == 1)">São Paulo</option>
-            <option value="2" selected="@(Model.Estado == 2)">Minas Gerais</option>
+            <option value="1" selected="@(Model.Estado == 1)">SP</option>
+            <option value="2" selected="@(Model.Estado == 2)">MG</option>
         </select>
     </div>
     <div class="col-md-2 form-group">
