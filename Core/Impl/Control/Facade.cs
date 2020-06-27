@@ -149,14 +149,6 @@ namespace Core.Impl.Control
             rns.Add(nameof(Cupom), null);
             #endregion
 
-            #region Endereco
-            EnderecoDAO enderecoDAO = new EnderecoDAO();
-
-            daos.Add(nameof(Endereco), enderecoDAO);
-
-            rns.Add(nameof(Endereco), null);
-            #endregion
-
             #region Estoque
             EstoqueDAO estoqueDAO = new EstoqueDAO();
 
@@ -256,6 +248,7 @@ namespace Core.Impl.Control
             ValidadorCpf validadorCpf = new ValidadorCpf();
             ValidadorSenha validadorSenha = new ValidadorSenha();
             ValidadorDadosCartao validadorDadosCartao = new ValidadorDadosCartao();
+            ValidadorDadosEndereco validadorDadosEndereco = new ValidadorDadosEndereco();
             ValidadorEmail validadorEmail = new ValidadorEmail();
           
             List<IStrategy> rnsSalvarUsuario = new List<IStrategy>();
@@ -286,6 +279,38 @@ namespace Core.Impl.Control
             rnsUsuario.Add("ALTERAR", rnsAlterarUsuario);
 
             rns.Add(nameof(Usuario), rnsUsuario);
+            #endregion
+
+            #region Endereco
+            EnderecoDAO enderecoDAO = new EnderecoDAO();
+
+            daos.Add(nameof(Endereco), enderecoDAO);
+
+            //Regras de salvar
+
+            inclusaoDataCadastro = new InclusaoDataCadastro();
+            ValidadorDadosObrigatoriosEndereco validadorDadosObrigatoriosEndereco = new ValidadorDadosObrigatoriosEndereco();
+            validadorDadosEndereco = new ValidadorDadosEndereco();
+
+            List<IStrategy> rnsSalvarEndereco = new List<IStrategy>();
+
+            rnsSalvarEndereco.Add(inclusaoDataCadastro);
+            rnsSalvarEndereco.Add(validadorDadosObrigatoriosEndereco);
+            rnsSalvarEndereco.Add(validadorDadosEndereco);
+
+            //Regras de alterar
+
+            List<IStrategy> rnsAlterarEndereco = new List<IStrategy>();
+
+            rnsAlterarEndereco.Add(validadorDadosObrigatoriosEndereco);
+            rnsAlterarEndereco.Add(validadorDadosEndereco);
+
+            Dictionary<string, List<IStrategy>> rnsEndereco = new Dictionary<string, List<IStrategy>>();
+
+            rnsEndereco.Add("SALVAR", rnsSalvarEndereco);
+            rnsEndereco.Add("ALTERAR", rnsAlterarEndereco);
+
+            rns.Add(nameof(Endereco), rnsEndereco);
             #endregion
 
             #region Cartao 

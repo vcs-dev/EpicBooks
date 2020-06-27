@@ -4,6 +4,7 @@
         <div class="col-md-3 form-group">
             <label for="tipoEndereco">Tipo de endereço*</label>
             <select class="custom-select" id="tipoEndereco" name="TipoEndereco" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+                <option value="" selected="@(Model.TipoEndereco == 0)"></option>
                 <option value="1" selected="@(Model.TipoEndereco == 1)">Entrega</option>
                 <option value="2" selected="@(Model.TipoEndereco == 2)">Cobrança</option>
             </select>
@@ -11,6 +12,7 @@
         <div class="col-md-3 form-group">
             <label for="tipoEndereco">Tipo de logradouro*</label>
             <select class="custom-select" id="tipoLogradouro" name="TipoLogradouro" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+                <option value="" selected="@(Model.TipoLogradouro == 0)"></option>
                 <option value="1" selected="@(Model.TipoLogradouro == 1)">Rua</option>
                 <option value="2" selected="@(Model.TipoLogradouro == 2)">Av.</option>
                 <option value="3" selected="@(Model.TipoLogradouro == 3)">Rod.</option>
@@ -19,6 +21,7 @@
         <div class="col-md-4 form-group">
             <label for="tipoResidencia">Tipo de residência*</label>
             <select class="custom-select" id="tipoResidencia" name="TipoResidencia" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+                <option value="" selected="@(Model.TipoResidencia == 0)"></option>
                 <option value="1" selected="@(Model.TipoResidencia == 1)">Casa</option>
                 <option value="2" selected="@(Model.TipoResidencia == 2)">Apartamento</option>
             </select>
@@ -38,13 +41,15 @@
         <div class="col-md-4 form-group">
             <label for="cidade">Cidade*</label>
             <select class="custom-select" id="cidade" name="Cidade" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
-                <option value="1" selected="@(Model.TipoResidencia == 1)">Mogi das Cruzes</option>
-                <option value="2" selected="@(Model.TipoResidencia == 2)">Suzano</option>
+                <option value="" selected="@(Model.Cidade == 0)"></option>
+                <option value="1" selected="@(Model.Cidade == 1)">Mogi das Cruzes</option>
+                <option value="2" selected="@(Model.Cidade == 2)">Suzano</option>
             </select>
         </div>
         <div class="col-md-4 form-group">
             <label for="estado">Estado*</label>
             <select class="custom-select" id="estado" name="Estado" disabled="@(ViewData["Title"].ToString().Contains("Detalhes"))">
+                <option value="" selected="@(Model.Estado == 0)"></option>
                 <option value="1" selected="@(Model.Estado == 1)">São Paulo</option>
                 <option value="2" selected="@(Model.Estado == 2)">Minas Gerais</option>
             </select>

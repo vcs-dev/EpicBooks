@@ -625,5 +625,114 @@ namespace Web.Areas.Loja.Controllers
             else
                 return RedirectToAction("Logar", "Conta");
         }
+
+        [Area("Loja")]
+        public IActionResult EditarEndereco(int EnderecoId)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new Endereco { Id = EnderecoId });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Endereco> enderecos = new List<Endereco>();
+                foreach (var item in resultado.Entidades)
+                {
+                    enderecos.Add((Endereco)item);
+                }
+                return View(enderecos.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult EditarEndereco(Endereco endereco)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Alterar(endereco);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View(endereco);
+                }
+                ViewBag.Mensagem = "Alterações salvas com sucesso!";
+                return View(endereco);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult ExcluirEndereco(int EnderecoId)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                string msg;
+                resultado = new Facade().Consultar(new CartaoDeCredito { Id = EnderecoId });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<CartaoDeCredito> cartoes = new List<CartaoDeCredito>();
+                foreach (var item in resultado.Entidades)
+                {
+                    cartoes.Add((CartaoDeCredito)item);
+                }
+                cartoes.FirstOrDefault().Ativo = 0;
+
+                resultado = new Facade().Alterar(cartoes.FirstOrDefault());
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                msg = "Endereço excluído com sucesso!";
+                return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+            }
+            else
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
+        }
+
+        [Area("Loja")]
+        public IActionResult SalvarEndereco()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                return View(new Endereco());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        [HttpPost]
+        public IActionResult SalvarEndereco(Endereco endereco)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                endereco.UsuarioId = HttpContext.Session.Get<int>("idUsuario");
+                resultado = new Facade().Salvar(endereco);
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View(endereco);
+                }
+                ViewBag.Mensagem = "Endereço cadastrado com sucesso!";
+                return View(endereco);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
     }
 }
