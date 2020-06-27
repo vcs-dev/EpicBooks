@@ -31,7 +31,7 @@ namespace Core.Impl.Business
                 {
                     regex = new Regex(@"[!@#$%&*()]+");
                     mc = regex.Matches(endereco.Logradouro);
-                    if (mc.Count < 1)
+                    if (mc.Count > 1)
                         return "O logradouro não deve conter caracteres especiais";
                 }
             }
