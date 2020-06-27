@@ -1,0 +1,26 @@
+﻿@model Domain.DadosCliente.Endereco
+@{
+    ViewData["Title"] = "Cartão - Detalhes";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <h4>Meu endereco</h4>
+            @await Html.PartialAsync("_endereco", Model)
+            <a href="/loja/Minhaconta/EditarEndereco?EnderecoId=@Model.Id" class="btn btn-secondary mb-2">Editar <i class="fa fa-edit"></i></a>
+            @if (Model.TipoEndereco == 1)
+            {
+                <button type="button" class="btn btn-danger mb-2" id="btnExcluirEndereco" value="@Model.Id">Excluir <i class="fa fa-trash-alt"></i></button>
+            }
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+
+@section Scripts{
+    <script src="~/js/loja/minhaconta/detalhes-endereco.js"></script>
+}

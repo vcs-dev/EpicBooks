@@ -579,5 +579,51 @@ namespace Web.Areas.Loja.Controllers
             else
                 return RedirectToAction("Logar", "Conta");
         }
+
+        [Area("Loja")]
+        public IActionResult Enderecos()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new Endereco { UsuarioId = HttpContext.Session.Get<int>("idUsuario") });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Endereco> enderecos = new List<Endereco>();
+                foreach (var item in resultado.Entidades)
+                {
+                    enderecos.Add((Endereco)item);
+                }
+                return View(enderecos);
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult DetalhesEndereco(int id)
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                resultado = new Facade().Consultar(new Endereco { Id = id });
+                if (resultado.Msg != null)
+                {
+                    ViewBag.Mensagem = resultado.Msg;
+                    return View();
+                }
+                List<Endereco> enderecos = new List<Endereco>();
+                foreach (var item in resultado.Entidades)
+                {
+                    enderecos.Add((Endereco)item);
+                }
+                return View(enderecos.FirstOrDefault());
+            }
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
     }
 }
