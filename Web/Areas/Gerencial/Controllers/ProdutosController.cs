@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,7 +54,7 @@ namespace Web.Areas.Gerencial.Controllers
         public async Task<IActionResult> CadastrarAsync(Livro livro)
         {
             resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
                 string pastaDestino = "produtos";
                 string caminhoWebRoot = _appEnvironment.WebRootPath;
@@ -85,20 +84,20 @@ namespace Web.Areas.Gerencial.Controllers
                     livro.CaminhoImagem = caminhoCurtoENomeArquivo.Replace("\\", "/");
 
                 resultado = new Facade().Salvar(livro);
-                if (!string.IsNullOrEmpty(resultado.Msg))
+                if (resultado.Msg != null)
                 {
-                    TempData["MsgErro"] = resultado.Msg;
+                    ViewBag.Mensagem = resultado.Msg;
                     return View();
                 }
                 else
                 {
-                    TempData["MsgSucesso"] = resultado.Msg;
+                    ViewBag.Mensagem = resultado.Msg;
                     return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
                 }
             }
             else
             {
-                TempData["MsgErro"] = "Isbn já cadastrado.";
+                ViewBag.Mensagem = "Isbn já cadastrado.";
                 return View("index");
             }
         }
@@ -110,14 +109,14 @@ namespace Web.Areas.Gerencial.Controllers
             List<Livro> livros;
             livro.Id = id;
             resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 return View();
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {
@@ -134,14 +133,14 @@ namespace Web.Areas.Gerencial.Controllers
             List<Livro> livros;
             livro.Id = id;
             resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 return View();
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {
@@ -162,14 +161,14 @@ namespace Web.Areas.Gerencial.Controllers
             string caminhoWebRoot = _appEnvironment.WebRootPath;
             string caminhoImagemAntiga = livro.CaminhoImagemBackup.Replace("/", "\\");
             resultado = new Facade().Consultar(livroConsulta);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 return View("editar", livro.Id);
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {
@@ -207,21 +206,21 @@ namespace Web.Areas.Gerencial.Controllers
                     livro.CaminhoImagem = caminhoCurtoENomeArquivo.Replace("\\", "/");
             }
             resultado = new Facade().Alterar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
-                TempData["MsgErro"] = resultado.Msg;
-                return View("editar", livro.Id);
+                ViewBag.Mensagem = resultado.Msg;
+                return View(livro);
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
                 string temp = caminhoImagemAntiga.Replace("\\", "/");
                 if (!temp.Equals(livro.CaminhoImagem))
                 {
                     FileInfo fi = new FileInfo(caminhoWebRoot + caminhoImagemAntiga);
                     fi.Delete();
                 }
-                return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+                ViewBag.Mensagem = "Produto alterado com sucesso!";
+                return View(livro);
             }
         }
         [Area("Gerencial")]
@@ -237,14 +236,14 @@ namespace Web.Areas.Gerencial.Controllers
             };
 
             resultado = new Facade().Consultar(livro);
-            if (!string.IsNullOrEmpty(resultado.Msg))
+            if (resultado.Msg != null)
             {
-                TempData["MsgErro"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 return PartialView("_produtos");
             }
             else
             {
-                TempData["MsgSucesso"] = resultado.Msg;
+                ViewBag.Mensagem = resultado.Msg;
                 livros = new List<Livro>();
                 foreach (var item in resultado.Entidades)
                 {

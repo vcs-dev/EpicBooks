@@ -1,40 +1,34 @@
 $(document).ready(function () {
-    const valStatus = $('#status').val();
-
     if ($('#textoModal').text() !== undefined && $('#textoModal').text().trim() !== '')
         $('#modalMensagem').modal('show');
 
+    $('#btnOkModal').on('click', function () {
+        if($('#textoModal').text() === 'Produto alterado com sucesso!')
+            location.href = '/Gerencial/Produtos/';
+    });
+
+    if ($('#status').val() === "1") {
+        $('#divCatAtivacao').removeClass('d-none');
+        $('#divCatInativacao').addClass('d-none');
+        $('#categoriaInativacao').val('');
+    }
+    else if ($('#status').val() === "0") {
+        $('#divCatInativacao').removeClass('d-none');
+        $('#divCatAtivacao').addClass('d-none');
+        $('#categoriaAtivacao').val('');
+    }
+
     $('#status').on('change', function () {
-        if ($('#status').val() !== valStatus) {
-            $('#divMudaStatus').removeClass('d-none');
-            $('#motivoMudancaStatus').prop('required', 'true');
-        }
-        else {
-            $('#divMudaStatus').addClass('d-none');
-            $('#motivoMudancaStatus').val('');
-            $('#motivoMudancaStatus').removeAttr('required');
-        }
-        if ($('#status').val() === "1" && $('#status').val() !== valStatus) {
+
+        if ($('#status').val() === "1") {
             $('#divCatAtivacao').removeClass('d-none');
-            $('#categoriaAtivacao').prop('required', 'true');
             $('#divCatInativacao').addClass('d-none');
             $('#categoriaInativacao').val('');
-            $('#categoriaInativacao').removeAttr('required');
         }
-        else if ($('#status').val() === "0" && $('#status').val() !== valStatus) {
+        else if ($('#status').val() === "0") {
             $('#divCatInativacao').removeClass('d-none');
-            $('#categoriaInativacao').prop('required', 'true');
-            $('#divCatAtivacao').addClass('d-none');
-            $('#categoriaAtivacao').removeAttr('required');
-            $('#categoriaAtivacao').val('');
-        }
-        else {
             $('#divCatAtivacao').addClass('d-none');
             $('#categoriaAtivacao').val('');
-            $('#categoriaAtivacao').removeAttr('required');
-            $('#divCatInativacao').addClass('d-none');
-            $('#categoriaInativacao').val('');
-            $('#categoriaInativacao').removeAttr('required');
         }
     });
 
@@ -42,7 +36,7 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: "/Gerencial/Produtos/Consultar/",
-            data: {stringBusca : $('#stringBusca').val()},
+            data: { stringBusca: $('#stringBusca').val() },
             dataType: "html",
             success: function (response) {
                 $("#listaProdutos").html(response);

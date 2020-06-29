@@ -6,7 +6,6 @@ using Domain.Produto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Core.Impl.Business
 {
@@ -46,14 +45,29 @@ namespace Core.Impl.Business
                 {
                     if(string.IsNullOrEmpty(livro.MotivoMudancaStatus) || string.IsNullOrWhiteSpace(livro.MotivoMudancaStatus))
                         return "Os campos com * são de preenchimento obrigatório.";
+                    if (livros.FirstOrDefault().MotivoMudancaStatus.Equals(livro.MotivoMudancaStatus))
+                        return "O motivo da mudança de status deve ser diferente do anterior.";
                     if (livro.Status == 1)
                     {
-                        if(livro.CategoriaAtivacao < 1)
+                        if(livro.CategoriaAtivacao == null || livro.CategoriaAtivacao < 1)
                             return "Os campos com * são de preenchimento obrigatório.";
                     }
                     else if (livro.Status == 0)
                     {
-                        if (livro.CategoriaInativacao < 1)
+                        if (livro.CategoriaInativacao == null || livro.CategoriaInativacao < 1)
+                            return "Os campos com * são de preenchimento obrigatório.";
+                    }
+                }
+                else
+                {
+                    if (livro.Status == 1)
+                    {
+                        if (livro.CategoriaAtivacao == null || livro.CategoriaAtivacao < 1)
+                            return "Os campos com * são de preenchimento obrigatório.";
+                    }
+                    else if (livro.Status == 0)
+                    {
+                        if (livro.CategoriaInativacao == null || livro.CategoriaInativacao < 1)
                             return "Os campos com * são de preenchimento obrigatório.";
                     }
                 }

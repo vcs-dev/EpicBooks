@@ -1,15 +1,11 @@
 ﻿@model Domain.Produto.Livro
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label for="titulo">Título</label>
-            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="nome" name="Nome" value="@Model.Nome"
-                   required>
-            <div class="invalid-feedback">
-                Informe um título.
-            </div>
+            <label for="titulo">Título*</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="nome" name="Nome" value="@Model.Nome">
         </div>
         <div class="col-md-2 mb-3">
-            <label for="imagem">Capa</label>
+            <label for="imagem">Capa*</label>
             <div class="input-group mb-3">
                 <img src="@(Model.CaminhoImagem)" class="img-thumbnail" alt="Imagem" width="40" height="60" />
             </div>
@@ -33,7 +29,7 @@
                 <label for="imagem">Capa</label>
                 <div class="input-group mb-3">
                     <div class="custom-file">
-                        <input type="file" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control custom-file-input" id="imagem" name="Imagem" value="@Model.Imagem" required>
+                        <input type="file" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control custom-file-input" id="imagem" name="Imagem" value="@Model.Imagem">
                         <label class="custom-file-label" for="imagem"
                                data-browse="Procurar">Escolha uma imagem</label>
                     </div>
@@ -41,8 +37,8 @@
             </div>
         }
         <div class="col-md-6 mb-3">
-            <label for="categorias">Genero</label>
-            <select multiple class="form-control" id="generos" name="Generos" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <label for="categorias">Genero*</label>
+            <select multiple class="form-control" id="generos" name="Generos" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                 <option selected="@(Model.Generos.Contains(1))" value="1">Ficção</option>
                 <option selected="@(Model.Generos.Contains(2))" value="2">Ficção Científica</option>
                 <option selected="@(Model.Generos.Contains(3))" value="3">Romance</option>
@@ -63,13 +59,10 @@
                 <option selected="@(Model.Generos.Contains(18))" value="18">Manual Técnico</option>
 
             </select>
-            <div class="invalid-feedback">
-                Informe pelo menos uma categoria.
-            </div>
         </div>
         <div class="col-md-6 mb-3">
-            <label for="autores">Autor</label>
-            <select multiple class="form-control" id="autores" name="Autores" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <label for="autores">Autor*</label>
+            <select multiple class="form-control" id="autores" name="Autores" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                 <option selected="@(Model.Autores.Contains(1))" value="1">J. R. R. Tolkien</option>
                 <option selected="@(Model.Autores.Contains(2))" value="2">J. J. Sutherland</option>
                 <option selected="@(Model.Autores.Contains(3))" value="3">George R.R. Martin</option>
@@ -85,21 +78,15 @@
                 <option selected="@(Model.Autores.Contains(13))" value="13">Bram Stoker</option>
                 <option selected="@(Model.Autores.Contains(14))" value="14">H. P. Lovecraft</option>
             </select>
-            <div class="invalid-feedback">
-                Informe pelo menos uma autor.
-            </div>
         </div>
         <div class="col-md-12 mb-3">
-            <label for="sinopse">Sinopse</label>
-            <textarea class="form-control" id="descricao" name="Descricao" cols="30" rows="6"
-                      required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">@Model.Descricao</textarea>
-            <div class="invalid-feedback">
-                Informe a sinopse.
-            </div>
+            <label for="sinopse">Sinopse*</label>
+            <textarea class="form-control" id="descricao" name="Descricao" cols="30" rows="6" 
+                      readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">@Model.Descricao</textarea>
         </div>
         <div class="col-md-3 mb-3">
-            <label for="editora">Editora</label>
-            <select class="form-control" id="editora" name="Editora" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <label for="editora">Editora*</label>
+            <select class="form-control" id="editora" name="Editora" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                 <option></option>
                 <option selected="@(Model.Editora == 1)" value="1">Leya</option>
                 <option selected="@(Model.Editora == 2)" value="2">Casa do Código</option>
@@ -115,69 +102,46 @@
                 <option selected="@(Model.Editora == 12)" value="12">Martins Fontes</option>
                 <option selected="@(Model.Editora == 13)" value="13">Sextante</option>
             </select>
-            <div class="invalid-feedback">
-                Informe uma editora.
-            </div>
         </div>
         <div class="col-md-3 mb-3">
-            <label for="grupoPrecificacao">Grupo de precificação</label>
-            <select class="form-control" id="grupoPrecificacao" name="GrupoPrecificacao" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <label for="grupoPrecificacao">Grupo de precificação*</label>
+            <select class="form-control" id="grupoPrecificacao" name="GrupoPrecificacao" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                 <option></option>
                 <option selected="@(Model.GrupoPrecificacao == 1)" value="1">Bronze</option>
                 <option selected="@(Model.GrupoPrecificacao == 2)" value="2">Prata</option>
                 <option selected="@(Model.GrupoPrecificacao == 3)" value="3">Ouro</option>
             </select>
-            <div class="invalid-feedback">
-                Informe um grupo de precificação.
-            </div>
         </div>
         <div class="col-md-2 mb-3">
-            <label for="anoLancamento">Ano de lançamento</label>
-            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="anoLancamento" name="AnoLancamento" placeholder="aaaa" maxlength="4" value="@Model.AnoLancamento" required>
-            <div class="invalid-feedback" style="width: 100%;">
-                Informe o ano de lançamento.
-            </div>
+            <label for="anoLancamento">Ano de lançamento*</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="anoLancamento" name="AnoLancamento" placeholder="aaaa" maxlength="4" value="@Model.AnoLancamento">
         </div>
         <div class="col-md-2 mb-3">
-            <label for="edicao">Edição</label>
-            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="edicao" name="Edicao" placeholder="1ª" value="@Model.Edicao" required>
-            <div class="invalid-feedback">
-                Informe a edição.
-            </div>
+            <label for="edicao">Edição*</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="edicao" name="Edicao" placeholder="1ª" value="@Model.Edicao">
         </div>
         <div class="col-md-2 mb-3">
-            <label for="volume">Volume</label>
+            <label for="volume">Volume*</label>
             <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="volume" name="Volume" value="@Model.Volume">
-            <div class="invalid-feedback">
-            </div>
         </div>
         <div class="col-md-2 mb-3">
-            <label for="tipocapa">Tipo de capa</label>
-            <select class="form-control" id="tipoCapa" name="TipoCapa" required readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+            <label for="tipocapa">Tipo de capa*</label>
+            <select class="form-control" id="tipoCapa" name="TipoCapa" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                 <option></option>
                 <option selected="@(Model.TipoCapa == 1)" value="1">Mole</option>
                 <option selected="@(Model.TipoCapa == 2)" value="2">Dura</option>
             </select>
-            <div class="invalid-feedback">
-                Informe o tipo de capa.
-            </div>
         </div>
         <div class="col-md-4 mb-3">
-            <label for="isbn">ISBN</label>
-            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="isbn" name="Isbn" value="@Model.Isbn" required>
-            <div class="invalid-feedback" style="width: 100%;">
-                Informe o ISBN.
-            </div>
+            <label for="isbn">ISBN*</label>
+            <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="isbn" name="Isbn" value="@Model.Isbn">
         </div>
         <div class="col-md-2 mb-3">
-            <label for="qtdePaginas">Qtde de páginas</label>
-            <input readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" type="text" class="form-control" id="qtdePaginas" name="QtdePaginas" value="@Model.QtdePaginas" required>
-            <div class="invalid-feedback" style="width: 100%;">
-                Informe a quantidade de páginas.
-            </div>
+            <label for="qtdePaginas">Qtde de páginas*</label>
+            <input readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" type="text" class="form-control" id="qtdePaginas" name="QtdePaginas" value="@Model.QtdePaginas">
         </div>
         <div class="col-md-2 mb-3">
-            <label for="altura">Altura</label>
+            <label for="altura">Altura*</label>
             <div class="input-group">
                 <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="altura" name="Altura" value="@Model.Altura">
                 <div class="input-group-append">
@@ -186,7 +150,7 @@
             </div>
         </div>
         <div class="col-md-2 mb-3">
-            <label for="comprimento">Comprimento</label>
+            <label for="comprimento">Comprimento*</label>
             <div class="input-group">
                 <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="comprimento" name="Comprimento" value="@Model.Comprimento">
                 <div class="input-group-append">
@@ -195,7 +159,7 @@
             </div>
         </div>
         <div class="col-md-2 mb-3">
-            <label for="largura">Largura</label>
+            <label for="largura">Largura*</label>
             <div class="input-group">
                 <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="largura" name="Largura" value="@Model.Largura">
                 <div class="input-group-append">
@@ -205,7 +169,7 @@
         </div>
         <div class="col-md-2 mb-3">
 
-            <label for="peso">Peso</label>
+            <label for="peso">Peso*</label>
             <div class="input-group">
                 <input type="text" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))" class="form-control" id="peso" name="Peso" value="@Model.Peso">
                 <div class="input-group-append">
@@ -216,7 +180,7 @@
         @if (!ViewData["Title"].ToString().ToLower().Contains("cadastro"))
         {
             <div class="col-md-2 mb-3">
-                <label for="status">Status</label>
+                <label for="status">Status*</label>
                 <select class="form-control" id="status" name="Status" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                     <option selected="@(Model.Status == 1)" value="1">Ativo</option>
                     <option selected="@(Model.Status == 0)" value="0">Inativo</option>
@@ -226,51 +190,39 @@
         @if (!string.IsNullOrEmpty(Model.MotivoMudancaStatus))
         {
             <div class="col-md-4 mb-3" id="divMudaStatus">
-                <label for="motivoMudancaStatus">Motivo da mudança de status</label>
+                <label for="motivoMudancaStatus">Motivo da mudança de status*</label>
                 <input type="text" class="form-control" id="motivoMudancaStatus" name="MotivoMudancaStatus" value="@Model.MotivoMudancaStatus" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                <div class="invalid-feedback" style="width: 100%;">
-                    Informe o motivo da mudança de status.
-                </div>
             </div>
         }
         else
         {
             <div class="col-md-4 mb-3 d-none" id="divMudaStatus">
-                <label for="motivoMudancaStatus">Motivo da mudança de status</label>
+                <label for="motivoMudancaStatus">Motivo da mudança de status*</label>
                 <input type="text" class="form-control" id="motivoMudancaStatus" name="MotivoMudancaStatus" value="@Model.MotivoMudancaStatus" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
-                <div class="invalid-feedback" style="width: 100%;">
-                    Informe o motivo da mudança de status.
-                </div>
             </div>
         }
         @if (Model.CategoriaAtivacao != null && Model.CategoriaAtivacao > 0)
         {
             <div class="col-md-2 mb-3" id="divCatAtivacao">
-                <label for="categoriaAtivacao">Categoria de ativação</label>
+                <label for="categoriaAtivacao">Categoria de ativação*</label>
                 <select class="form-control" id="categoriaAtivacao" name="CategoriaAtivacao" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                     <option></option>
                     <option selected="@(Model.CategoriaAtivacao == 1)" value="1">Produto novo</option>
                     <option selected="@(Model.CategoriaAtivacao == 2)" value="2">Liberação judicial</option>
                     <option selected="@(Model.CategoriaAtivacao == 3)" value="3">Reabastecimento de estoque</option>
                 </select>
-                <div class="invalid-feedback">
-                    Informe a categoria de ativação.
-                </div>
             </div>
         }
         else
         {
             <div class="col-md-2 mb-3 d-none" id="divCatAtivacao">
-                <label for="categoriaAtivacao">Categoria de ativação</label>
+                <label for="categoriaAtivacao">Categoria de ativação*</label>
                 <select class="form-control" id="categoriaAtivacao" name="CategoriaAtivacao" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
                     <option></option>
                     <option selected="@(Model.CategoriaAtivacao == 1)" value="1">Produto novo</option>
                     <option selected="@(Model.CategoriaAtivacao == 2)" value="2">Liberação judicial</option>
                     <option selected="@(Model.CategoriaAtivacao == 3)" value="3">Reabastecimento de estoque</option>
                 </select>
-                <div class="invalid-feedback">
-                    Informe a categoria de ativação.
-                </div>
             </div>
         }
         @if (Model.CategoriaInativacao != null && Model.CategoriaInativacao > 0)
@@ -282,9 +234,6 @@
                     <option selected="@(Model.CategoriaInativacao == 1)" value="1">Sem estoque</option>
                     <option selected="@(Model.CategoriaInativacao == 2)" value="2">Imposição legal</option>
                 </select>
-                <div class="invalid-feedback">
-                    Informe a categoria de inativação.
-                </div>
             </div>
         }
         else
@@ -296,9 +245,6 @@
                     <option selected="@(Model.CategoriaInativacao == 1)" value="1">Sem estoque</option>
                     <option selected="@(Model.CategoriaInativacao == 2)" value="2">Imposição legal</option>
                 </select>
-                <div class="invalid-feedback">
-                    Informe a categoria de inativação.
-                </div>
             </div>
         }
     </div>
