@@ -13,9 +13,9 @@ namespace Core.Impl.Business
                 Usuario usuario = (Usuario)entidade;
                 if(string.IsNullOrEmpty(usuario.NomeCompleto) || string.IsNullOrEmpty(usuario.DataNascimento) ||
                     usuario.Sexo == 0 || string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.ConfirmacaoSenha) ||
-                    usuario.TelefoneTipo == 0 || string.IsNullOrEmpty(usuario.TelefoneDdd) ||
-                    string.IsNullOrEmpty(usuario.Cartao.NomeImpresso) || string.IsNullOrEmpty(usuario.Cartao.Numeracao) ||
-                    string.IsNullOrEmpty(usuario.Cartao.Validade) || usuario.Cartao.Bandeira == 0)
+                    usuario.TelefoneTipo == 0 || string.IsNullOrEmpty(usuario.TelefoneDdd) || string.IsNullOrEmpty(usuario.TelefoneDdi) ||
+                    string.IsNullOrEmpty(usuario.TelefoneNumero) || string.IsNullOrEmpty(usuario.Cartao.NomeImpresso) || 
+                    string.IsNullOrEmpty(usuario.Cartao.Numeracao) || string.IsNullOrEmpty(usuario.Cartao.Validade) || usuario.Cartao.Bandeira == 0)
                 {
                     return "Os campos com * são de preenchimento obrigatório";
                 }

@@ -534,6 +534,7 @@ namespace Web.Areas.Loja.Controllers
                     usuarios.Add((Usuario)item);
                 }
                 usuarios.FirstOrDefault().CartaoPreferencial = CartaoId;
+                usuarios.FirstOrDefault().DadosAlterados = "CARTAO";
                 resultado = new Facade().Alterar(usuarios.FirstOrDefault());
                 if (resultado.Msg != null)
                 {
@@ -733,6 +734,55 @@ namespace Web.Areas.Loja.Controllers
             }
             else
                 return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public IActionResult InativarConta()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+                return View();
+            else
+                return RedirectToAction("Logar", "Conta");
+        }
+
+        [Area("Loja")]
+        public JsonResult Inativar()
+        {
+            if (HttpContext.Session.Get<int>("idUsuario") > 0)
+            {
+                ViewBag.NomeUsuario = HttpContext.Session.GetString("nomeUsuario");
+                string msg;
+                resultado = new Facade().Consultar(new Usuario { Id = HttpContext.Session.Get<int>("idUsuario")});
+                if (resultado.Msg != null)
+                {
+                    msg = resultado.Msg;
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                List<Usuario> usuarios = new List<Usuario>();
+                foreach (var item in resultado.Entidades)
+                {
+                    usuarios.Add((Usuario)item);
+                }
+                if (usuarios.FirstOrDefault().Ativo > 0)
+                {
+                    usuarios.FirstOrDefault().Ativo = 0;
+                    resultado = new Facade().Alterar(usuarios.FirstOrDefault());
+                    if (resultado.Msg != null)
+                    {
+                        msg = resultado.Msg;
+                        return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                    }
+                    msg = "Conta inativada com sucesso!";
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+                else
+                {
+                    msg = "A conta ja está inativada";
+                    return Json("{\"Mensagem\":" + "\"" + msg.Replace("\n", " ") + "\"}");
+                }
+            }
+            else
+                return Json("{\"Mensagem\":" + "\"" + "Erro: O usuário não está logado" + "\"}");
         }
     }
 }

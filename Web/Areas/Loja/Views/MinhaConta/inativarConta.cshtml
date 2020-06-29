@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Domain.Negocio.Notificacao>
+@{
+    ViewData["Title"] = "Minha Conta - Inativação de conta";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pl-0">
+            @await Html.PartialAsync("_menu")
+        </div>
+        <div class="col-md-9">
+            <h4>Inativação de conta</h4>
+            <button class="btn btn-danger mt-2" id="btnInativarConta">Inativar Conta</button>
+        </div>
+    </div>
+</div> <!-- /container -->
+@await Html.PartialAsync("_modalMensagem")
+@section Scripts{
+    <script src="~/js/loja/minhaconta/inativar-conta.js"></script>
+}

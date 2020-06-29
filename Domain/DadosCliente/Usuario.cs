@@ -8,6 +8,7 @@
             EnderecoCobranca = new Endereco { TipoEndereco = 2 };
             Cartao = new CartaoDeCredito();
             DadosAlterados = "";
+            Ativo = 1;
         }
         public string NomeCompleto { get; set; }
         public byte Sexo { get; set; }
@@ -15,6 +16,7 @@
         public string Cpf { get; set; }
         public byte TelefoneTipo { get; set; }
         public string TelefoneDdd { get; set; }
+        public string TelefoneDdi { get; set; }
         public string TelefoneNumero { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
@@ -26,5 +28,6 @@
         public byte EndEntregaECobranca { get; set; }
         public int CartaoPreferencial { get; set; }
         public string DadosAlterados { get; set; }
+        public int Ativo { get; set; }
     }
 }

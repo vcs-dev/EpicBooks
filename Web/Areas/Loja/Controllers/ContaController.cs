@@ -37,9 +37,14 @@ namespace Web.Areas.Loja.Controllers
                     {
                         usuarios.Add((Usuario)entidade);
                     }
-                    HttpContext.Session.Set("nomeUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().NomeCompleto));
-                    HttpContext.Session.Set("idUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().Id.ToString()));
-                    return RedirectToAction("Index", "MinhaConta");
+                    if (usuarios.FirstOrDefault().Ativo > 0)
+                    {
+                        HttpContext.Session.Set("nomeUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().NomeCompleto));
+                        HttpContext.Session.Set("idUsuario", Encoding.UTF8.GetBytes(usuarios.FirstOrDefault().Id.ToString()));
+                        return RedirectToAction("Index", "MinhaConta");
+                    }
+                    else
+                        ViewBag.Mensagem = "Conta inativada pelo titular. Para reativá-la contate o suporte técnico.";
                 }
             }
             return View();

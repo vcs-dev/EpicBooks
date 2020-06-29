@@ -65,13 +65,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="telefoneTipo">Tipo de telefone*</label>
                         <select class="custom-select d-block w-100" id="telefoneTipo" name="telefoneTipo">
                             <option selected="@(Model.TelefoneTipo == 0)">Selecione</option>
                             <option value="1" selected="@(Model.TelefoneTipo == 1)">Fixo</option>
                             <option value="2" selected="@(Model.TelefoneTipo == 2)">Móvel</option>
                         </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="telefoneDdi">DDI*</label>
+                        <input type="text" class="form-control" id="telefoneDdi" name="TelefoneDdi" maxlength="3" value="@Model.TelefoneDdi">
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="telefoneDdd">DDD*</label>

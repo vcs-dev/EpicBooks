@@ -57,7 +57,8 @@ namespace Core.Impl.DAO.DadosCliente
                                                        "Email," +
                                                        "Senha," +
                                                        "DataCadastro," +
-                                                       "CartaoPreferencial" +
+                                                       "CartaoPreferencial, " +
+                                                       "Ativo" +
                                   ") " +
                                   "VALUES(@NomeCompleto," +
                                          "@Sexo," +
@@ -69,22 +70,25 @@ namespace Core.Impl.DAO.DadosCliente
                                          "@Email," +
                                          "CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1)," +
                                          "@DataCadastro, " +
-                                         "@CartaoPreferencial" +
+                                         "@CartaoPreferencial, " +
+                                         "@Ativo" +
                                   ") SELECT CAST(scope_identity() AS int)";
 
                 SqlCommand comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
 
                 comandoUsuario.Parameters.AddWithValue("@NomeCompleto", usuario.NomeCompleto);
                 comandoUsuario.Parameters.AddWithValue("@Sexo", usuario.Sexo);
-                comandoUsuario.Parameters.AddWithValue("@DataNascimento", usuario.DataNascimento);
+                comandoUsuario.Parameters.AddWithValue("@DataNascimento", Convert.ToDateTime(usuario.DataNascimento));
                 comandoUsuario.Parameters.AddWithValue("@Cpf", usuario.Cpf);
                 comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
                 comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
+                comandoUsuario.Parameters.AddWithValue("@TelefoneDdi", usuario.TelefoneDdi);
                 comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
                 comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
                 comandoUsuario.Parameters.AddWithValue("@Senha", usuario.Senha);
                 comandoUsuario.Parameters.AddWithValue("@DataCadastro", usuario.DataCadastro);
                 comandoUsuario.Parameters.AddWithValue("@CartaoPreferencial", usuario.Cartao.Id);
+                comandoUsuario.Parameters.AddWithValue("@Ativo", usuario.Ativo);
                 usuario.Id = Convert.ToInt32(comandoUsuario.ExecuteScalar());
                 comandoUsuario.Dispose();
 
@@ -231,10 +235,11 @@ namespace Core.Impl.DAO.DadosCliente
 
                 if (usuario.DadosAlterados.Equals("PESSOAIS"))
                 {
-                    cmdTextoUsuario = "UPDATE Usuarios SET TelefoneTipo = @TelefoneTipo, TelefoneDdd = @TelefoneDdd, TelefoneNumero = @TelefoneNumero, Email = @Email WHERE UsuarioId = @UsuarioId";
+                    cmdTextoUsuario = "UPDATE Usuarios SET TelefoneTipo = @TelefoneTipo, TelefoneDdd = @TelefoneDdd, TelefoneDdi = @TelefoneDdi, TelefoneNumero = @TelefoneNumero, Email = @Email WHERE UsuarioId = @UsuarioId";
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneDdi", usuario.TelefoneDdi);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
                     comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
@@ -248,7 +253,7 @@ namespace Core.Impl.DAO.DadosCliente
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
                     comandoUsuario.ExecuteNonQuery();
                 }
-                else if (usuario.CartaoPreferencial > 0)
+                else if (usuario.DadosAlterados.Equals("CARTAO"))
                 {
                     cmdTextoUsuario = "UPDATE Usuarios SET CartaoPreferencial = @CartaoPreferencial WHERE UsuarioId = @UsuarioId";
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
@@ -258,7 +263,7 @@ namespace Core.Impl.DAO.DadosCliente
                 }
                 else
                 {
-                    cmdTextoUsuario = "UPDATE Usuarios SET Nome = @Nome," +
+                    cmdTextoUsuario = "UPDATE Usuarios SET NomeCompleto = @NomeCompleto," +
                                                           "Sexo = @Sexo," +
                                                           "DataNascimento = @DataNascimento," +
                                                           "Cpf = @Cpf," +
@@ -266,20 +271,23 @@ namespace Core.Impl.DAO.DadosCliente
                                                           "TelefoneDdd = @TelefoneDdd," +
                                                           "TelefoneDdi = @TelefoneDdi," +
                                                           "TelefoneNumero = @TelefoneNumero," +
-                                                          "Email = @Email" +
+                                                          "Email = @Email," +
+                                                          "Ativo = @Ativo " +
                                       "WHERE UsuarioId = @UsuarioId";
 
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
 
                     comandoUsuario.Parameters.AddWithValue("@UsuarioId", usuario.Id);
-                    comandoUsuario.Parameters.AddWithValue("@Nome", usuario.NomeCompleto);
+                    comandoUsuario.Parameters.AddWithValue("@NomeCompleto", usuario.NomeCompleto);
                     comandoUsuario.Parameters.AddWithValue("@Sexo", usuario.Sexo);
-                    comandoUsuario.Parameters.AddWithValue("@DataNascimento", usuario.DataNascimento);
+                    comandoUsuario.Parameters.AddWithValue("@DataNascimento", Convert.ToDateTime(usuario.DataNascimento));
                     comandoUsuario.Parameters.AddWithValue("@Cpf", usuario.Cpf);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
+                    comandoUsuario.Parameters.AddWithValue("@TelefoneDdi", usuario.TelefoneDdi);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneNumero", usuario.TelefoneNumero);
                     comandoUsuario.Parameters.AddWithValue("@Email", usuario.Email);
+                    comandoUsuario.Parameters.AddWithValue("@Ativo", usuario.Ativo);
                     comandoUsuario.ExecuteNonQuery();
                 }
                 Commit();
@@ -383,11 +391,13 @@ namespace Core.Impl.DAO.DadosCliente
                         DataCadastro = Convert.ToDateTime(dataReader["DataCadastro"]),
                         TelefoneTipo = Convert.ToByte(dataReader["TelefoneTipo"]),
                         TelefoneDdd = dataReader["TelefoneDdd"].ToString(),
+                        TelefoneDdi = dataReader["TelefoneDdi"].ToString(),
                         TelefoneNumero = dataReader["TelefoneNumero"].ToString(),
                         Cpf = (dataReader["Cpf"]).ToString(),
                         Email = dataReader["Email"].ToString(),
                         Senha = dataReader["Senha"].ToString(),
-                        CartaoPreferencial = Convert.ToInt32(dataReader["CartaoPreferencial"])
+                        CartaoPreferencial = Convert.ToInt32(dataReader["CartaoPreferencial"]),
+                        Ativo = Convert.ToInt32(dataReader["Ativo"])
                     };
 
                     usuarios.Add(usuario);
