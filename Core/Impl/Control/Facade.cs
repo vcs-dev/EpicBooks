@@ -266,12 +266,14 @@ namespace Core.Impl.Control
             ValidadorDadosObrigatoriosTrocaSenha validadorDadosObrigatoriosTrocaSenha = new ValidadorDadosObrigatoriosTrocaSenha();
             ValidadorSenhaAtual validadorSenhaAtual = new ValidadorSenhaAtual();
             ValidadorTrocaSenha validadorTrocaSenha = new ValidadorTrocaSenha();
+            ValidadorDadosObrigatoriosUsuarioEdicao validadorDadosObrigatoriosUsuarioEdicao = new ValidadorDadosObrigatoriosUsuarioEdicao();
 
             List<IStrategy> rnsAlterarUsuario = new List<IStrategy>();
 
             rnsAlterarUsuario.Add(validadorDadosObrigatoriosTrocaSenha);
             rnsAlterarUsuario.Add(validadorSenhaAtual);
             rnsAlterarUsuario.Add(validadorTrocaSenha);
+            rnsAlterarUsuario.Add(validadorDadosObrigatoriosUsuarioEdicao);
 
             Dictionary<string, List<IStrategy>> rnsUsuario = new Dictionary<string, List<IStrategy>>();
 

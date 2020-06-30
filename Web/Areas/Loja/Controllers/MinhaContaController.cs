@@ -324,7 +324,7 @@ namespace Web.Areas.Loja.Controllers
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
-                    return View();
+                    return View(usuario);
                 }
                 ViewBag.Mensagem = "Dados pessoais alterados com sucesso!";
                 return View(usuario);

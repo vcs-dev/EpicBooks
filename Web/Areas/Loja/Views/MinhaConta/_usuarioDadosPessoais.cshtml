@@ -5,15 +5,32 @@
         <label for="nomeCompleto">Nome completo</label>
         <input type="text" class="form-control" id="nomeCompleto" name="NomeCompleto" value="@Model.NomeCompleto" readonly>
     </div>
-    <div class="col-md-4 form-group">
+    <div class="col-md-3 form-group">
         <label for="dataNascimento">Data de nascimento</label>
         <input type="text" class="form-control" id="dataNascimento" name="DataNascimento" value="@Model.DataNascimento.Substring(0, 10)" readonly>
+    </div>
+    <div class="col-md-5 form-group">
+        <div class="col-md-12">
+            <div class="col-md-12">
+                <label class="mr-3">Sexo*</label>
+            </div>
+            <div class="col-md-12">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="sexo1" name="Sexo" class="custom-control-input" value="1" checked="@(Model.Sexo == 1)" disabled="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                    <label class="custom-control-label" for="sexo1">Masculino</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="sexo2" name="Sexo" class="custom-control-input" value="2" checked="@(Model.Sexo == 2)" disabled="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+                    <label class="custom-control-label" for="sexo2">Feminino</label>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-4 form-group">
         <label for="cpf">CPF</label>
         <input type="text" class="form-control" id="cpf" name="Cpf" value="@Model.Cpf" readonly>
     </div>
-    <div class="col-md-3 form-group">
+    <div class="col-md-4 form-group">
         <label for="telefoneTipo">Tipo de telefone*</label>
         <select class="custom-select d-block w-100" id="telefoneTipo" name="telefoneTipo" disabled="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
             <option selected="@(Model.TelefoneTipo == 0)">Selecione</option>
@@ -22,15 +39,19 @@
         </select>
     </div>
     <div class="col-md-2 form-group">
-        <label for="telefoneDdd">DDD</label>
+        <label for="telefoneDdi">DDI*</label>
+        <input type="text" class="form-control" id="telefoneDdi" name="TelefoneDdi" value="@Model.TelefoneDdi" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
+    </div>
+    <div class="col-md-2 form-group">
+        <label for="telefoneDdd">DDD*</label>
         <input type="text" class="form-control" id="telefoneDdd" name="TelefoneDdd" value="@Model.TelefoneDdd" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
     </div>
-    <div class="col-md-3 form-group">
-        <label for="telefoneNumero">Numero</label>
+    <div class="col-md-6 form-group">
+        <label for="telefoneNumero">Numero*</label>
         <input type="text" class="form-control" id="telefoneNumero" name="TelefoneNumero" value="@Model.TelefoneNumero" readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
     </div>
-    <div class="col-md-4 form-group">
-        <label for="email">Email</label>
+    <div class="col-md-6 form-group">
+        <label for="email">Email*</label>
         <input type="text" class="form-control" id="email" name="Email" value="@Model.Email"
                readonly="@(ViewData["Title"].ToString().ToLower().Contains("detalhes"))">
     </div>

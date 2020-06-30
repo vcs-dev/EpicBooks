@@ -53,6 +53,7 @@ namespace Core.Impl.DAO.DadosCliente
                                                        "Cpf," +
                                                        "TelefoneTipo," +
                                                        "TelefoneDdd," +
+                                                       "TelefoneDdi," +
                                                        "TelefoneNumero," +
                                                        "Email," +
                                                        "Senha," +
@@ -66,6 +67,7 @@ namespace Core.Impl.DAO.DadosCliente
                                          "@Cpf," +
                                          "@TelefoneTipo," +
                                          "@TelefoneDdd," +
+                                         "@TelefoneDdi," +
                                          "@TelefoneNumero," +
                                          "@Email," +
                                          "CONVERT(varchar(32),HASHBYTES('SHA2_256', @Senha),1)," +
@@ -115,7 +117,8 @@ namespace Core.Impl.DAO.DadosCliente
                                                          "Cidade, " +
                                                          "Estado, " +
                                                          "Pais, " +
-                                                         "Observacao" +
+                                                         "Observacao," +
+                                                         "Ativo" +
                                    ") " +
                                    "VALUES(@TipoEndereco," +
                                           "@TipoResidencia, " +
@@ -127,7 +130,8 @@ namespace Core.Impl.DAO.DadosCliente
                                           "@Cidade, " +
                                           "@Estado, " +
                                           "@Pais, " +
-                                          "@Observacao" +
+                                          "@Observacao," +
+                                          "@Ativo" +
                                    ") SELECT CAST(scope_identity() AS int)";
                 SqlCommand comandoEndereco = new SqlCommand(cmdTextoEndereco, conexao, transacao);
 
@@ -147,6 +151,7 @@ namespace Core.Impl.DAO.DadosCliente
                     comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
                 else
                     comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
+                comandoEndereco.Parameters.AddWithValue("@Ativo", usuario.EnderecoEntrega.Ativo);
                 idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 comandoEndereco.Parameters.Clear();
 
@@ -166,6 +171,7 @@ namespace Core.Impl.DAO.DadosCliente
                         comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
                     else
                         comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoEntrega.Observacao);
+                    comandoEndereco.Parameters.AddWithValue("@Ativo", usuario.EnderecoEntrega.Ativo);
                     idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 }
                 else
@@ -184,6 +190,7 @@ namespace Core.Impl.DAO.DadosCliente
                         comandoEndereco.Parameters.AddWithValue("@Observacao", DBNull.Value);
                     else
                         comandoEndereco.Parameters.AddWithValue("@Observacao", usuario.EnderecoCobranca.Observacao);
+                    comandoEndereco.Parameters.AddWithValue("@Ativo", usuario.EnderecoCobranca.Ativo);
                     idsEnderecos.Add(Convert.ToInt32(comandoEndereco.ExecuteScalar()));
                 }
 
@@ -235,8 +242,9 @@ namespace Core.Impl.DAO.DadosCliente
 
                 if (usuario.DadosAlterados.Equals("PESSOAIS"))
                 {
-                    cmdTextoUsuario = "UPDATE Usuarios SET TelefoneTipo = @TelefoneTipo, TelefoneDdd = @TelefoneDdd, TelefoneDdi = @TelefoneDdi, TelefoneNumero = @TelefoneNumero, Email = @Email WHERE UsuarioId = @UsuarioId";
+                    cmdTextoUsuario = "UPDATE Usuarios SET Sexo = @Sexo, TelefoneTipo = @TelefoneTipo, TelefoneDdd = @TelefoneDdd, TelefoneDdi = @TelefoneDdi, TelefoneNumero = @TelefoneNumero, Email = @Email WHERE UsuarioId = @UsuarioId";
                     comandoUsuario = new SqlCommand(cmdTextoUsuario, conexao, transacao);
+                    comandoUsuario.Parameters.AddWithValue("@Sexo", usuario.Sexo);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneTipo", usuario.TelefoneTipo);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneDdd", usuario.TelefoneDdd);
                     comandoUsuario.Parameters.AddWithValue("@TelefoneDdi", usuario.TelefoneDdi);
@@ -387,6 +395,7 @@ namespace Core.Impl.DAO.DadosCliente
                     {
                         Id = Convert.ToInt32(dataReader["UsuarioId"]),
                         NomeCompleto = dataReader["NomeCompleto"].ToString(),
+                        Sexo = Convert.ToByte(dataReader["Sexo"]),
                         DataNascimento = dataReader["DataNascimento"].ToString(),
                         DataCadastro = Convert.ToDateTime(dataReader["DataCadastro"]),
                         TelefoneTipo = Convert.ToByte(dataReader["TelefoneTipo"]),
