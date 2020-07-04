@@ -44,9 +44,12 @@ namespace Web.Areas.Gerencial.Controllers
         }
 
         [Area("Gerencial")]
-        public IActionResult Cadastrar()
+        public IActionResult Cadastrar(Livro livro)
         {
-            return View(new Livro());
+            if(livro == null)
+                return View(new Livro());
+            else
+                return View(livro);
         }
 
         [Area("Gerencial")]
@@ -59,10 +62,21 @@ namespace Web.Areas.Gerencial.Controllers
                 string pastaDestino = "produtos";
                 string caminhoWebRoot = _appEnvironment.WebRootPath;
                 string nomeArquivo = Path.GetRandomFileName();
-                if (livro.Imagem.FileName.Contains("jpg"))
-                    nomeArquivo += ".jpg";
+                if (livro.Imagem != null)
+                {
+                    if (livro.Imagem.FileName.Contains("jpg"))
+                        nomeArquivo += ".jpg";
+                    else
+                    {
+                        ViewBag.Mensagem = "Erro. Utilize uma imagem JPEG";
+                        return View(livro);
+                    }
+                }
                 else
-                    return BadRequest();
+                {
+                    ViewBag.Mensagem = "Erro. Insira uma imagem";
+                    return View(livro);
+                }
                 string caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
                 FileInfo fi = new FileInfo(caminhoCurtoENomeArquivo);
                 while (fi.Exists)
@@ -71,7 +85,10 @@ namespace Web.Areas.Gerencial.Controllers
                     if (livro.Imagem.FileName.Contains("jpg"))
                         nomeArquivo += ".jpg";
                     else
-                        return BadRequest();
+                    {
+                        ViewBag.Mensagem = "Erro. Utilize uma imagem JPEG";
+                        return View(livro);
+                    }
                     caminhoCurtoENomeArquivo = "\\img\\uploads\\" + pastaDestino + "\\" + nomeArquivo;
                 }
                 string caminhoDestinoArquivoCompleto = caminhoWebRoot + caminhoCurtoENomeArquivo;
@@ -87,18 +104,18 @@ namespace Web.Areas.Gerencial.Controllers
                 if (resultado.Msg != null)
                 {
                     ViewBag.Mensagem = resultado.Msg;
-                    return View();
+                    return View(livro);
                 }
                 else
                 {
-                    ViewBag.Mensagem = resultado.Msg;
-                    return RedirectToAction("Index", "Produtos", new { area = "Gerencial" });
+                    ViewBag.Mensagem = "Produto cadastrado com sucesso!";
+                    return View(livro);
                 }
             }
             else
             {
                 ViewBag.Mensagem = "Isbn já cadastrado.";
-                return View("index");
+                return View(livro);
             }
         }
 
